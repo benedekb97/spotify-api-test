@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Spotify;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use DateInterval;
+use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -72,8 +76,8 @@ class AuthenticationController extends Controller
         self::SCOPE_USERS_READ_PRIVATE => true,
     ];
 
-    private const ENDPOINT_AUTHORIZE = 'authorize';
-    private const ENDPOINT_ACCESS_TOKEN = 'api/token';
+    public const ENDPOINT_AUTHORIZE = 'authorize';
+    public const ENDPOINT_ACCESS_TOKEN = 'api/token';
 
     public const SESSION_STATE_KEY = 'spotify.state';
 
@@ -128,12 +132,22 @@ class AuthenticationController extends Controller
 
             $responseContent = $response->getBody()->getContents();
 
-            $response = json_decode($responseContent);
+            $response = json_decode($responseContent, true);
 
-            $accessToken = $response['access_token'];
-            $tokenType = $response['token_type'];
             $expiresIn = $response['expires_in'];
-            $refreshToken = $response['refresh_token'];
+
+            $tokenExpiry = (new DateTime())->add(new DateInterval(sprintf('PT1%sS', $expiresIn)));
+
+            /** @var User $user */
+            $user = Auth::user();
+
+            $user->spotify_access_token = $response['access_token'];
+            $user->spotify_refresh_token = $response['refresh_token'];
+            $user->spotify_access_token_expiry = $tokenExpiry;
+
+            $user->save();
+
+            return new RedirectResponse(route('dashboard.index'));
         }
 
         if ($request->has('error')) {

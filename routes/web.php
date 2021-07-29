@@ -13,7 +13,7 @@ Route::group(
     [
         'prefix' => 'dashboard',
         'as' => 'dashboard.',
-        'middleware' => 'auth',
+        'middleware' => ['auth', 'reauthenticate'],
     ],
     static function () {
         Route::get('', [DashboardController::class, 'index'])->name('index');

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,6 +11,10 @@ use Illuminate\Notifications\Notifiable;
  * Class User
  * @property string $email
  * @property string $password
+ * @property string $spotify_access_token
+ * @property string $spotify_refresh_token
+ * @property DateTimeInterface $spotify_access_token_expiry
+ * @property string $spotify_access_scope
  */
 class User extends Authenticatable
 {
