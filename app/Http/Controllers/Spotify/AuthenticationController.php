@@ -51,7 +51,7 @@ class AuthenticationController extends Controller
         self::SCOPE_UGC_IMAGE_UPLOAD => false,
 
         self::SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED => false,
-        self::SCOPE_LISTENING_HISTORY_TOP_PLAYED => false,
+        self::SCOPE_LISTENING_HISTORY_TOP_PLAYED => true,
         self::SCOPE_LISTENING_HISTORY_PLAYBACK_POSITION => false,
 
         self::SCOPE_SPOTIFY_CONNECT_PLAYBACK_STATE => false,

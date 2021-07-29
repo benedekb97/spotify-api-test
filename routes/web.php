@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Spotify\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AuthenticationController;
@@ -29,6 +30,9 @@ Route::group(
     static function () {
         Route::get('redirect', [SpotifyAuthenticationController::class, 'redirect'])->name('redirect');
         Route::get('callback', [SpotifyAuthenticationController::class, 'callback'])->name('callback');
+
+        Route::get('profile', [UserController::class, 'profile'])->name('profile');
+        Route::get('top/{type}', [UserController::class, 'top'])->name('top');
     }
 );
 
