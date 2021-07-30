@@ -46,7 +46,7 @@ class ReauthenticateSpotifyMiddleware
         $refreshedAccessTokenResponse = $this->spotifyAuthenticationApi->refreshAccessToken($refreshToken);
 
         $tokenExpiry = (new DateTime())
-            ->add(new DateInterval(sprintf('PT1%sS', $refreshedAccessTokenResponse->getExpiresIn())));
+            ->add(new DateInterval(sprintf('PT%sS', $refreshedAccessTokenResponse->getExpiresIn())));
 
         /** @var User $user */
         $user = Auth::user();

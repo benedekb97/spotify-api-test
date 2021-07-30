@@ -6,6 +6,7 @@ namespace App\Http\Api\Requests;
 
 use App\Http\Api\Factories\ResponseBodies\ResponseBodyFactoryInterface;
 use App\Http\Api\Requests\RequestBodies\RequestBodyInterface;
+use App\Http\Api\Responses\ResponseBodies\ErrorResponseBody;
 use App\Http\Api\Responses\SpotifyResponse;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Client;
@@ -154,20 +155,32 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         if ($this->getExpectedStatusCode() === null && !$this->validateStatusCode($response)) {
             $responseContent = json_decode($response->getBody()->getContents(), true);
 
-            throw new LogicException(
+            $this->response = new SpotifyResponse();
+
+            $this->response->setStatusCode($response->getStatusCode());
+            $this->response->setBody((new ErrorResponseBody())->setData($responseContent));
+
+            Log::error(
                 sprintf(
                     'Could not validate status code for response. Status code: %s Error: %s',
                     $response->getStatusCode(),
                     json_encode($responseContent)
                 )
             );
+
+            return;
         } elseif (
             $this->getExpectedStatusCode() !== null
             && ($statusCode = $response->getStatusCode()) !== $this->getExpectedStatusCode()
         ) {
             $response = json_decode($response->getBody()->getContents(), true);
 
-            throw new LogicException(
+            $this->response = new SpotifyResponse();
+
+            $this->response->setStatusCode($statusCode);
+            $this->response->setBody((new ErrorResponseBody())->setData($response));
+
+            Log::error(
                 sprintf(
                     'Expecting status code %s, received %s. Error: %s',
                     $this->getExpectedStatusCode(),

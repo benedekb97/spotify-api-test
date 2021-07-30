@@ -60,7 +60,7 @@ class AuthenticationController extends Controller
             $accessTokenResponse = $this->spotifyAuthenticationApi->getAccessToken($accessCodeResponse->getCode());
 
             $tokenExpiry = (new DateTime())
-                ->add(new DateInterval(sprintf('PT1%sS', $accessTokenResponse->getExpiresIn())));
+                ->add(new DateInterval(sprintf('PT%sS', $accessTokenResponse->getExpiresIn())));
 
             /** @var User $user */
             $user = Auth::user();
