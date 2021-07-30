@@ -12,6 +12,7 @@ use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Util\CacheTags;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Cache\Repository;
@@ -80,33 +81,30 @@ class UserController extends Controller
             );
         }
 
-//        $response =  $this->cache->tags(
-//            [
-//                CacheTags::TRACKS,
-//                CacheTags::ME . Auth::id()
-//            ]
-//        )->remember(
-//            sprintf('me.%s.top.%s', Auth::id(), $type),
-//            180,
-//            function () use ($type) {
+        /** @var SpotifyResponseInterface $response */
+        $response = $this->cache->tags(
+            [
+                CacheTags::TRACKS,
+                CacheTags::ME . Auth::id()
+            ]
+        )->remember(
+            sprintf('me.%s.top.%s', Auth::id(), $type),
+            180,
+            function () use ($type) {
                 if ($type === self::TYPE_ARTISTS) {
                     $request = new TopArtistsRequest();
-
-                    $response = $this->spotifyApi->execute($request);
                 } else {
                     $request = new TopTracksRequest();
-
-                    $response = $this->spotifyApi->execute($request);
                 }
 
-                dd($response);
-//            }
-//        );
+                return $this->spotifyApi->execute($request);
+            }
+        );
 
         return view(
             sprintf('pages.spotify.top.%s', $type),
             [
-                'items' => $response['items'],
+                'items' => $response->getBody()->getItems(),
                 'type' => array_search($type, self::TYPE_MAP),
             ]
         );

@@ -14,24 +14,22 @@
             <td>{{ $key + 1 }}</td>
             <td>
                 <img
-                    src="{{ $item['album']['images'][array_key_first($item['album']['images'])]['url'] }}"
+                    src="{{ $item->getAlbum()->getImages()->first()->getUrl() }}"
                     style="width:100px; height:100px;"
-                    alt="{{ $item['album']['name'] }}" />
+                    alt="{{ $item->getAlbum()->getName() }}" />
             </td>
-            <td><a target="_blank" href="{{ $item['external_urls']['spotify'] }}">{{ $item['name'] }}</a></td>
+            <td><a target="_blank" href="{{ $item->getExternalUrl()->getSpotify() }}">{{ $item->getName() }}</a></td>
             <td>
                 {{
-                    implode(', ', array_map(
-                        static function ($artist): string
-                        {
-                            return (string)$artist['name'];
-                        },
-                        $item['artists']
-                    ))
+                    implode(', ', $item->getArtists()->map(
+                        static function (\App\Http\Api\Responses\ResponseBodies\Entity\Artist $artist) {
+                            return $artist->getName();
+                        }
+                    )->toArray())
                 }}
             </td>
-            <td>{{ $item['album']['name'] }}</td>
-            <td>{{ date('m:s', $item['duration_ms'] / 1000) }}</td>
+            <td>{{ $item->getAlbum()->getName() }}</td>
+            <td>{{ date('m:s', $item->getDurationms() / 1000) }}</td>
         </tr>
     @endforeach
 </table>

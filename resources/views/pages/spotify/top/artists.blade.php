@@ -10,16 +10,16 @@
     @foreach ($items as $key => $item)
         <tr>
             <td>
-                <a href="{{ $item['external_urls']['spotify'] }}" target="_blank">{{ $item['name'] }}</a>
+                <a href="{{ $item->getExternalUrl()->getSpotify() }}" target="_blank">{{ $item->getName() }}</a>
             </td>
             <td>
                 <img
-                    src="{{ $item['images'][array_key_first($item['images'])]['url'] }}"
+                    src="{{ $item->getImages()->last()->getUrl() }}"
                     style="width:100px; height:100px;"
-                    alt="{{ $item['name'] }}" />
+                    alt="{{ $item->getName() }}" />
             </td>
-            <td>{{ $item['followers']['total'] }}</td>
-            <td>{{ implode(', ', $item['genres']) }}</td>
+            <td>{{ $item->getFollowers()->getTotal() }}</td>
+            <td>{{ implode(', ', $item->getGenres()) }}</td>
         </tr>
     @endforeach
 </table>
