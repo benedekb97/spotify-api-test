@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Api\Authentication\Factory\Entity;
+namespace App\Http\Api\Authentication\Factory\Response\Entity;
 
 use App\Http\Api\Authentication\Responses\Entity\Scope;
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;

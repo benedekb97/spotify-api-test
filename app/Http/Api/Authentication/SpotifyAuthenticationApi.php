@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Authentication;
 
-use App\Http\Api\Authentication\Factory\AccessTokenResponseFactory;
-use App\Http\Api\Authentication\Factory\RefreshedAccessTokenResponseFactory;
+use App\Http\Api\Authentication\Factory\Response\AccessTokenResponseFactory;
+use App\Http\Api\Authentication\Factory\Response\RefreshedAccessTokenResponseFactory;
 use App\Http\Api\Authentication\Responses\AccessTokenResponse;
 use App\Http\Api\Authentication\Responses\RefreshedAccessTokenResponse;
 use GuzzleHttp\Client;

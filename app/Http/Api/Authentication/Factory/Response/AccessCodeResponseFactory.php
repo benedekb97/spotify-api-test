@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Api\Authentication\Factory;
+namespace App\Http\Api\Authentication\Factory\Response;
 
 use App\Http\Api\Authentication\Responses\AccessCodeResponse;
 use Illuminate\Http\Request;

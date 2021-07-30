@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
-use App\Http\Api\Authentication\Factory\AccessCodeResponseFactory;
+use App\Http\Api\Authentication\Factory\Response\AccessCodeResponseFactory;
 use App\Http\Api\Authentication\SpotifyAuthenticationApi;
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Controllers\Controller;

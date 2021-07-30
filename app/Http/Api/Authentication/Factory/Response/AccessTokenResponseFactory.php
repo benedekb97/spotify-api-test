@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Api\Authentication\Factory;
+namespace App\Http\Api\Authentication\Factory\Response;
 
-use App\Http\Api\Authentication\Factory\Entity\ScopeFactory;
+use App\Http\Api\Authentication\Factory\Response\Entity\ScopeFactory;
 use App\Http\Api\Authentication\Responses\AccessTokenResponse;
 
 class AccessTokenResponseFactory
