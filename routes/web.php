@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Spotify\DeviceController;
 use App\Http\Controllers\Spotify\PlayerController;
 use App\Http\Controllers\Spotify\UserController;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,17 @@ Route::group(
                 Route::get('previous', [PlayerController::class, 'previous'])->name('previous');
 
                 Route::get('currently-playing', [PlayerController::class, 'currentlyPlaying'])->name('currently-playing');
+
+                Route::group(
+                    [
+                        'prefix' => 'devices',
+                        'as' => 'devices.',
+                    ],
+                    static function () {
+                        Route::get('list-available', [DeviceController::class, 'listAvailable'])->name('list-available');
+                        Route::get('activate/{device}/{play?}', [DeviceController::class, 'activate'])->name('activate');
+                    }
+                );
             }
         );
     }

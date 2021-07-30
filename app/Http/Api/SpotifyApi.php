@@ -73,7 +73,7 @@ class SpotifyApi implements SpotifyApiInterface
             }
 
             $request->setRequestBody(
-                $requestBodyFactory->create($requestBodyFactoryParameters)
+                $requestBodyFactory->create(...$requestBodyFactoryParameters)
             );
         }
 

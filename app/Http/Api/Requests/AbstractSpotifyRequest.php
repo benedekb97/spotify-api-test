@@ -105,7 +105,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         $options = [];
 
         if (isset($this->requestBody)) {
-            $options['form_params'] = $this->requestBody->toArray();
+            $options['body'] = json_encode($this->requestBody->toArray());
         }
 
         $options['headers'] = $this->headers;
