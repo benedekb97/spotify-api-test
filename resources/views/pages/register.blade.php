@@ -1,23 +1,40 @@
-<form action="{{ route('auth.register') }}" method="post">
-    {{ csrf_field() }}
+@extends('layouts.landing')
 
-    <label for="email">Email address</label>
-    <input name="email" required type="email" placeholder="Email address" id="email" value="{{ old('email') }}" />
+@section('title', 'Register')
 
-    <br />
-    <br />
-    <label for="password">Password</label>
-    <input name="password" required type="password" placeholder="Password" id="password" />
+@section('content')
+    <div class="grid-x">
+        <div class="cell small-10 small-offset-1 medium-6 medium-offset-3 large-4 large-offset-4">
+            <div class="card" style="margin-top:20px;">
+                <div class="card-section">
+                    <div class="grid-x grid-padding-x">
+                        <div class="small-12 cell">
+                            <h4 class="align-center-middle">Register</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-section">
+                    <form action="{{ route('auth.register') }}" method="post">
+                        {{ csrf_field() }}
+                        <div class="input-group">
+                            <input value="{{ old('email') }}" name="email" class="input-group-field" required type="email" placeholder="Email address" id="email" />
+                        </div>
+                        <div class="input-group">
+                            <input name="password" class="input-group-field" required type="password" placeholder="Password" id="password" />
+                        </div>
+                        <div class="input-group">
+                            <input name="password_confirmation" required type="password" placeholder="Password confirmation" id="password_confirmation" />
+                        </div>
+                        <div class="input-group">
+                            <input type="text" name="name" required placeholder="Full name" id="name" value="{{ old('name') }}" />
+                        </div>
 
-    <br />
-    <br />
-    <label for="password_confirmation">Password confirmation</label>
-    <input name="password_confirmation" required type="password" placeholder="Password confirmation" id="password_confirmation" />
-
-    <br />
-    <br />
-    <label for="name">Full name</label>
-    <input name="name" required placeholder="Full name" id="name" value="{{ old('name') }}" />
-
-    <input type="submit" value="Register" />
-</form>
+                        <div class="input-group">
+                            <input type="submit" class="button" value="Register" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
