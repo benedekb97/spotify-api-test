@@ -36,16 +36,7 @@ class DashboardController extends Controller
         /** @var Collection $recentlyPlayed */
         $recentlyPlayed = $this->spotifyApi->execute(new GetRecentlyPlayedTracksRequest())->getBody()->getItems();
 
-        $tracks = $recentlyPlayed->slice(0, 1);
-
-        $seedArtists = array_merge(
-            array_values($tracks->map(
-                static function (RecentlyPlayed $track) {
-                    return $track->getTrack()->getArtists()->first()->getId();
-                }
-            )->toArray()),
-            [$currentlyPlaying->getBody()->getItem()->getArtists()->first()->getId()]
-        );
+        $tracks = $recentlyPlayed->slice(0, 4);
 
         $seedTracks = array_merge(
             array_values($tracks->map(
@@ -56,7 +47,7 @@ class DashboardController extends Controller
             [$currentlyPlaying->getBody()->getItem()->getId()]
         );
 
-        $recommendationsRequest = new GetRecommendationsRequest($seedArtists, null, $seedTracks);
+        $recommendationsRequest = new GetRecommendationsRequest(null, null, $seedTracks);
 
         $recommendations = $this->spotifyApi->execute($recommendationsRequest)->getBody();
 
