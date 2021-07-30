@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="hu">
     <head>
-        <title>Spotify Playground</title>
+        <title>@yield('title', 'Spotify Playground')</title>
         <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
     </head>
     <body>
-        <div class="flex-container">
-
+        <div class="grid-container fluid">
+            @yield('content')
         </div>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ asset('js/app.js') }}"></script>
+        <script>$(document).foundation();</script>
     </body>
 </html>

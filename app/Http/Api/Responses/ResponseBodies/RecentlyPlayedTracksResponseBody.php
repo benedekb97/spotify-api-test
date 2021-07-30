@@ -74,4 +74,15 @@ class RecentlyPlayedTracksResponseBody implements ResponseBodyInterface
     {
         $this->href = $href;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'items' => $this->items->map(static fn (RecentlyPlayed $rp) => $rp->toArray())->toArray(),
+            'next' => $this->next,
+            'cursors' => $this->cursors,
+            'limit' => $this->limit,
+            'href' => $this->href,
+        ];
+    }
 }

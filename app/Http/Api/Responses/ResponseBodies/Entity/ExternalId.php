@@ -41,4 +41,13 @@ class ExternalId
     {
         $this->upc = $upc;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'ean' => $this->ean,
+            'isrc' => $this->isrc,
+            'upc' => $this->upc,
+        ];
+    }
 }

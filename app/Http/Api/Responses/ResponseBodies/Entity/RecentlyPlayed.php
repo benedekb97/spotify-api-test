@@ -43,4 +43,13 @@ class RecentlyPlayed
     {
         $this->context = $context;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'track' => isset($this->track) ? $this->track->toArray() : null,
+            'playedAt' => isset($this->playedAt) ? $this->playedAt->format('Y-m-d H:i:s') : null,
+            'context' => $this->context,
+        ];
+    }
 }

@@ -98,4 +98,17 @@ class TopTracksResponseBody implements ResponseBodyInterface
     {
         $this->next = $next;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'items' => $this->items->map(static fn (Track $t) => $t->toArray())->toArray(),
+            'total' => $this->total,
+            'limit' => $this->limit,
+            'offset' => $this->offset,
+            'previous' => $this->previous,
+            'href' => $this->href,
+            'next' => $this->next,
+        ];
+    }
 }

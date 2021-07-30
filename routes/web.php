@@ -39,8 +39,12 @@ Route::group(
 
                 Route::get('queue/add/{uri}', [UserController::class, 'addToQueue'])->name('queue.add');
 
+                Route::get('recommended', [UserController::class, 'recommended'])->name('recommended');
+
                 Route::get('next', [PlayerController::class, 'next'])->name('next');
                 Route::get('previous', [PlayerController::class, 'previous'])->name('previous');
+
+                Route::get('currently-playing', [PlayerController::class, 'currentlyPlaying'])->name('currently-playing');
             }
         );
     }

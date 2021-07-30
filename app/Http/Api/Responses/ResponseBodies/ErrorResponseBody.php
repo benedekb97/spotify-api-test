@@ -19,4 +19,11 @@ class ErrorResponseBody implements ResponseBodyInterface
     {
         return $this->data;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'data' => $this->data
+        ];
+    }
 }

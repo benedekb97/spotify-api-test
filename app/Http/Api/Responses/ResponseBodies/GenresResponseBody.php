@@ -17,4 +17,11 @@ class GenresResponseBody implements ResponseBodyInterface
     {
         $this->genres = $genres;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'genres' => $this->genres
+        ];
+    }
 }

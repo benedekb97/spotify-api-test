@@ -255,4 +255,30 @@ class Album
     {
         $this->uri = $uri;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'albumType' => $this->albumType,
+            'artists' => $this->artists->map(static fn (Artist $artist) => $artist->toArray())->toArray(),
+            'availableMarkets' => $this->availableMarkets,
+            'copyrights' => $this->copyrights->map(fn (Copyright $copyright) => $copyright->toArray()),
+            'externalId' => isset($this->externalId) ? $this->externalId->toArray() : null,
+            'externalUrl' => isset($this->externalUrl) ? $this->externalUrl->toArray() : null,
+            'genres' => $this->genres,
+            'href' => $this->href,
+            'id' => $this->id,
+            'images' => $this->images->map(static fn (Image $image) => $image->toArray())->toArray(),
+            'label' => $this->label,
+            'name' => $this->name,
+            'popularity' => $this->popularity,
+            'releaseDate' => $this->releaseDate,
+            'releaseDatePrecision' => $this->releaseDatePrecision,
+            'albumRestriction' => isset($this->albumRestriction) ? $this->albumRestriction->toArray() : null,
+            'totalTracks' => $this->totalTracks,
+            'tracks' => $this->tracks->map(static fn (SimplifiedTrack $t) => $t->toArray())->toArray(),
+            'type' => $this->type,
+            'uri' => $this->uri,
+        ];
+    }
 }

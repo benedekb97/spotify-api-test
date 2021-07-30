@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Http\Api\Requests\CurrentlyPlayingRequest;
 use App\Http\Api\Requests\NextTrackRequest;
 use App\Http\Api\Requests\PreviousTrackRequest;
 use App\Http\Api\SpotifyApi;
@@ -34,5 +35,16 @@ class PlayerController extends Controller
         $this->spotifyApi->execute(new PreviousTrackRequest());
 
         return new JsonResponse(['success' => true]);
+    }
+
+    public function currentlyPlaying(): Response
+    {
+        $currentlyPlaying = $this->spotifyApi->execute(new CurrentlyPlayingRequest());
+
+        return new JsonResponse(
+            $currentlyPlaying->getBody() !== null
+                ? $currentlyPlaying->getBody()->toArray()
+                : null
+        );
     }
 }

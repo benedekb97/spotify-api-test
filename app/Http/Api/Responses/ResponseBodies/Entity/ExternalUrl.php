@@ -17,4 +17,11 @@ class ExternalUrl
     {
         $this->spotify = $spotify;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'spotify' => $this->spotify
+        ];
+    }
 }

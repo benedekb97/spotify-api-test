@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Http\Api\Requests\AbstractSpotifyRequest;
 use App\Http\Api\Requests\AddItemToQueueRequest;
+use App\Http\Api\Requests\CurrentlyPlayingRequest;
+use App\Http\Api\Requests\GetRecentlyPlayedTracksRequest;
+use App\Http\Api\Requests\GetRecommendationsRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
+use App\Http\Api\Responses\ResponseBodies\Entity\RecentlyPlayed;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
@@ -16,6 +21,7 @@ use App\Util\CacheTags;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Cache\Repository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -108,6 +114,31 @@ class UserController extends Controller
                 'type' => array_search($type, self::TYPE_MAP),
             ]
         );
+    }
+
+    public function recommended(): Response
+    {
+        $currentlyPlaying = $this->spotifyApi->execute(new CurrentlyPlayingRequest());
+
+        /** @var Collection $recentlyPlayed */
+        $recentlyPlayed = $this->spotifyApi->execute(new GetRecentlyPlayedTracksRequest())->getBody()->getItems();
+
+        $tracks = $recentlyPlayed->slice(0, 4);
+
+        $seedTracks = array_merge(
+            array_values($tracks->map(
+                static function (RecentlyPlayed $track) {
+                    return $track->getTrack()->getId();
+                }
+            )->toArray()),
+            $currentlyPlaying->hasBody() ? [$currentlyPlaying->getBody()->getItem()->getId()] : []
+        );
+
+        $recommendationsRequest = new GetRecommendationsRequest(null, null, $seedTracks);
+
+        $recommendations = $this->spotifyApi->execute($recommendationsRequest)->getBody();
+
+        return new JsonResponse($recommendations->toArray());
     }
 
     public function addToQueue(string $uri): Response

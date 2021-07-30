@@ -254,4 +254,30 @@ class Track
     {
         $this->uri = $uri;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'album' => isset($this->album) ? $this->album->toArray() : null,
+            'artists' => $this->artists->map(fn(Artist $artist) => $artist->toArray())->toArray(),
+            'availableMarkets' => $this->availableMarkets,
+            'discNumber' => $this->discNumber,
+            'durationMs' => $this->durationMs,
+            'explicit' => $this->explicit,
+            'externalId' => isset($this->externalId) ? $this->externalId->toArray() : null,
+            'externalUrl' => isset($this->externalUrl) ? $this->externalUrl->toArray() : null,
+            'href' => $this->href,
+            'id' => $this->id,
+            'isLocal' => $this->isLocal,
+            'isPlayable' => $this->isPlayable,
+            'linkedFrom' => $this->linkedFrom,
+            'name' => $this->name,
+            'popularity' => $this->popularity,
+            'previewUrl' => $this->previewUrl,
+            'restrictions' => isset($this->restrictions) ? $this->restrictions->toArray() : null,
+            'trackNumber' => $this->trackNumber,
+            'type' => $this->type,
+            'uri' => $this->uri,
+        ];
+    }
 }

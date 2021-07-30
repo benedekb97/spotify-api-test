@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -50,5 +51,13 @@ class User extends Authenticatable
     public function scopes(): BelongsToMany
     {
         return $this->belongsToMany(Scope::class, 'user_scope', 'user_id', 'scope_id');
+    }
+
+    public function isLoggedInWithSpotify(): bool
+    {
+        return isset($this->spotify_access_token)
+            && isset($this->spotify_refresh_token)
+            && isset($this->spotify_access_token_expiry)
+            && (new DateTime()) < (new DateTime($this->spotify_access_token_expiry));
     }
 }

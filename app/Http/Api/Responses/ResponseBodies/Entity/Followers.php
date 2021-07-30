@@ -29,4 +29,12 @@ class Followers
     {
         $this->total = $total;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'href' => $this->href,
+            'total' => $this->total
+        ];
+    }
 }

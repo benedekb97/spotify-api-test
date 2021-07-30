@@ -38,4 +38,12 @@ class RecommendationsResponseBody implements ResponseBodyInterface
     {
         $this->seeds = $seeds;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'tracks' => $this->tracks->map(static fn (Track $t) => $t->toArray())->toArray(),
+            'seeds' => $this->seeds,
+        ];
+    }
 }

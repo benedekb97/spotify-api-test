@@ -12,7 +12,7 @@ class CurrentlyPlayingResponseBody implements ResponseBodyInterface
 
     private ?string $context = null;
 
-    private ?int $progress_ms = null;
+    private ?int $progressMs = null;
 
     private ?Track $item;
 
@@ -44,12 +44,12 @@ class CurrentlyPlayingResponseBody implements ResponseBodyInterface
 
     public function getProgressMs(): ?int
     {
-        return $this->progress_ms;
+        return $this->progressMs;
     }
 
-    public function setProgressMs(?int $progress_ms): void
+    public function setProgressMs(?int $progressMs): void
     {
-        $this->progress_ms = $progress_ms;
+        $this->progressMs = $progressMs;
     }
 
     public function getItem(): ?Track
@@ -90,5 +90,18 @@ class CurrentlyPlayingResponseBody implements ResponseBodyInterface
     public function setIsPlaying(?bool $isPlaying): void
     {
         $this->isPlaying = $isPlaying;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'timestamp' => $this->timestamp,
+            'context' => $this->context,
+            'progressMs' => $this->progressMs,
+            'item' => isset($this->item) ? $this->item->toArray() : null,
+            'currentlyPlayingType' => $this->currentlyPlayingType,
+            'actions' => $this->actions,
+            'isPlaying' => $this->isPlaying
+        ];
     }
 }

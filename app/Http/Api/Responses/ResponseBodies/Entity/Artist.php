@@ -132,4 +132,20 @@ class Artist
     {
         $this->uri = $uri;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'externalUrl' => isset($this->externalUrl) ? $this->externalUrl->toArray() : null,
+            'followers' => isset($this->followers) ? $this->followers->toArray() : null,
+            'genres' => $this->genres,
+            'href' => $this->href,
+            'id' => $this->id,
+            'images' => $this->images->map(static fn (Image $i) => $i->toArray())->toArray(),
+            'name' => $this->name,
+            'popularity' => $this->popularity,
+            'type' => $this->type,
+            'uri' => $this->uri,
+        ];
+    }
 }

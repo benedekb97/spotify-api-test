@@ -41,4 +41,13 @@ class Image
     {
         $this->url = $url;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'height' => $this->height,
+            'width' => $this->width,
+            'url' => $this->url,
+        ];
+    }
 }

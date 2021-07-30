@@ -98,4 +98,17 @@ class TopArtistsResponseBody implements ResponseBodyInterface
     {
         $this->next = $next;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'items' => $this->items->map(static fn (Artist $a) => $a->toArray())->toArray(),
+            'total' => $this->total,
+            'limit' => $this->limit,
+            'offset' => $this->offset,
+            'previous' => $this->previous,
+            'href' => $this->href,
+            'next' => $this->next,
+        ];
+    }
 }

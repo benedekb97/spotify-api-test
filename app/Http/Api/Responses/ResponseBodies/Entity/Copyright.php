@@ -6,5 +6,8 @@ namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
 class Copyright
 {
-
+    public function toArray(): array
+    {
+        return [];
+    }
 }

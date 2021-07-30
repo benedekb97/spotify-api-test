@@ -6,5 +6,5 @@ namespace App\Http\Api\Responses\ResponseBodies;
 
 interface ResponseBodyInterface
 {
-
+    public function toArray(): array;
 }

@@ -6,5 +6,8 @@ namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
 class AlbumRestriction
 {
-
+    public function toArray(): array
+    {
+        return [];
+    }
 }
