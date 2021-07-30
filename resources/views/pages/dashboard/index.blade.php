@@ -17,6 +17,44 @@
         )->toArray()) }}
         - {{ $currentlyPlaying->getItem()->getName() }}
     @endisset
+<br><br>
+    @isset($recommendations)
+<b>Recommendations:</b><br>
+        <table style="border:1px solid rgba(0, 0, 0, 0.2);">
+            <tr>
+                <th>Image</th>
+                <th>Artist</th>
+                <th>Title</th>
+                <th>Operations</th>
+            </tr>
+            @foreach($recommendations->getTracks() as $track)
+                <tr>
+                    <td>
+                        <img src="{{ $track->getAlbum()->getImages()->first()->getUrl() }}"
+                             style="width:50px; height:50px;"
+                             alt="{{ $track->getAlbum()->getName() }}" />
+                    </td>
+                    <td>{{ implode(', ', $track->getArtists()->map(fn(\App\Http\Api\Responses\ResponseBodies\Entity\Artist $artist) => $artist->getName())->toArray()) }}</td>
+                    <td>{{ $track->getName() }}</td>
+                    <td>
+                        <a href="#" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $track->getUri()]) }}')">Add to queue</a>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+    @endisset
 @else
     <a href="{{ route('spotify.redirect') }}">Log in with spotify</a>
 @endif
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function addToQueue(url)
+    {
+        $.ajax({
+            url: url
+        });
+    }
+</script>

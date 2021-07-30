@@ -25,12 +25,12 @@ class TopTracksResponseBodyFactory implements ResponseBodyFactoryInterface
 
         $object = new TopTracksResponseBody();
 
-        $object->setHref($data['href']);
-        $object->setLimit($data['limit']);
-        $object->setNext($data['next']);
-        $object->setPrevious($data['previous']);
-        $object->setOffset($data['offset']);
-        $object->setTotal($data['total']);
+        $object->setHref($data['href'] ?? null);
+        $object->setLimit($data['limit'] ?? null);
+        $object->setNext($data['next'] ?? null);
+        $object->setPrevious($data['previous'] ?? null);
+        $object->setOffset($data['offset'] ?? null);
+        $object->setTotal($data['total'] ?? null);
 
         foreach ($data['items'] as $artist) {
             $object->addItem(
