@@ -133,6 +133,8 @@ window.updateRecommendations = function () {
 
 $(document).ready(
     function() {
+        // TODO: only do this for specific routes kek, now it refreshes every 20 seconds even if you aren't logged in. You get a 401 obv, but still, shite
+
         updateRecommendations();
         updateCurrentlyPlaying();
 
