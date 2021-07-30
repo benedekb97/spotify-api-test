@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
-use App\Http\Api\Requests\SpotifyRequestInterface;
+use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\SpotifyResponseInterface;
@@ -110,22 +110,23 @@ class UserController extends Controller
         );
     }
 
+    public function addToQueue(string $uri): Response
+    {
+        $this->spotifyApi->execute(new AddItemToQueueRequest($uri));
+
+        return new JsonResponse(
+            [
+                'success' => true
+            ]
+        );
+    }
+
     private function getProfileUrl(): string
     {
         return sprintf(
             '%s/%s',
             trim(config('spotify.apiBaseUrl'), '/'),
             self::ENDPOINT_USER_PROFILE
-        );
-    }
-
-    private function getTopUrl(string $type): string
-    {
-        return sprintf(
-            '%s/%s/%s?limit=50',
-            trim(config('spotify.apiBaseUrl'), '/'),
-            self::ENDPOINT_TOP_ARTISTS_AND_TRACKS,
-            $type
         );
     }
 

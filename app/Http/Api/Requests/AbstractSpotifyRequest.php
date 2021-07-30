@@ -179,9 +179,12 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
 
         $this->response = new SpotifyResponse();
 
-        $this->response->setBody(
-            $this->getResponseBodyFactory()->create($response)
-        );
+        if ($this->hasResponseBody()) {
+            $this->response->setBody(
+                $this->getResponseBodyFactory()->create($response)
+            );
+        }
+
         $this->response->setStatusCode($response->getStatusCode());
         $this->response->setHeaders($response->getheaders());
     }

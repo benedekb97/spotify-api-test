@@ -35,6 +35,8 @@ Route::group(
             static function () {
                 Route::get('profile', [UserController::class, 'profile'])->name('profile');
                 Route::get('top/{type}', [UserController::class, 'top'])->name('top');
+
+                Route::get('queue/add/{uri}', [UserController::class, 'addToQueue'])->name('queue.add');
             }
         );
     }
