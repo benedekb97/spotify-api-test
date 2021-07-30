@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Http\Api\Requests\SpotifyRequestInterface;
+use App\Http\Api\Requests\TopArtistsRequest;
+use App\Http\Api\Responses\SpotifyResponseInterface;
+use App\Http\Api\SpotifyApi;
+use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Util\CacheTags;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Cache\Repository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use Psy\Util\Json;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -32,12 +35,16 @@ class UserController extends Controller
 
     private Repository $cache;
 
+    private SpotifyApiInterface $spotifyApi;
+
     public function __construct(
         Client $client,
-        Repository $cache
+        Repository $cache,
+        SpotifyApi $spotifyApi
     ) {
         $this->client = $client;
         $this->cache = $cache;
+        $this->spotifyApi = $spotifyApi;
     }
 
     public function profile(): Response
@@ -72,33 +79,26 @@ class UserController extends Controller
             );
         }
 
-        $response =  $this->cache->tags(
-            [
-                CacheTags::TRACKS,
-                CacheTags::ME . Auth::id()
-            ]
-        )->remember(
-            sprintf('me.%s.top.%s', Auth::id(), $type),
-            180,
-            function () use ($type) {
-                try {
-                    $response = $this->client->get(
-                        $this->getTopUrl($type),
-                        [
-                            'headers' => $this->getHeaders(),
-                        ]
-                    );
-                } catch (GuzzleException $exception) {
-                    return new JsonResponse(
-                        [
-                            'error' => $exception->getMessage()
-                        ]
-                    );
-                }
+//        $response =  $this->cache->tags(
+//            [
+//                CacheTags::TRACKS,
+//                CacheTags::ME . Auth::id()
+//            ]
+//        )->remember(
+//            sprintf('me.%s.top.%s', Auth::id(), $type),
+//            180,
+//            function () use ($type) {
+                if ($type === self::TYPE_ARTISTS) {
+                    $request = new TopArtistsRequest();
 
-                return json_decode($response->getBody()->getContents(), true);
-            }
-        );
+                    $response = $this->spotifyApi->execute($request);
+
+                    dd($response);
+                } else {
+                    // TODO
+                }
+//            }
+//        );
 
         return view(
             sprintf('pages.spotify.top.%s', $type),

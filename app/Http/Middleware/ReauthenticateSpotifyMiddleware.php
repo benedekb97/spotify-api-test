@@ -34,7 +34,6 @@ class ReauthenticateSpotifyMiddleware
                 isset($user->spotify_refresh_token)
                 && (new DateTime()) >= (new DateTime($user->spotify_access_token_expiry))
             ) {
-
                 $this->reauthenticate($user->spotify_refresh_token);
             }
         }
@@ -44,20 +43,20 @@ class ReauthenticateSpotifyMiddleware
 
     private function reauthenticate(string $refreshToken): void
     {
-        $refreshedAccessTokenResposne = $this->spotifyAuthenticationApi->refreshAccessToken($refreshToken);
+        $refreshedAccessTokenResponse = $this->spotifyAuthenticationApi->refreshAccessToken($refreshToken);
 
         $tokenExpiry = (new DateTime())
-            ->add(new DateInterval(sprintf('PT1%sS', $refreshedAccessTokenResposne->getExpiresIn())));
+            ->add(new DateInterval(sprintf('PT1%sS', $refreshedAccessTokenResponse->getExpiresIn())));
 
         /** @var User $user */
         $user = Auth::user();
 
-        $user->spotify_access_token = $refreshedAccessTokenResposne->getAccessToken();
+        $user->spotify_access_token = $refreshedAccessTokenResponse->getAccessToken();
         $user->spotify_access_token_expiry = $tokenExpiry->format('Y-m-d H:i:s');
 
         $user->save();
 
-        foreach ($refreshedAccessTokenResposne->getScope()->getScope() as $scopeName) {
+        foreach ($refreshedAccessTokenResponse->getScope()->getScope() as $scopeName) {
             $scope = Scope::all()->where('name', $scopeName)->first();
 
             if ($scope === null) {
@@ -72,7 +71,7 @@ class ReauthenticateSpotifyMiddleware
         }
 
         foreach ($user->scopes as $userScope) {
-            if (!$refreshedAccessTokenResposne->getScope()->getScope()->contains($userScope->name)) {
+            if (!$refreshedAccessTokenResponse->getScope()->getScope()->contains($userScope->name)) {
                 $user->scopes()->detach($userScope);
             }
         }

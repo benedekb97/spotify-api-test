@@ -31,8 +31,12 @@ Route::group(
         Route::get('redirect', [SpotifyAuthenticationController::class, 'redirect'])->name('redirect');
         Route::get('callback', [SpotifyAuthenticationController::class, 'callback'])->name('callback');
 
-        Route::get('profile', [UserController::class, 'profile'])->name('profile');
-        Route::get('top/{type}', [UserController::class, 'top'])->name('top');
+        Route::middleware(['auth', 'reauthenticate'])->group(
+            static function () {
+                Route::get('profile', [UserController::class, 'profile'])->name('profile');
+                Route::get('top/{type}', [UserController::class, 'top'])->name('top');
+            }
+        );
     }
 );
 
