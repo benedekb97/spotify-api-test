@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Spotify\PlayerController;
 use App\Http\Controllers\Spotify\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -37,6 +38,9 @@ Route::group(
                 Route::get('top/{type}', [UserController::class, 'top'])->name('top');
 
                 Route::get('queue/add/{uri}', [UserController::class, 'addToQueue'])->name('queue.add');
+
+                Route::get('next', [PlayerController::class, 'next'])->name('next');
+                Route::get('previous', [PlayerController::class, 'previous'])->name('previous');
             }
         );
     }
