@@ -7,6 +7,7 @@ namespace App\Http\Api\Requests;
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Api\Factories\ResponseBodies\TopArtistsResponseBodyFactory;
 use App\Http\Api\Responses\SpotifyResponseInterface;
+use GuzzleHttp\Psr7\Response;
 
 class TopArtistsRequest extends AbstractSpotifyRequest implements SpotifyRequestInterface
 {
@@ -32,6 +33,11 @@ class TopArtistsRequest extends AbstractSpotifyRequest implements SpotifyRequest
     protected function getExpectedStatusCode(): int
     {
         return SpotifyResponseInterface::STATUS_CODE_OK;
+    }
+
+    protected function validateStatusCode(Response $response): bool
+    {
+        return true;
     }
 
     public function getRequestBodyFactoryClass(): ?string

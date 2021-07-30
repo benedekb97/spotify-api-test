@@ -17,7 +17,9 @@ interface SpotifyResponseInterface
 
     public function hasBody(): bool;
 
-    public function getBody(): ResponseBodyInterface;
+    public function setBody(?ResponseBodyInterface $responseBody): void;
+
+    public function getBody(): ?ResponseBodyInterface;
 
     public function setHeaders(?array $headers): void;
 

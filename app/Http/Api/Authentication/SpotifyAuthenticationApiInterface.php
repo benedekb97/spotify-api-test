@@ -42,13 +42,13 @@ interface SpotifyAuthenticationApiInterface
     public const SCOPE_ENABLED_MAP = [
         self::SCOPE_UGC_IMAGE_UPLOAD => false,
 
-        self::SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED => false,
+        self::SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED => true,
         self::SCOPE_LISTENING_HISTORY_TOP_PLAYED => true,
-        self::SCOPE_LISTENING_HISTORY_PLAYBACK_POSITION => false,
+        self::SCOPE_LISTENING_HISTORY_PLAYBACK_POSITION => true,
 
-        self::SCOPE_SPOTIFY_CONNECT_PLAYBACK_STATE => false,
-        self::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE => false,
-        self::SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING => false,
+        self::SCOPE_SPOTIFY_CONNECT_PLAYBACK_STATE => true,
+        self::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE => true,
+        self::SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING => true,
 
         self::SCOPE_PLAYBACK_REMOTE_CONTROL => false,
         self::SCOPE_PLAYBACK_STREAMING => false,

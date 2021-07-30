@@ -9,5 +9,5 @@ use GuzzleHttp\Psr7\Response;
 
 interface ResponseBodyFactoryInterface
 {
-    public function create(Response $response): ResponseBodyInterface;
+    public function create(Response $response): ?ResponseBodyInterface;
 }

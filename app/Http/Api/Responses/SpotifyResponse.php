@@ -19,12 +19,12 @@ class SpotifyResponse implements SpotifyResponseInterface
         return isset($this->body);
     }
 
-    public function setBody(ResponseBodyInterface $responseBody): void
+    public function setBody(?ResponseBodyInterface $responseBody): void
     {
         $this->body = $responseBody;
     }
 
-    public function getBody(): ResponseBodyInterface
+    public function getBody(): ?ResponseBodyInterface
     {
         return $this->body;
     }

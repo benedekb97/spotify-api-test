@@ -5,19 +5,17 @@ declare(strict_types=1);
 namespace App\Http\Api\Requests;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
-use App\Http\Api\Factories\ResponseBodies\TopTracksResponseBodyFactory;
+use App\Http\Api\Factories\ResponseBodies\CurrentlyPlayingResponseBodyFactory;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
-class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestInterface
+class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyRequestInterface
 {
-    private const ENDPOINT = 'v1/me/top/tracks';
+    private const ENDPOINT = 'v1/me/player/currently-playing';
 
     public function getScopes(): array
     {
-        return [
-            SpotifyAuthenticationApiInterface::SCOPE_LISTENING_HISTORY_TOP_PLAYED
-        ];
+        return [SpotifyAuthenticationApiInterface::SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING];
     }
 
     protected function getEndpoint(): string
@@ -30,14 +28,20 @@ class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestI
         return self::METHOD_GET;
     }
 
-    protected function getExpectedStatusCode(): int
+    protected function getExpectedStatusCode(): ?int
     {
-        return SpotifyResponseInterface::STATUS_CODE_OK;
+        return null;
     }
 
     protected function validateStatusCode(Response $response): bool
     {
-        return true;
+        return in_array(
+            $response->getStatusCode(),
+            [
+                SpotifyResponseInterface::STATUS_CODE_OK,
+                SpotifyResponseInterface::STATUS_CODE_NO_CONTENT
+            ]
+        );
     }
 
     public function getRequestBodyFactoryClass(): ?string
@@ -52,7 +56,7 @@ class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestI
 
     public function getResponseBodyFactoryClass(): ?string
     {
-        return TopTracksResponseBodyFactory::class;
+        return CurrentlyPlayingResponseBodyFactory::class;
     }
 
     public function hasResponseBody(): bool

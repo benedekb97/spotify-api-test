@@ -40,7 +40,9 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
 
     abstract protected function getMethod(): string;
 
-    abstract protected function getExpectedStatusCode(): int;
+    abstract protected function getExpectedStatusCode(): ?int;
+
+    abstract protected function validateStatusCode(Response $response): bool;
 
     private function getAuthorizationHeader(): array
     {
@@ -149,7 +151,20 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
             return;
         }
 
-        if (($statusCode = $response->getStatusCode()) !== $this->getExpectedStatusCode()) {
+        if ($this->getExpectedStatusCode() === null && !$this->validateStatusCode($response)) {
+            $responseContent = json_decode($response->getBody()->getContents(), true);
+
+            throw new LogicException(
+                sprintf(
+                    'Could not validate status code for response. Status code: %s Error: %s',
+                    $response->getStatusCode(),
+                    json_encode($responseContent)
+                )
+            );
+        } elseif (
+            $this->getExpectedStatusCode() !== null
+            && ($statusCode = $response->getStatusCode()) !== $this->getExpectedStatusCode()
+        ) {
             $response = json_decode($response->getBody()->getContents(), true);
 
             throw new LogicException(
@@ -157,7 +172,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
                     'Expecting status code %s, received %s. Error: %s',
                     $this->getExpectedStatusCode(),
                     $statusCode,
-                    $response['message']
+                    json_encode($response)
                 )
             );
         }
