@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Spotify;
 
 use App\Http\Api\Requests\SpotifyRequestInterface;
 use App\Http\Api\Requests\TopArtistsRequest;
+use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
@@ -92,11 +93,13 @@ class UserController extends Controller
                     $request = new TopArtistsRequest();
 
                     $response = $this->spotifyApi->execute($request);
-
-                    dd($response);
                 } else {
-                    // TODO
+                    $request = new TopTracksRequest();
+
+                    $response = $this->spotifyApi->execute($request);
                 }
+
+                dd($response);
 //            }
 //        );
 

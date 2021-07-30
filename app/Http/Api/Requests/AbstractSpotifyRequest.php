@@ -34,7 +34,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         $this->headers = $this->getAuthorizationHeader();
     }
 
-    abstract protected function getScopes(): array;
+    abstract public function getScopes(): array;
 
     abstract protected function getEndpoint(): string;
 

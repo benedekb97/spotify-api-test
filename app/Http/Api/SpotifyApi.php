@@ -7,10 +7,13 @@ namespace App\Http\Api;
 use App\Http\Api\Factories\ResponseBodies\ResponseBodyFactoryInterface;
 use App\Http\Api\Requests\SpotifyRequestInterface;
 use App\Http\Api\Responses\SpotifyResponseInterface;
+use App\Http\Api\Validators\UserRequestScopeValidator;
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Log\Logger;
+use Illuminate\Support\Facades\Auth;
 use LogicException;
 use Psr\Log\LogLevel;
 
@@ -22,14 +25,18 @@ class SpotifyApi implements SpotifyApiInterface
 
     private Logger $logger;
 
+    private UserRequestScopeValidator $requestScopeValidator;
+
     public function __construct(
         Client $client,
         Container $container,
-        Logger $logger
+        Logger $logger,
+        UserRequestScopeValidator $requestScopeValidator
     ) {
         $this->client = $client;
         $this->container = $container;
         $this->logger = $logger;
+        $this->requestScopeValidator = $requestScopeValidator;
     }
 
     public function execute(
@@ -37,6 +44,18 @@ class SpotifyApi implements SpotifyApiInterface
         ...$requestBodyFactoryParameters
     ): ?SpotifyResponseInterface
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if (!$this->requestScopeValidator->validate($user, $request)) {
+            $this->logger->log(
+                LogLevel::ERROR,
+                'User does not have the necessary scopes to complete this request!'
+            );
+
+            return null;
+        }
+
         if ($request->requiresRequestBody()) {
             try {
                 $requestBodyFactory = $this->container->make($request->getRequestBodyFactoryClass());

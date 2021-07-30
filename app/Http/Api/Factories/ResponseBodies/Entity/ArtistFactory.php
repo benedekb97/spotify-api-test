@@ -28,28 +28,34 @@ class ArtistFactory
     {
         $artist = new Artist();
 
-        $artist->setExternalUrl(
-            $this->externalUrlFactory->create($data['external_urls'])
-        );
-
-        $artist->setFollowers(
-            $this->followersFactory->create($data['followers'])
-        );
-
-        $artist->setGenres($data['genres'] ?? []);
-        $artist->setHref($data['href']);
-        $artist->setId($data['id']);
-
-        foreach ($data['images'] as $image) {
-            $artist->addImage(
-                $this->imageFactory->create($image)
+        if (array_key_exists('external_urls', $data)) {
+            $artist->setExternalUrl(
+                $this->externalUrlFactory->create($data['external_urls'])
             );
         }
 
-        $artist->setName($data['name']);
-        $artist->setPopularity($data['popularity']);
-        $artist->setType($data['type']);
-        $artist->setUri($data['uri']);
+        if (array_key_exists('followers', $data)) {
+            $artist->setFollowers(
+                $this->followersFactory->create($data['followers'])
+            );
+        }
+
+        $artist->setGenres($data['genres'] ?? null);
+        $artist->setHref($data['href'] ?? null);
+        $artist->setId($data['id'] ?? null);
+
+        if (array_key_exists('images', $data)) {
+            foreach ($data['images'] as $image) {
+                $artist->addImage(
+                    $this->imageFactory->create($image)
+                );
+            }
+        }
+
+        $artist->setName($data['name'] ?? null);
+        $artist->setPopularity($data['popularity'] ?? null);
+        $artist->setType($data['type'] ?? null);
+        $artist->setUri($data['uri'] ?? null);
 
         return $artist;
     }
