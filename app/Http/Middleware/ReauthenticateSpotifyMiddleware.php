@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\Spotify\AuthenticationController;
+use App\Http\Api\Authentication\SpotifyAuthenticationApi;
+use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
+use App\Models\Scope;
 use App\Models\User;
 use Closure;
 use DateInterval;
 use DateTime;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use LogicException;
 
 class ReauthenticateSpotifyMiddleware
 {
-    private Client $client;
+    private SpotifyAuthenticationApiInterface $spotifyAuthenticationApi;
 
     public function __construct(
-        Client $client
+        SpotifyAuthenticationApi $spotifyAuthenticationApi
     ) {
-        $this->client = $client;
+        $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
     }
 
     public function handle($request, Closure $next)
@@ -44,49 +44,37 @@ class ReauthenticateSpotifyMiddleware
 
     private function reauthenticate(string $refreshToken): void
     {
-        $url = sprintf(
-            '%s/%s',
-            trim(config('spotify.baseUrl'), '/'),
-            AuthenticationController::ENDPOINT_ACCESS_TOKEN
-        );
+        $refreshedAccessTokenResposne = $this->spotifyAuthenticationApi->refreshAccessToken($refreshToken);
 
-        try {
-            $response = $this->client->post(
-                $url,
-                [
-                    'form_params' => [
-                        'grant_type' => 'refresh_token',
-                        'refresh_token' => $refreshToken,
-                        'client_id' => config('spotify.client.id'),
-                        'client_secret' => config('spotify.client.secret'),
-                    ]
-                ]
-            );
-        } catch (GuzzleException $exception) {
-            Log::error(
-                sprintf(
-                    'Failed to reauthenticate on spotify using refresh token. Error: %s',
-                    $exception->getMessage()
-                )
-            );
-
-            return;
-        }
-
-        $responseContent = $response->getBody()->getContents();
-
-        $response = json_decode($responseContent, true);
-
-        $expiresIn = $response['expires_in'];
-
-        $tokenExpiry = (new DateTime())->add(new DateInterval(sprintf('PT1%sS', $expiresIn)));
+        $tokenExpiry = (new DateTime())
+            ->add(new DateInterval(sprintf('PT1%sS', $refreshedAccessTokenResposne->getExpiresIn())));
 
         /** @var User $user */
         $user = Auth::user();
 
-        $user->spotify_access_token = $response['access_token'];
+        $user->spotify_access_token = $refreshedAccessTokenResposne->getAccessToken();
         $user->spotify_access_token_expiry = $tokenExpiry->format('Y-m-d H:i:s');
 
         $user->save();
+
+        foreach ($refreshedAccessTokenResposne->getScope()->getScope() as $scopeName) {
+            $scope = Scope::all()->where('name', $scopeName)->first();
+
+            if ($scope === null) {
+                throw new LogicException(
+                    sprintf('Scope could not be found with name %s.', $scopeName)
+                );
+            }
+
+            if (!$user->scopes->contains($scope)) {
+                $user->scopes()->attach($scope);
+            }
+        }
+
+        foreach ($user->scopes as $userScope) {
+            if (!$refreshedAccessTokenResposne->getScope()->getScope()->contains($userScope->name)) {
+                $user->scopes()->detach($userScope);
+            }
+        }
     }
 }

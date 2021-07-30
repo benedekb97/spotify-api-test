@@ -4,101 +4,51 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Http\Api\Authentication\Factory\AccessCodeResponseFactory;
+use App\Http\Api\Authentication\SpotifyAuthenticationApi;
+use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\AccessCodeRequest;
+use App\Models\Scope;
 use App\Models\User;
 use DateInterval;
 use DateTime;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
+use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
 {
-    private const SCOPE_UGC_IMAGE_UPLOAD = 'ugc-image-upload';
-
-    private const SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED = 'user-read-recently-played';
-    private const SCOPE_LISTENING_HISTORY_TOP_PLAYED = 'user-top-read';
-    private const SCOPE_LISTENING_HISTORY_PLAYBACK_POSITION = 'user-read-playback-position';
-
-    private const SCOPE_SPOTIFY_CONNECT_PLAYBACK_STATE = 'user-read-playback-state';
-    private const SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE = 'user-modify-playback-state';
-    private const SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING = 'user-read-currently-playing';
-
-    private const SCOPE_PLAYBACK_REMOTE_CONTROL = 'app-remote-control';
-    private const SCOPE_PLAYBACK_STREAMING = 'streaming';
-
-    private const SCOPE_PLAYLISTS_MODIFY_PUBLIC = 'playlist-modify-public';
-    private const SCOPE_PLAYLISTS_MODIFY_PRIVATE = 'playlist-modify-private';
-    private const SCOPE_PLAYLISTS_READ_PRIVATE = 'playlist-read-private';
-    private const SCOPE_PLAYLISTS_READ_COLLABORATIVE = 'playlist-read-collaborative';
-
-    private const SCOPE_FOLLOW_MODIFY = 'user-follow-modify';
-    private const SCOPE_FOLLOW_READ = 'user-follow-read';
-
-    private const SCOPE_LIBRARY_MODIFY = 'user-library-modify';
-    private const SCOPE_LIBRARY_READ = 'user-library-read';
-
-    private const SCOPE_USERS_READ_EMAIL = 'user-read-email';
-    private const SCOPE_USERS_READ_PRIVATE = 'user-read-private';
-
-    private const SCOPE_ENABLED_MAP = [
-        self::SCOPE_UGC_IMAGE_UPLOAD => false,
-
-        self::SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED => false,
-        self::SCOPE_LISTENING_HISTORY_TOP_PLAYED => true,
-        self::SCOPE_LISTENING_HISTORY_PLAYBACK_POSITION => false,
-
-        self::SCOPE_SPOTIFY_CONNECT_PLAYBACK_STATE => false,
-        self::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE => false,
-        self::SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING => false,
-
-        self::SCOPE_PLAYBACK_REMOTE_CONTROL => false,
-        self::SCOPE_PLAYBACK_STREAMING => false,
-
-        self::SCOPE_PLAYLISTS_MODIFY_PUBLIC => false,
-        self::SCOPE_PLAYLISTS_MODIFY_PRIVATE => false,
-        self::SCOPE_PLAYLISTS_READ_PRIVATE => false,
-        self::SCOPE_PLAYLISTS_READ_COLLABORATIVE => false,
-
-        self::SCOPE_FOLLOW_MODIFY => false,
-        self::SCOPE_FOLLOW_READ => false,
-
-        self::SCOPE_LIBRARY_MODIFY => false,
-        self::SCOPE_LIBRARY_READ => false,
-
-        self::SCOPE_USERS_READ_EMAIL => true,
-        self::SCOPE_USERS_READ_PRIVATE => true,
-    ];
-
-    public const ENDPOINT_AUTHORIZE = 'authorize';
-    public const ENDPOINT_ACCESS_TOKEN = 'api/token';
-
     public const SESSION_STATE_KEY = 'spotify.state';
 
-    private Client $client;
+    private SpotifyAuthenticationApiInterface $spotifyAuthenticationApi;
+
+    private AccessCodeResponseFactory $accessCodeResponseFactory;
 
     public function __construct(
-        Client $client
-    ){
-        $this->client = $client;
+        SpotifyAuthenticationApi $spotifyAuthenticationApi,
+        AccessCodeResponseFactory $accessCodeResponseFactory
+    )
+    {
+        $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
+        $this->accessCodeResponseFactory = $accessCodeResponseFactory;
     }
 
     public function redirect(): Response
     {
-        return new RedirectResponse($this->getRedirectUrl());
+        return $this->spotifyAuthenticationApi->redirect();
     }
 
-    public function callback(Request $request): Response
+    public function callback(AccessCodeRequest $request): Response
     {
+        $accessCodeResponse = $this->accessCodeResponseFactory->create($request);
+
         $state = Session::get(self::SESSION_STATE_KEY);
 
-        if (!$request->has('state') || $state !== $request->get('state')) {
+        if ($accessCodeResponse->getState() !== $state) {
             return new JsonResponse(
                 [
                     'error' => 'State provided by spotify redirect does not match state stored in session. Aborting.'
@@ -106,54 +56,40 @@ class AuthenticationController extends Controller
             );
         }
 
-        if ($request->has('code')) {
-            $accessCode = $request->get('code');
+        if ($accessCodeResponse->hasCode()) {
+            $accessTokenResponse = $this->spotifyAuthenticationApi->getAccessToken($accessCodeResponse->getCode());
 
-            try {
-                $response = $this->client->post(
-                    $this->getTokenRequestUrl(),
-                    [
-                        'form_params' => [
-                            'grant_type' => 'authorization_code',
-                            'code' => $accessCode,
-                            'redirect_uri' => config('spotify.redirectUrl'),
-                            'client_id' => config('spotify.client.id'),
-                            'client_secret' => config('spotify.client.secret'),
-                        ]
-                    ]
-                );
-            } catch (GuzzleException $exception) {
-                return new JsonResponse(
-                    [
-                        'error' => $exception->getMessage()
-                    ]
-                );
-            }
-
-            $responseContent = $response->getBody()->getContents();
-
-            $response = json_decode($responseContent, true);
-
-            $expiresIn = $response['expires_in'];
-
-            $tokenExpiry = (new DateTime())->add(new DateInterval(sprintf('PT1%sS', $expiresIn)));
+            $tokenExpiry = (new DateTime())
+                ->add(new DateInterval(sprintf('PT1%sS', $accessTokenResponse->getExpiresIn())));
 
             /** @var User $user */
             $user = Auth::user();
 
-            $user->spotify_access_token = $response['access_token'];
-            $user->spotify_refresh_token = $response['refresh_token'];
+            $user->spotify_access_token = $accessTokenResponse->getAccessToken();
+            $user->spotify_refresh_token = $accessTokenResponse->getRefreshToken();
             $user->spotify_access_token_expiry = $tokenExpiry;
 
             $user->save();
 
+            foreach ($accessTokenResponse->getScope()->getScope() as $scopeName) {
+                $scope = Scope::all()->where('name', $scopeName)->first();
+
+                if ($scope === null) {
+                    throw new LogicException(
+                        sprintf('Could not find scope %s in database!', $scopeName)
+                    );
+                }
+
+                $user->scopes()->attach($scope);
+            }
+
             return new RedirectResponse(route('dashboard.index'));
         }
 
-        if ($request->has('error')) {
+        if ($accessCodeResponse->hasError()) {
             return new JsonResponse(
                 [
-                    'error' => $request->get('error')
+                    'error' => $accessCodeResponse->getError(),
                 ]
             );
         }
@@ -163,61 +99,5 @@ class AuthenticationController extends Controller
                 'error' => 'Unknown error occurred. Aborting.'
             ]
         );
-    }
-
-    private function getTokenRequestUrl(): string
-    {
-        $baseUrl = trim(config('spotify.baseUrl'), '/');
-
-        return sprintf(
-            '%s/%s',
-            $baseUrl,
-            self::ENDPOINT_ACCESS_TOKEN
-        );
-    }
-
-    private function getRedirectUrl(): string
-    {
-        $scope = $this->getScope();
-
-        $baseUrl = trim(config('spotify.baseUrl'), '/');
-
-        $state = Str::random();
-
-        Session::put(self::SESSION_STATE_KEY, $state);
-
-        $queryString = str_replace(
-            '+',
-            ' ',
-            http_build_query(
-                [
-                    'client_id' => config('spotify.client.id'),
-                    'response_type' => 'code',
-                    'redirect_uri' => config('spotify.redirectUrl'),
-                    'scope' => $scope,
-                    'state' => $state
-                ]
-            )
-        );
-
-        return sprintf(
-            '%s/%s?%s',
-            $baseUrl,
-            self::ENDPOINT_AUTHORIZE,
-            $queryString
-        );
-    }
-
-    private function getScope(): string
-    {
-        $scopes = [];
-
-        foreach (self::SCOPE_ENABLED_MAP as $scope => $enabled) {
-            if ($enabled) {
-                $scopes[] = $scope;
-            }
-        }
-
-        return implode(' ', $scopes);
     }
 }
