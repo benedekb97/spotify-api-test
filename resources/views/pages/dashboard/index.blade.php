@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-divider">
-            Recommended songs |&nbsp;<a href="#" onclick="updateRecommendations()">Refresh</a>
+            <h5>Recommended songs |&nbsp;<a href="#" onclick="updateRecommendations()">Refresh</a></h5>
         </div>
         <table style="border:1px solid rgba(0, 0, 0, 0.2);">
             <tr>

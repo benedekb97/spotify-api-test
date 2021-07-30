@@ -1,25 +1,34 @@
-<title>My Top {{ $type }}</title>
+@extends('layouts.dashboard')
 
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Image</th>
-        <th>Followers</th>
-        <th>Genres</th>
-    </tr>
-    @foreach ($items as $key => $item)
-        <tr>
-            <td>
-                <a href="{{ $item->getExternalUrl()->getSpotify() }}" target="_blank">{{ $item->getName() }}</a>
-            </td>
-            <td>
-                <img
-                    src="{{ $item->getImages()->last()->getUrl() }}"
-                    style="width:100px; height:100px;"
-                    alt="{{ $item->getName() }}" />
-            </td>
-            <td>{{ $item->getFollowers()->getTotal() }}</td>
-            <td>{{ implode(', ', $item->getGenres()) }}</td>
-        </tr>
-    @endforeach
-</table>
+@section('title', "My top $type")
+
+@section('content')
+    <div class="card">
+        <div class="card-divider">
+            <h5>My top artists</h5>
+        </div>
+        <table>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Followers</th>
+                <th>Genres</th>
+            </tr>
+            @foreach ($items as $key => $item)
+                <tr>
+                    <td>
+                        <img
+                            src="{{ $item->getImages()->last()->getUrl() }}"
+                            style="width:64px; height:64px;"
+                            alt="{{ $item->getName() }}" />
+                    </td>
+                    <td>
+                        <a href="{{ $item->getExternalUrl()->getSpotify() }}" target="_blank">{{ $item->getName() }}</a>
+                    </td>
+                    <td style="text-align:right;">{{ number_format($item->getFollowers()->getTotal()) }}</td>
+                    <td style="text-align:center;">{{ implode(', ', $item->getGenres()) }}</td>
+                </tr>
+            @endforeach
+        </table>
+    </div>
+@endsection
