@@ -1,3 +1,7 @@
+$has-tip-border-bottom: none !important;
+$has-tip-cursor: cursor !important;
+
+
 @import "node_modules/foundation-sites/scss/foundation";
 
 @include foundation-everything(true);

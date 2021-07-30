@@ -1,5 +1,7 @@
 require('./bootstrap');
 
+import Foundation from 'foundation-sites';
+
 window.playNow = function (url) {
     $.ajax({
         url: url,
@@ -10,9 +12,26 @@ window.playNow = function (url) {
     })
 }
 
-window.addToQueue = function (url) {
+window.addToQueue = function (url, name = null) {
     $.ajax({
-        url: url
+        url: url,
+        success: function () {
+            name = name + ' ';
+
+            let calloutsHtml = $('#callouts').html();
+
+            calloutsHtml += `
+                <div class="callout success" data-closable>
+                    <p>Added <b>${name}</b>to queue!</p>
+                    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            `;
+
+            $('#callouts').html(calloutsHtml);
+            $(document).foundation();
+        }
     })
 }
 
@@ -91,9 +110,13 @@ window.updateRecommendations = function () {
                         </td>
                         <td>${artists}</td>
                         <td>${element.name}</td>
-                        <td style="text-align:center;">
-                            <a href="#" onclick="addToQueue('http://spotify.local/spotify/queue/add/${element.uri}')">Add to queue</a><br>
-                            <a href="#" onclick="playNow('http://spotify.local/spotify/queue/add/${element.uri}')">Play now</a>
+                        <td style="text-align:center;font-size:20pt;">
+                            <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('http://spotify.local/spotify/queue/add/${element.uri}', '${element.name}')">
+                                <i class="fas fa-plus-circle"></i>
+                            </a>&nbsp;
+                            <a data-tooltip class="top" title="Play now" onclick="playNow('http://spotify.local/spotify/queue/add/${element.uri}')">
+                                <i class="fas fa-play-circle"></i>
+                            </a>
                         </td>
                     </tr>
                     `;
@@ -101,6 +124,9 @@ window.updateRecommendations = function () {
             );
 
             $('#recommendations').html(rows);
+
+            $(document).foundation();
+            $('.has-tip').foundation();
         }
     });
 }
@@ -109,5 +135,10 @@ $(document).ready(
     function() {
         updateRecommendations();
         updateCurrentlyPlaying();
+
+        setInterval(updateCurrentlyPlaying, 20 * 1000);
     }
 )
+
+$(document).foundation();
+$('.has-tip').foundation();

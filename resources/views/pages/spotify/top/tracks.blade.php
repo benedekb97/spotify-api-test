@@ -24,7 +24,7 @@
                     <td>
                         <img
                             src="{{ $item->getAlbum()->getImages()->first()->getUrl() }}"
-                            style="width:100px; height:100px;"
+                            style="width:50px; height:50px;"
                             alt="{{ $item->getAlbum()->getName() }}" />
                     </td>
                     <td><a target="_blank" href="{{ $item->getExternalUrl()->getSpotify() }}">{{ $item->getName() }}</a></td>
@@ -39,9 +39,13 @@
                     </td>
                     <td>{{ $item->getAlbum()->getName() }}</td>
                     <td>{{ date('m:s', $item->getDurationms() / 1000) }}</td>
-                    <td>
-                        <a href="#" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}');">Add to queue</a><br>
-                        <a href="#" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}')">Play now</a>
+                    <td style="font-size:20pt;">
+                        <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}', '{{ $item->getName() }}');">
+                            <i class="fas fa-plus-circle"></i>
+                        </a>&nbsp;
+                        <a data-tooltip class="top" title="Play now" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}')">
+                            <i class="fas fa-play-circle"></i>
+                        </a>
                     </td>
                 </tr>
             @endforeach

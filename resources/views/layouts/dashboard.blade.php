@@ -4,6 +4,8 @@
     <title>@yield('title', 'Spotify Playground')</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
+
+    <script src="https://kit.fontawesome.com/492a2c0a6b.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <div class="top-bar">
@@ -53,17 +55,25 @@
                         />
                         <div class="card-section">
                             <div class="grid-x">
-                                <div class="cell small-2" style="">
-                                    <a href="#" onclick="moveTrack('{{ route('spotify.previous') }}')">&#8612;</a>
+                                <div class="cell small-2" style="font-size:20pt;">
+                                    <a href="#" onclick="moveTrack('{{ route('spotify.previous') }}')">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </a>
                                 </div>
                                 <div class="cell small-8 align-center-middle" style="text-align:center;">
                                     <span id="currentlyPlayingText" class="align-center-middle"></span>
                                 </div>
-                                <div class="cell small-2" style="text-align:right;">
-                                    <a href="#" onclick="moveTrack('{{ route('spotify.next') }}')">&#8614;</a>
+                                <div class="cell small-2" style="text-align:right; font-size:20pt;">
+                                    <a href="#" onclick="moveTrack('{{ route('spotify.next') }}')">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                </div>
+
+                <div id="callouts">
+
                 </div>
             </div>
             <div class="small-9 cell">
