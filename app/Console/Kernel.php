@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(GetRecentlyPlayedJob::class)->hourly();
+        $schedule->call(GetRecentlyPlayedJob::class)->everyThirtyMinutes();
     }
 
     protected function commands()
