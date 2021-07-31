@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Spotify\Playback;
 use DateTime;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -20,6 +22,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $spotify_access_scope
  *
  * @property Collection|Scope[] $scopes
+ * @property Collection|Playback[] $playbacks
  */
 class User extends Authenticatable
 {
@@ -51,6 +54,11 @@ class User extends Authenticatable
     public function scopes(): BelongsToMany
     {
         return $this->belongsToMany(Scope::class, 'user_scope', 'user_id', 'scope_id');
+    }
+
+    public function playbacks(): HasMany
+    {
+        return $this->hasMany(Playback::class, 'user_id');
     }
 
     public function isLoggedInWithSpotify(): bool
