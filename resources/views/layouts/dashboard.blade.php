@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
     <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon" />
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://kit.fontawesome.com/492a2c0a6b.js" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -39,7 +41,7 @@
 <div class="grid-container fluid">
     @if(!\Auth::user()->isLoggedInWithSpotify())
         <div class="grid-x">
-            <div class="cell small-10 small-offset-1 medium-6 medium-offset-3 large-4 large-offset-4" style="margin-top:20px;">
+            <div class="cell medium-6 medium-offset-3 large-4 large-offset-4" style="margin-top:20px;">
                 <div class="input-group align-center-middle">
                     <a class="button" href="{{ route('spotify.redirect') }}">Log in with spotify!</a>
                 </div>
@@ -47,7 +49,7 @@
         </div>
     @else
         <div class="grid-x grid-padding-x" style="margin-top:20px;">
-            <div class="small-3 cell">
+            <div class="medium-3 cell">
                 <div class="card">
                     <div class="card-divider">
                         <h5>Currently playing</h5>
@@ -79,7 +81,7 @@
 
                 </div>
             </div>
-            <div class="small-9 cell">
+            <div class="medium-9 cell">
                 @yield('content')
             </div>
         </div>
