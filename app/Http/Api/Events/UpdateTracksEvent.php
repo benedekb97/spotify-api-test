@@ -19,6 +19,8 @@ class UpdateTracksEvent
      */
     public function __construct($tracks)
     {
+        $this->tracks = new Collection();
+
         if ($tracks === null) {
             return;
         }

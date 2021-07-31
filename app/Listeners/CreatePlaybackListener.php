@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Auth;
 
 class CreatePlaybackListener
 {
-    private const DURATION_OFFSET = 60 * 2;
+    private const DURATION_OFFSET = 60 * 3;
 
     public function handle(CreatePlaybackEvent $event): void
     {
+        sleep(10);
+
         $track = $event->getTrack();
 
         if ($track === null) {
