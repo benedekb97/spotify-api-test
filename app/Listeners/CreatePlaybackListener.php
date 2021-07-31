@@ -16,8 +16,6 @@ class CreatePlaybackListener
 
     public function handle(CreatePlaybackEvent $event): void
     {
-        sleep(10);
-
         $track = $event->getTrack();
 
         if ($track === null) {
