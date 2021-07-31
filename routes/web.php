@@ -20,6 +20,8 @@ Route::group(
     ],
     static function () {
         Route::get('', [DashboardController::class, 'index'])->name('index');
+
+        Route::get('history', [DashboardController::class, 'history'])->name('history');
     }
 );
 

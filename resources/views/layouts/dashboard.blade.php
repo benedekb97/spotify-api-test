@@ -13,15 +13,18 @@
         <ul class="menu">
             <li class="menu-text">Spotify Playground</li>
             @if (\Auth::user()->isLoggedInWithSpotify())
-            <li>
-                <a href="{{ route('dashboard.index') }}"><b>Dashboard</b></a>
-            </li>
-            <li>
-                <a href="{{ route('spotify.top', ['type' => 'tracks']) }}">Top Tracks</a>
-            </li>
-            <li>
-                <a href="{{ route('spotify.top', ['type' => 'artists']) }}">Top Artists</a>
-            </li>
+                <li>
+                    <a href="{{ route('dashboard.index') }}"><b>Dashboard</b></a>
+                </li>
+                <li>
+                    <a href="{{ route('spotify.top', ['type' => 'tracks']) }}">Top Tracks</a>
+                </li>
+                <li>
+                    <a href="{{ route('spotify.top', ['type' => 'artists']) }}">Top Artists</a>
+                </li>
+                <li>
+                    <a href="{{ route('dashboard.history') }}">History</a>
+                </li>
             @endif
         </ul>
     </div>
