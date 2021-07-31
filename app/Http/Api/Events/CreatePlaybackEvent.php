@@ -16,6 +16,8 @@ class CreatePlaybackEvent
     public function __construct(?Track $track)
     {
         if ($track === null) {
+            $this->track = null;
+
             return;
         }
 
