@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model as BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * Class Track
@@ -34,11 +35,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $album_id
  *
  * @property Album $album
- * @property Collection|Artist[] $artists
+ * @property Collection|TrackArtist[] $trackArtists
  * @property Collection|Playback[] $playbacks
  */
 class Track extends BaseModel
 {
+    protected $casts = [
+        'available_markets' => 'array',
+        'external_ids' => 'array',
+        'external_urls' => 'array',
+    ];
+
+    public $incrementing = false;
+
     protected $table = 'spotify_tracks';
 
     public function album(): BelongsTo
@@ -49,14 +58,9 @@ class Track extends BaseModel
         );
     }
 
-    public function artists(): BelongsToMany
+    public function trackArtists(): HasMany
     {
-        return $this->belongsToMany(
-            Artist::class,
-            'spotify_track_artist',
-            'track_id',
-            'artist_id'
-        );
+        return $this->hasMany(TrackArtist::class);
     }
 
     public function playbacks(): HasMany

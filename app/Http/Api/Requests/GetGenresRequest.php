@@ -56,4 +56,9 @@ class GetGenresRequest extends AbstractSpotifyRequest implements SpotifyRequestI
     {
         return true;
     }
+
+    protected function getEvents(): array
+    {
+        return [];
+    }
 }

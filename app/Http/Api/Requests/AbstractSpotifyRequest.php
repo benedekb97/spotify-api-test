@@ -12,6 +12,7 @@ use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use LogicException;
@@ -44,6 +45,8 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
     abstract protected function getExpectedStatusCode(): ?int;
 
     abstract protected function validateStatusCode(Response $response): bool;
+
+    abstract protected function getEvents(): array;
 
     private function getAuthorizationHeader(): array
     {
@@ -200,5 +203,13 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
 
         $this->response->setStatusCode($response->getStatusCode());
         $this->response->setHeaders($response->getheaders());
+
+        /**
+         * @var Dispatchable $event
+         * @var array|null $parameters
+         */
+        foreach ($this->getEvents() as $event => $parameters) {
+            $event::dispatch(...$parameters);
+        }
     }
 }

@@ -59,4 +59,9 @@ class TopArtistsRequest extends AbstractSpotifyRequest implements SpotifyRequest
     {
         return true;
     }
+
+    protected function getEvents(): array
+    {
+        return [];
+    }
 }

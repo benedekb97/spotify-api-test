@@ -59,4 +59,9 @@ class GetAvailableDevicesRequest extends AbstractSpotifyRequest implements Spoti
     {
         return true;
     }
+
+    protected function getEvents(): array
+    {
+        return [];
+    }
 }

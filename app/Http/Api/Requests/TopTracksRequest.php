@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Api\Requests;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
+use App\Http\Api\Events\UpdateTracksEvent;
 use App\Http\Api\Factories\ResponseBodies\TopTracksResponseBodyFactory;
+use App\Http\Api\Responses\ResponseBodies\TopTracksResponseBody;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -58,5 +60,24 @@ class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestI
     public function hasResponseBody(): bool
     {
         return true;
+    }
+
+    protected function getEvents(): array
+    {
+        return [
+            UpdateTracksEvent::class => $this->getUpdateTracksEventParameters(),
+        ];
+    }
+
+    private function getUpdateTracksEventParameters(): array
+    {
+        /** @var TopTracksResponseBody|null $responseBody */
+        $responseBody = $this->getResponse()->getBody();
+
+        if ($responseBody === null) {
+            return [null];
+        }
+
+        return [$responseBody->getItems()];
     }
 }

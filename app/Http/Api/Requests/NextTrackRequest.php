@@ -58,4 +58,9 @@ class NextTrackRequest extends AbstractSpotifyRequest implements SpotifyRequestI
     {
         return false;
     }
+
+    protected function getEvents(): array
+    {
+        return [];
+    }
 }

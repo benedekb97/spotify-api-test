@@ -59,4 +59,9 @@ class TransferPlaybackRequest extends AbstractSpotifyRequest implements SpotifyR
     {
         return false;
     }
+
+    protected function getEvents(): array
+    {
+        return [];
+    }
 }

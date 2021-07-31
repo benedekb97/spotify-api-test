@@ -72,4 +72,9 @@ class AddItemToQueueRequest extends AbstractSpotifyRequest implements SpotifyReq
     {
         return false;
     }
+
+    protected function getEvents(): array
+    {
+        return [];
+    }
 }

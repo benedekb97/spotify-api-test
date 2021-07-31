@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Api\Requests;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
+use App\Http\Api\Events\CreatePlaybackEvent;
+use App\Http\Api\Events\UpdateTracksEvent;
 use App\Http\Api\Factories\ResponseBodies\CurrentlyPlayingResponseBodyFactory;
+use App\Http\Api\Responses\ResponseBodies\CurrentlyPlayingResponseBody;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -62,5 +65,25 @@ class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyR
     public function hasResponseBody(): bool
     {
         return true;
+    }
+
+    protected function getEvents(): array
+    {
+        return [
+            UpdateTracksEvent::class => $this->getTrack(),
+            CreatePlaybackEvent::class => $this->getTrack(),
+        ];
+    }
+
+    private function getTrack(): array
+    {
+        /** @var CurrentlyPlayingResponseBody|null $responseBody */
+        $responseBody = $this->getResponse()->getBody();
+
+        if ($responseBody === null) {
+            return [null];
+        }
+
+        return [$responseBody->getItem()];
     }
 }
