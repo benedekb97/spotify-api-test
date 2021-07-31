@@ -14,13 +14,11 @@ class AlterSpotifyTracksTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
-        //
+        Schema::table('spotify_tracks', function (Blueprint $table) {
+            $table->dropForeign('spotify_tracks_album_id_foreign');
+            $table->dropColumn('album_id');
+        });
     }
 }

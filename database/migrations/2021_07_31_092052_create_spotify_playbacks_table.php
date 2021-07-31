@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateSpotifyPlaybacksTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('spotify_playbacks', function (Blueprint $table) {
@@ -23,11 +18,6 @@ class CreateSpotifyPlaybacksTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('spotify_playbacks');

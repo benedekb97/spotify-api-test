@@ -7,6 +7,7 @@ namespace App\Http\Api\Requests;
 use App\Http\Api\Factories\ResponseBodies\ResponseBodyFactoryInterface;
 use App\Http\Api\Requests\RequestBodies\RequestBodyInterface;
 use App\Http\Api\Responses\SpotifyResponseInterface;
+use App\Models\User;
 use GuzzleHttp\Client;
 
 interface SpotifyRequestInterface
@@ -34,4 +35,8 @@ interface SpotifyRequestInterface
     public function setClient(Client $client): void;
 
     public function getResponse(): ?SpotifyResponseInterface;
+
+    public function getUser(): ?User;
+
+    public function setUser(?User $user): void;
 }

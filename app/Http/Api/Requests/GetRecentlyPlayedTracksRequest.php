@@ -19,6 +19,21 @@ class GetRecentlyPlayedTracksRequest extends AbstractSpotifyRequest implements S
 {
     private const ENDPOINT = 'v1/me/player/recently-played';
 
+    private ?int $after;
+
+    private ?int $before;
+
+    private ?int $limit;
+
+    public function __construct(?int $limit = 20, ?int $after = null, ?int $before = null)
+    {
+        parent::__construct();
+
+        $this->after = $after;
+        $this->before = $before;
+        $this->limit = $limit;
+    }
+
     public function getScopes(): array
     {
         return [
@@ -28,7 +43,17 @@ class GetRecentlyPlayedTracksRequest extends AbstractSpotifyRequest implements S
 
     protected function getEndpoint(): string
     {
-        return self::ENDPOINT;
+        $queryString = '?limit=' . $this->limit;
+
+        if (isset($this->after)) {
+            $queryString .= '&after=' . $this->after * 1000;
+        }
+
+        if (isset($this->before)) {
+            $queryString .= '&before=' . $this->before * 1000;
+        }
+
+        return self::ENDPOINT . $queryString;
     }
 
     protected function getMethod(): string

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $user_id
  * @property DateTimeInterface $created_at
  * @property DateTimeInterface $updated_at
+ * @property DateTimeInterface $played_at
  *
  * @property User $user
  * @property Track $track

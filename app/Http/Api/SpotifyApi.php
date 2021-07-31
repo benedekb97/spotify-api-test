@@ -44,8 +44,7 @@ class SpotifyApi implements SpotifyApiInterface
         ...$requestBodyFactoryParameters
     ): ?SpotifyResponseInterface
     {
-        /** @var User $user */
-        $user = Auth::user();
+        $user = $request->getUser();
 
         if (!$this->requestScopeValidator->validate($user, $request)) {
             $this->logger->log(

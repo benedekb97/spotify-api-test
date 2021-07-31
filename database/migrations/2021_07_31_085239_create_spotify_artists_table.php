@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateSpotifyArtistsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('spotify_artists', function (Blueprint $table) {
@@ -27,11 +22,6 @@ class CreateSpotifyArtistsTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('spotify_artists');

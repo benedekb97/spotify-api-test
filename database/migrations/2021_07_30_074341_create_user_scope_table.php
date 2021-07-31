@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateUserScopeTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('user_scope', function (Blueprint $table) {
@@ -21,11 +16,6 @@ class CreateUserScopeTable extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('user_scope');

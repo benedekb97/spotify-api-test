@@ -27,6 +27,7 @@ class CreatePlaybackListener
 
             $playback->user_id = Auth::id();
             $playback->track_id = $track->getId();
+            $playback->played_at = (new DateTime())->format('Y-m-d H:i:s');
 
             $playback->save();
         }
@@ -37,7 +38,7 @@ class CreatePlaybackListener
         $playback = Playback::where('user_id', Auth::id())
             ->where('track_id', $trackId)
             ->where(
-                'created_at',
+                'played_at',
                 '>',
                 (new DateTime())->sub(new DateInterval("PT{$duration}S"))
             )

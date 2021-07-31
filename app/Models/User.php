@@ -68,4 +68,9 @@ class User extends Authenticatable
             && isset($this->spotify_access_token_expiry)
             && (new DateTime()) < (new DateTime($this->spotify_access_token_expiry));
     }
+
+    public function needsReauthentication(): bool
+    {
+        return !$this->isLoggedInWithSpotify() || (new DateTime()) < (new DateTime($this->spotify_access_token_expiry));
+    }
 }

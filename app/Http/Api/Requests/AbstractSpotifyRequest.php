@@ -9,6 +9,7 @@ use App\Http\Api\Requests\RequestBodies\RequestBodyInterface;
 use App\Http\Api\Responses\ResponseBodies\ErrorResponseBody;
 use App\Http\Api\Responses\SpotifyResponse;
 use App\Http\Api\Responses\SpotifyResponseInterface;
+use App\Models\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
@@ -29,11 +30,16 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
 
     private ?RequestBodyInterface $requestBody = null;
 
-    private ?array $headers;
+    private ?array $headers = null;
+
+    private ?User $user;
 
     public function __construct()
     {
-        $this->headers = $this->getAuthorizationHeader();
+        /** @var User $user */
+        $user = Auth::user();
+
+        $this->user = $user;
     }
 
     abstract public function getScopes(): array;
@@ -53,7 +59,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         return [
             'Authorization' => sprintf(
                 'Bearer %s',
-                Auth::user()->spotify_access_token
+                $this->user->spotify_access_token
             )
         ];
     }
@@ -93,6 +99,16 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         return $this->responseBodyFactory;
     }
 
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }
+
     public function setRequestBody(RequestBodyInterface $requestBody): void
     {
         $this->requestBody = $requestBody;
@@ -111,7 +127,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
             $options['body'] = json_encode($this->requestBody->toArray());
         }
 
-        $options['headers'] = $this->headers;
+        $options['headers'] = $this->headers ?? $this->getAuthorizationHeader();
 
         return $options;
     }
