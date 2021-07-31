@@ -84,6 +84,10 @@ class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyR
             return [null];
         }
 
-        return [$responseBody->getItem()];
+        if ($responseBody->getIsPlaying()) {
+            return [$responseBody->getItem()];
+        }
+
+        return [null];
     }
 }
