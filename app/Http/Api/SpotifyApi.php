@@ -46,7 +46,7 @@ class SpotifyApi implements SpotifyApiInterface
     {
         $user = $request->getUser();
 
-        if (!$this->requestScopeValidator->validate($user, $request)) {
+        if ($user !== null && !$this->requestScopeValidator->validate($user, $request)) {
             $this->logger->log(
                 LogLevel::ERROR,
                 'User does not have the necessary scopes to complete this request!'

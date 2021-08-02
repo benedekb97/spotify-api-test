@@ -7,5 +7,5 @@ return [
     ],
     'baseUrl' => 'https://accounts.spotify.com/',
     'apiBaseUrl' => 'https://api.spotify.com/',
-    'redirectUrl' => trim(env('APP_URL'), '/') . '/spotify/callback',
+    'redirectUrl' => trim(env('APP_URL'), '/') . '/auth/callback',
 ];

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Api\Authentication\SpotifyAuthenticationApi;
+use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,39 +16,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationController extends Controller
 {
-    public function login(LoginRequest $request): Response
-    {
-        $login = Auth::attempt(
-            [
-                'email' => $request->get('email'),
-                'password' => $request->get('password'),
-            ]
-        );
+    private SpotifyAuthenticationApiInterface $spotifyAuthenticationApi;
 
-        if ($login) {
-            return new RedirectResponse(route('index'));
-        }
-
-        return new JsonResponse(
-            [
-                'error' => 'Incorrect credentials.'
-            ]
-        );
+    public function __construct(
+        SpotifyAuthenticationApi $spotifyAuthenticationApi
+    ) {
+        $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
     }
 
-    public function register(RegistrationRequest $request): Response
+    public function redirect(): Response
     {
-        $user = new User();
+        if (Auth::check()) {
+            return redirect(route('dashboard.index'));
+        }
 
-        $user->email = $request->get('email');
-        $user->password = Hash::make($request->get('password'));
-        $user->name = $request->get('name');
-
-        $user->save();
-
-        Auth::login($user);
-
-        return new RedirectResponse(route('dashboard.index'));
+        return $this->spotifyAuthenticationApi->redirect();
     }
 
     public function logout(): Response

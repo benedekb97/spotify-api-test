@@ -10,7 +10,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Spotify\AuthenticationController as SpotifyAuthenticationController;
 
 Route::get('', [HomeController::class, 'index'])->name('index');
-Route::get('register', [HomeController::class, 'register'])->name('register');
 
 Route::group(
     [
@@ -32,9 +31,6 @@ Route::group(
         'middleware' => 'auth',
     ],
     static function () {
-        Route::get('redirect', [SpotifyAuthenticationController::class, 'redirect'])->name('redirect');
-        Route::get('callback', [SpotifyAuthenticationController::class, 'callback'])->name('callback');
-
         Route::middleware(['auth', 'reauthenticate'])->group(
             static function () {
                 Route::get('profile', [UserController::class, 'profile'])->name('profile');
@@ -70,9 +66,9 @@ Route::group(
         'as' => 'auth.',
     ],
     static function () {
-        Route::post('login', [AuthenticationController::class, 'login'])->name('login');
-        Route::post('register', [AuthenticationController::class, 'register'])->name('register');
+        Route::get('redirect', [AuthenticationController::class, 'redirect'])->name('redirect');
         Route::any('logout', [AuthenticationController::class, 'logout'])->name('logout');
+        Route::get('callback', [SpotifyAuthenticationController::class, 'callback'])->name('callback');
     }
 );
 

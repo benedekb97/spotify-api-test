@@ -53,10 +53,10 @@ interface SpotifyAuthenticationApiInterface
         self::SCOPE_PLAYBACK_REMOTE_CONTROL => false,
         self::SCOPE_PLAYBACK_STREAMING => false,
 
-        self::SCOPE_PLAYLISTS_MODIFY_PUBLIC => false,
-        self::SCOPE_PLAYLISTS_MODIFY_PRIVATE => false,
-        self::SCOPE_PLAYLISTS_READ_PRIVATE => false,
-        self::SCOPE_PLAYLISTS_READ_COLLABORATIVE => false,
+        self::SCOPE_PLAYLISTS_MODIFY_PUBLIC => true,
+        self::SCOPE_PLAYLISTS_MODIFY_PRIVATE => true,
+        self::SCOPE_PLAYLISTS_READ_PRIVATE => true,
+        self::SCOPE_PLAYLISTS_READ_COLLABORATIVE => true,
 
         self::SCOPE_FOLLOW_MODIFY => false,
         self::SCOPE_FOLLOW_READ => false,

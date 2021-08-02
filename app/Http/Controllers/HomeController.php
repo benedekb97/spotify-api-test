@@ -18,13 +18,4 @@ class HomeController extends Controller
 
         return view('pages.index');
     }
-
-    public function register()
-    {
-        if (Auth::check()) {
-            return new RedirectResponse(route('dashboard.index'));
-        }
-
-        return view('pages.register');
-    }
 }

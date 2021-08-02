@@ -34,6 +34,8 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
 
     private ?User $user;
 
+    private ?string $accessToken = null;
+
     public function __construct()
     {
         /** @var User $user */
@@ -59,7 +61,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         return [
             'Authorization' => sprintf(
                 'Bearer %s',
-                $this->user->spotify_access_token
+                $this->accessToken ?? $this->user->spotify_access_token
             )
         ];
     }
@@ -107,6 +109,11 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
     public function setUser(?User $user): void
     {
         $this->user = $user;
+    }
+
+    public function setAccessToken(string $accessToken): void
+    {
+        $this->accessToken = $accessToken;
     }
 
     public function setRequestBody(RequestBodyInterface $requestBody): void
