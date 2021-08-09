@@ -44,19 +44,9 @@ class NextTrackRequest extends AbstractSpotifyRequest implements SpotifyRequestI
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return null;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return false;
     }
 
     protected function getEvents(): array

@@ -6,7 +6,7 @@ namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
 use Illuminate\Database\Eloquent\Collection;
 
-class User
+class User implements EntityInterface
 {
     private ?string $country = null;
 

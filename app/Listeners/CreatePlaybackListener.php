@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CreatePlaybackListener
 {
-    private const DURATION_OFFSET = 60 * 3;
+    private const DURATION_OFFSET = 60 * 2;
 
     public function handle(CreatePlaybackEvent $event): void
     {
@@ -37,17 +37,15 @@ class CreatePlaybackListener
     {
         $playback = Playback::where('user_id', Auth::id())
             ->where('track_id', $trackId)
-            ->where(
+            ->whereBetween(
                 'played_at',
-                '>',
-                (new DateTime())->sub(new DateInterval("PT{$duration}S"))
+                [
+                    (new DateTime())->sub(new DateInterval("PT{$duration}S")),
+                    (new DateTime())->add(new DateInterval("PT{$duration}S"))
+                ]
             )
             ->first();
 
-        if ($playback !== null) {
-            return true;
-        }
-
-        return false;
+        return $playback !== null;
     }
 }

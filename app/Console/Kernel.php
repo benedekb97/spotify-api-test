@@ -2,7 +2,8 @@
 
 namespace App\Console;
 
-use App\Jogs\GetRecentlyPlayedJob;
+use App\Jobs\CreateWeeklyMostPlayedPlaylistJob;
+use App\Jobs\GetRecentlyPlayedJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -15,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(GetRecentlyPlayedJob::class)->everyThirtyMinutes();
+        $schedule->call(CreateWeeklyMostPlayedPlaylistJob::class)->weeklyOn('sunday');
     }
 
     protected function commands()

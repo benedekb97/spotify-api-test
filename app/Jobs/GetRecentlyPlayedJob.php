@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Jogs;
+namespace App\Jobs;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApi;
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;

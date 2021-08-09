@@ -6,7 +6,7 @@ namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
 use Illuminate\Database\Eloquent\Collection;
 
-class Artist
+class Artist implements EntityInterface
 {
     private ?ExternalUrl $externalUrl = null;
 

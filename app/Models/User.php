@@ -20,6 +20,8 @@ use Illuminate\Notifications\Notifiable;
  * @property string $spotify_refresh_token
  * @property DateTimeInterface $spotify_access_token_expiry
  * @property string $spotify_access_scope
+ * @property string $spotify_id
+ * @property bool $automatically_create_weekly_playlist
  *
  * @property Collection|Scope[] $scopes
  * @property Collection|Playback[] $playbacks

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
-class ExternalUrl
+class ExternalUrl implements EntityInterface
 {
     private ?string $spotify = null;
 

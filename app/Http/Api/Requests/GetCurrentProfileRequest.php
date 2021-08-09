@@ -51,18 +51,8 @@ class GetCurrentProfileRequest extends AbstractSpotifyRequest implements Spotify
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return GetCurrentProfileResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 }

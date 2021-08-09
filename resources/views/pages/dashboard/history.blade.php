@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'My listening history')
+@section('title', 'My playback history')
 
 @section('content')
     <div class="card">

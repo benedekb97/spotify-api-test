@@ -38,7 +38,7 @@
                         }}
                     </td>
                     <td>{{ $item->getAlbum()->getName() }}</td>
-                    <td>{{ date('m:s', $item->getDurationms() / 1000) }}</td>
+                    <td>{{ date('i:s', $item->getDurationms() / 1000) }}</td>
                     <td style="font-size:20pt;">
                         <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}', '{{ $item->getName() }}');">
                             <i class="fas fa-plus-circle"></i>

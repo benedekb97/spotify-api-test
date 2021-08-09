@@ -36,11 +36,11 @@ window.addToQueue = function (url, name = null) {
 }
 
 window.nextTrack = function () {
-    moveTrack('http://spotify.local/spotify/next');
+    moveTrack(window.app.name + '/spotify/next');
 }
 
 window.previousTrack = function () {
-    moveTrack('http://spotify.local/spotify/previous');
+    moveTrack(window.app.name + '/spotify/previous');
 }
 
 window.moveTrack = function (url) {
@@ -60,7 +60,7 @@ window.moveTrack = function (url) {
 
 window.updateCurrentlyPlaying = function () {
     $.ajax({
-        url: 'http://spotify.local/spotify/currently-playing',
+        url: window.app.name + '/spotify/currently-playing',
         success: function(e) {
             if (e.item === undefined) {
                 $('#currentlyPlayingImg').attr('src', '').attr('alt', '');
@@ -88,7 +88,7 @@ window.updateCurrentlyPlaying = function () {
 
 window.updateRecommendations = function () {
     $.ajax({
-        url: 'http://spotify.local/spotify/recommended',
+        url: window.app.name + '/spotify/recommended',
         success: function (e) {
             let rows = '';
 
@@ -101,6 +101,8 @@ window.updateRecommendations = function () {
                         }
                     ).join(', ');
 
+                    let duration = new Date(element.durationMs);
+
                     rows += `
                     <tr>
                         <td>
@@ -110,11 +112,12 @@ window.updateRecommendations = function () {
                         </td>
                         <td>${artists}</td>
                         <td>${element.name}</td>
+                        <td>${duration.getMinutes() + ':' + duration.getSeconds()}</td>
                         <td style="text-align:center;font-size:20pt;">
-                            <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('http://spotify.local/spotify/queue/add/${element.uri}', '${element.name}')">
+                            <a data-tooltip class="top" title="Add to queue" onclick="addToQueue(window.app.name + '/spotify/queue/add/${element.uri}', '${element.name}')">
                                 <i class="fas fa-plus-circle"></i>
                             </a>&nbsp;
-                            <a data-tooltip class="top" title="Play now" onclick="playNow('http://spotify.local/spotify/queue/add/${element.uri}')">
+                            <a data-tooltip class="top" title="Play now" onclick="playNow(window.app.name + '/spotify/queue/add/${element.uri}')">
                                 <i class="fas fa-play-circle"></i>
                             </a>
                         </td>

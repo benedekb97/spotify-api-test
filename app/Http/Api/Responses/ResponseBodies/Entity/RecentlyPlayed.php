@@ -6,13 +6,13 @@ namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
 use DateTimeInterface;
 
-class RecentlyPlayed
+class RecentlyPlayed implements EntityInterface
 {
     private ?Track $track = null;
 
     private ?DateTimeInterface $playedAt = null;
 
-    private ?string $context = null;
+    private ?array $context = null;
 
     public function getTrack(): ?Track
     {
@@ -34,12 +34,12 @@ class RecentlyPlayed
         $this->playedAt = $playedAt;
     }
 
-    public function getContext(): ?string
+    public function getContext(): ?array
     {
         return $this->context;
     }
 
-    public function setContext(?string $context): void
+    public function setContext(?array $context): void
     {
         $this->context = $context;
     }

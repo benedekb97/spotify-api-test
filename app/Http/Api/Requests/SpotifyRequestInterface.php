@@ -38,5 +38,5 @@ interface SpotifyRequestInterface
 
     public function getUser(): ?User;
 
-    public function setUser(?User $user): void;
+    public function setUser(?User $user): self;
 }

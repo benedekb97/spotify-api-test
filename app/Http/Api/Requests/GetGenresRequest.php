@@ -42,19 +42,9 @@ class GetGenresRequest extends AbstractSpotifyRequest implements SpotifyRequestI
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return GenresResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 
     protected function getEvents(): array

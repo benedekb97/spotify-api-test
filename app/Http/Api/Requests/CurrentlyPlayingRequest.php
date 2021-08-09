@@ -52,19 +52,9 @@ class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyR
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return CurrentlyPlayingResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 
     protected function getEvents(): array

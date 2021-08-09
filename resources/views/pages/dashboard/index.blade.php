@@ -10,6 +10,7 @@
                 <th>Image</th>
                 <th>Artist</th>
                 <th>Title</th>
+                <th>Duration</th>
                 <th>Operations</th>
             </tr>
             <tbody id="recommendations">

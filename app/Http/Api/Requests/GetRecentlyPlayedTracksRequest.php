@@ -76,19 +76,9 @@ class GetRecentlyPlayedTracksRequest extends AbstractSpotifyRequest implements S
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return RecentlyPlayedTracksResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 
     protected function getEvents(): array

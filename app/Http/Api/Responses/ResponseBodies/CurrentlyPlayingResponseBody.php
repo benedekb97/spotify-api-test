@@ -10,7 +10,7 @@ class CurrentlyPlayingResponseBody implements ResponseBodyInterface
 {
     private ?int $timestamp = null;
 
-    private ?string $context = null;
+    private ?array $context = null;
 
     private ?int $progressMs = null;
 
@@ -32,12 +32,12 @@ class CurrentlyPlayingResponseBody implements ResponseBodyInterface
         $this->timestamp = $timestamp;
     }
 
-    public function getContext(): ?string
+    public function getContext(): ?array
     {
         return $this->context;
     }
 
-    public function setContext(?string $context): void
+    public function setContext(?array $context): void
     {
         $this->context = $context;
     }

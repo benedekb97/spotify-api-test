@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
-class Device
+class Device implements EntityInterface
 {
     private ?string $id = null;
 

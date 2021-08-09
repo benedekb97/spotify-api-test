@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
-class SimplifiedTrack
+class SimplifiedTrack implements EntityInterface
 {
     public function toArray(): array
     {

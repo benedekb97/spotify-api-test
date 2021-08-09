@@ -99,6 +99,7 @@ class AuthenticationController extends Controller
             $user->spotify_access_token = $accessTokenResponse->getAccessToken();
             $user->spotify_refresh_token = $accessTokenResponse->getRefreshToken();
             $user->spotify_access_token_expiry = $tokenExpiry;
+            $user->spotify_id = $userDetails->getUser()->getId();
 
             $user->save();
 

@@ -45,19 +45,9 @@ class TopArtistsRequest extends AbstractSpotifyRequest implements SpotifyRequest
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return TopArtistsResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 
     protected function getEvents(): array

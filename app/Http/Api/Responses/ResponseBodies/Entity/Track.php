@@ -6,7 +6,7 @@ namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
 use Illuminate\Database\Eloquent\Collection;
 
-class Track
+class Track implements EntityInterface
 {
     private ?Album $album = null;
 

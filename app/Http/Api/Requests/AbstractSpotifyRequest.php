@@ -106,9 +106,11 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         return $this->user;
     }
 
-    public function setUser(?User $user): void
+    public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
     }
 
     public function setAccessToken(string $accessToken): void
@@ -156,6 +158,16 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
             trim(self::BASE_URL, '/'),
             $this->getEndpoint()
         );
+    }
+
+    public function hasResponseBody(): bool
+    {
+        return $this->getResponseBodyFactoryClass() !== null;
+    }
+
+    public function requiresRequestBody(): bool
+    {
+        return $this->getRequestBodyFactoryClass() !== null;
     }
 
     public function execute(): void

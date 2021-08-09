@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Factories\ResponseBodies\Entity;
 
+use App\Http\Api\Responses\ResponseBodies\Entity\PublicUser;
 use App\Http\Api\Responses\ResponseBodies\Entity\User;
 
 class UserFactory
@@ -32,13 +33,7 @@ class UserFactory
     {
         $user = new User();
 
-        $user->setCountry($data['country']);
         $user->setDisplayName($data['display_name']);
-        $user->setEmail($data['email']);
-
-        $user->setExplicitContent(
-            $this->explicitContentSettingsFactory->create($data['explicit_content'])
-        );
 
         $user->setExternalUrl(
             $this->externalUrlFactory->create($data['external_urls'])
@@ -57,9 +52,9 @@ class UserFactory
             );
         }
 
-        $user->setProduct($data['product']);
         $user->setType($data['type']);
         $user->setUri($data['uri']);
+        $user->setEmail($data['email']);
 
         return $user;
     }

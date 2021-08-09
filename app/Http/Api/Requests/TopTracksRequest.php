@@ -13,7 +13,7 @@ use GuzzleHttp\Psr7\Response;
 
 class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestInterface
 {
-    private const ENDPOINT = 'v1/me/top/tracks';
+    private const ENDPOINT = 'v1/me/top/tracks?limit=50';
 
     public function getScopes(): array
     {
@@ -47,19 +47,9 @@ class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestI
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return TopTracksResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 
     protected function getEvents(): array

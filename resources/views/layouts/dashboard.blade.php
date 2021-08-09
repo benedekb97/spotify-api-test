@@ -43,7 +43,7 @@
         <div class="grid-x">
             <div class="cell medium-6 medium-offset-3 large-4 large-offset-4" style="margin-top:20px;">
                 <div class="input-group align-center-middle">
-                    <a class="button" href="{{ route('spotify.redirect') }}">Log in with spotify!</a>
+                    <a class="button" href="{{ route('auth.redirect') }}">Log in with spotify!</a>
                 </div>
             </div>
         </div>
@@ -87,6 +87,11 @@
         </div>
     @endif
 </div>
+<script>
+    window.app = {
+        name: '{{ env('APP_URL') }}'
+    }
+</script>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

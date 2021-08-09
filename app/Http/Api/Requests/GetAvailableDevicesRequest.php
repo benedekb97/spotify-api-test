@@ -45,19 +45,9 @@ class GetAvailableDevicesRequest extends AbstractSpotifyRequest implements Spoti
         return null;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return false;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return AvailableDevicesResponseBodyFactory::class;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return true;
     }
 
     protected function getEvents(): array

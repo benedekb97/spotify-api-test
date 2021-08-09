@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Http\Api\Authentication\SpotifyAuthenticationApi;
+use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Api\Requests\AbstractSpotifyRequest;
 use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
@@ -16,6 +18,7 @@ use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
+use App\Jobs\CreateWeeklyMostPlayedPlaylistJob;
 use App\Models\User;
 use App\Util\CacheTags;
 use GuzzleHttp\Client;
@@ -45,14 +48,18 @@ class UserController extends Controller
 
     private SpotifyApiInterface $spotifyApi;
 
+    private SpotifyAuthenticationApiInterface $spotifyAuthenticationApi;
+
     public function __construct(
         Client $client,
         Repository $cache,
-        SpotifyApi $spotifyApi
+        SpotifyApi $spotifyApi,
+        SpotifyAuthenticationApi $spotifyAuthenticationApi
     ) {
         $this->client = $client;
         $this->cache = $cache;
         $this->spotifyApi = $spotifyApi;
+        $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
     }
 
     public function profile(): Response

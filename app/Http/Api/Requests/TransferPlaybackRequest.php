@@ -45,19 +45,9 @@ class TransferPlaybackRequest extends AbstractSpotifyRequest implements SpotifyR
         return ModifyPlaybackDeviceRequestBodyFactory::class;
     }
 
-    public function requiresRequestBody(): bool
-    {
-        return true;
-    }
-
     public function getResponseBodyFactoryClass(): ?string
     {
         return null;
-    }
-
-    public function hasResponseBody(): bool
-    {
-        return false;
     }
 
     protected function getEvents(): array

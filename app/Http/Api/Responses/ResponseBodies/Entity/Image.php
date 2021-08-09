@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
-class Image
+class Image implements EntityInterface
 {
     private ?int $height = null;
 
