@@ -11,7 +11,7 @@
         <table>
             <tr>
                 <th>#</th>
-                <th>Image</th>
+                <th style="width:70px !important;"></th>
                 <th>Title</th>
                 <th>Artists</th>
                 <th>Album</th>

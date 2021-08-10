@@ -12,7 +12,9 @@ class ExternalUrlFactory
     {
         $externalUrl = new ExternalUrl();
 
-        $externalUrl->setSpotify($data['spotify']);
+        if (isset($data['spotify'])) {
+            $externalUrl->setSpotify($data['spotify']);
+        }
 
         return $externalUrl;
     }

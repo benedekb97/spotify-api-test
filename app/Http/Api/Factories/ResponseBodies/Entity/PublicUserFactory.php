@@ -29,7 +29,7 @@ class PublicUserFactory
     {
         $user = new PublicUser();
 
-        $user->setDisplayName($data['display_name']);
+        $user->setDisplayName($data['display_name'] ?? $data['id']);
 
         $user->setExternalUrl(
             $this->externalUrlFactory->create($data['external_urls'])

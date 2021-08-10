@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Models\Spotify\Playback;
+use App\Models\Spotify\Playlist;
 use DateTime;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -25,6 +27,7 @@ use Illuminate\Notifications\Notifiable;
  *
  * @property Collection|Scope[] $scopes
  * @property Collection|Playback[] $playbacks
+ * @property Collection|Playlist[] $playlists
  */
 class User extends Authenticatable
 {
@@ -41,8 +44,7 @@ class User extends Authenticatable
         'password',
     ];
 
-    protected $hidden = [
-    ];
+    protected $hidden = [];
 
     /**
      * The attributes that should be cast to native types.
@@ -61,6 +63,11 @@ class User extends Authenticatable
     public function playbacks(): HasMany
     {
         return $this->hasMany(Playback::class, 'user_id');
+    }
+
+    public function playlists(): HasMany
+    {
+        return $this->hasMany(Playlist::class, 'local_user_id');
     }
 
     public function isLoggedInWithSpotify(): bool

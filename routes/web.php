@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Spotify\DeviceController;
 use App\Http\Controllers\Spotify\PlayerController;
+use App\Http\Controllers\Spotify\PlaylistController;
 use App\Http\Controllers\Spotify\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -39,6 +40,17 @@ Route::group(
                 Route::get('queue/add/{uri}', [UserController::class, 'addToQueue'])->name('queue.add');
 
                 Route::get('recommended', [UserController::class, 'recommended'])->name('recommended');
+
+                Route::group(
+                    [
+                        'prefix' => 'playlists',
+                        'as' => 'playlists.',
+                    ],
+                    static function () {
+                        Route::get('', [UserController::class, 'playlists'])->name('index');
+                        Route::get('{playlist}', [PlaylistController::class, 'show'])->name('show');
+                    }
+                );
 
                 Route::get('next', [PlayerController::class, 'next'])->name('next');
                 Route::get('previous', [PlayerController::class, 'previous'])->name('previous');

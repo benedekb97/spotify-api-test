@@ -9,7 +9,7 @@
         </div>
         <table>
             <tr>
-                <th>Image</th>
+                <th style="width:70px !important;"></th>
                 <th>Name</th>
                 <th>Followers</th>
                 <th>Genres</th>

@@ -40,13 +40,17 @@ class PlaylistFactory
     {
         $playlist = new Playlist();
 
-        $playlist->setFollowers(
-            $this->followersFactory->create($data['followers'])
-        );
+        if (isset($data['followers'])) {
+            $playlist->setFollowers(
+                $this->followersFactory->create($data['followers'])
+            );
+        }
 
-        $playlist->setExternalUrl(
-            $this->externalUrlFactory->create($data['external_urls'])
-        );
+        if (isset($data['external_urls'])) {
+            $playlist->setExternalUrl(
+                $this->externalUrlFactory->create($data['external_urls'])
+            );
+        }
 
         $playlist->setDescription($data['description']);
         $playlist->setCollaborative($data['collaborative']);
@@ -55,10 +59,16 @@ class PlaylistFactory
         $playlist->setId($data['id']);
         $playlist->setHref($data['href']);
 
-        foreach ($data['images'] as $image) {
-            $playlist->addImage(
-                $this->imageFactory->create($image)
-            );
+        if (isset($data['images'])) {
+            foreach ($data['images'] as $image) {
+                $playlist->addImage(
+                    $this->imageFactory->create($image)
+                );
+            }
+        }
+
+        if (isset($data['tracks'])) {
+            $playlist->setTracksData($data['tracks']);
         }
 
         $playlist->setOwner(

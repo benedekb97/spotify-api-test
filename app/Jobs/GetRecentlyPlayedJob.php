@@ -62,7 +62,7 @@ class GetRecentlyPlayedJob
                 $user->save();
             }
 
-            $request = new GetRecentlyPlayedTracksRequest(30, null, $before);
+            $request = new GetRecentlyPlayedTracksRequest(50, null, $before);
 
             $request->setUser($user);
 

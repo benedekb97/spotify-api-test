@@ -52,7 +52,7 @@ class AlbumFactory
         $album->setName($data['name']);
         $album->setReleaseDate($data['release_date']);
         $album->setReleaseDatePrecision($data['release_date_precision']);
-        $album->setTotalTracks($data['total_tracks']);
+        $album->setTotalTracks($data['total_tracks'] ?? null);
         $album->setType($data['type']);
         $album->setUri($data['uri']);
 

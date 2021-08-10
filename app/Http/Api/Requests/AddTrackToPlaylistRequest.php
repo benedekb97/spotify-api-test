@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Api\Requests;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
+use App\Http\Api\Events\UpdatePlaylistsEvent;
 use App\Http\Api\Factories\RequestBodies\AddTrackToPlaylistRequestBodyFactory;
 use App\Http\Api\Factories\ResponseBodies\AddTrackToPlaylistResponseBodyFactory;
+use App\Http\Api\Responses\ResponseBodies\Entity\Playlist;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -53,9 +55,7 @@ class AddTrackToPlaylistRequest extends AbstractSpotifyRequest implements Spotif
 
     protected function getEvents(): array
     {
-        return [
-
-        ];
+        return [];
     }
 
     public function getRequestBodyFactoryClass(): ?string

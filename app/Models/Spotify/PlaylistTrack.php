@@ -26,6 +26,10 @@ class PlaylistTrack extends BaseModel
 
     public $incrementing = false;
 
+    public $timestamps = false;
+
+    public $primaryKey = null;
+
     public function track(): BelongsTo
     {
         return $this->belongsTo(Track::class);
@@ -36,9 +40,19 @@ class PlaylistTrack extends BaseModel
         return $this->belongsTo(Playlist::class);
     }
 
-    public static function createFromEntity(PlaylistTrackEntity $playlistTrack, string $playlistId): self
+    public static function createFromEntity(PlaylistTrackEntity $playlistTrack, string $playlistId): ?self
     {
-        $model = new self();
+        if ($playlistTrack->getTrack()->getId() === null) {
+            return null;
+        }
+
+        $model = self::where('track_id', $playlistTrack->getTrack()->getId())
+            ->where('playlist_id', $playlistId)
+            ->first();
+
+        if ($model === null) {
+            $model = new self();
+        }
 
         $model->track_id = $playlistTrack->getTrack()->getId();
         $model->playlist_id = $playlistId;

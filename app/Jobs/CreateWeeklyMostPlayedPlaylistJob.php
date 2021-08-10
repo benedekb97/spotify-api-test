@@ -64,7 +64,6 @@ class CreateWeeklyMostPlayedPlaylistJob
             /** @var CreatePlaylistResponseBody $responseBody */
             $responseBody = $playlistResponse->getBody();
 
-
             $playlist = Playlist::createFromEntity($responseBody->getPlaylist());
 
             $tracks = [];

@@ -105,7 +105,7 @@ window.updateRecommendations = function () {
 
                     rows += `
                     <tr>
-                        <td>
+                        <td style="width:70px; !important">
                             <img src="${element.album.images[0].url}"
                                  style="width:50px; height:50px;"
                                  alt="${element.album.name}" />

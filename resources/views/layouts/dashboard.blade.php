@@ -27,6 +27,9 @@
                 <li>
                     <a href="{{ route('dashboard.history') }}">History</a>
                 </li>
+                <li>
+                    <a href="{{ route('spotify.playlists.index') }}">Playlists</a>
+                </li>
             @endif
         </ul>
     </div>

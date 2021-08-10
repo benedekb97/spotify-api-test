@@ -13,6 +13,8 @@ class UpdateTracksEvent
 {
     use Dispatchable;
 
+    private Collection $tracks;
+
     /**
      * UpdateTracksEvent constructor.
      * @param Track|Collection|null $tracks
@@ -44,8 +46,6 @@ class UpdateTracksEvent
             );
         }
     }
-
-    private Collection $tracks;
 
     public function getTracks(): Collection
     {

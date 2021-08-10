@@ -16,7 +16,9 @@ class DashboardController extends Controller
 
     public function history()
     {
-        $playbacks = Playback::where('user_id', Auth::id())->orderBy('played_at', 'desc')->get();
+        $playbacks = Playback::where('user_id', Auth::id())
+            ->orderBy('played_at', 'desc')
+            ->paginate(50);
 
         return view(
             'pages.dashboard.history',
@@ -24,5 +26,10 @@ class DashboardController extends Controller
                 'playbacks' => $playbacks
             ]
         );
+    }
+
+    public function recommendations(RecommendationsRequest $request)
+    {
+
     }
 }

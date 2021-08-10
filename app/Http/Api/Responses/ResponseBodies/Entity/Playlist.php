@@ -38,6 +38,8 @@ class Playlist implements EntityInterface
 
     private ?string $uri = null;
 
+    private ?array $tracksData = null;
+
     public function __construct()
     {
         $this->images = new Collection();
@@ -182,6 +184,16 @@ class Playlist implements EntityInterface
     public function setUri(?string $uri): void
     {
         $this->uri = $uri;
+    }
+
+    public function getTracksData(): ?array
+    {
+        return $this->tracksData;
+    }
+
+    public function setTracksData(?array $tracksData): void
+    {
+        $this->tracksData = $tracksData;
     }
 
     public function toArray(): array

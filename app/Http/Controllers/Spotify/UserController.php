@@ -11,9 +11,11 @@ use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
 use App\Http\Api\Requests\GetRecentlyPlayedTracksRequest;
 use App\Http\Api\Requests\GetRecommendationsRequest;
+use App\Http\Api\Requests\GetUserPlaylistsRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\ResponseBodies\Entity\RecentlyPlayed;
+use App\Http\Api\Responses\ResponseBodies\GetUserPlaylistsResponseBody;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
@@ -119,6 +121,18 @@ class UserController extends Controller
             [
                 'items' => $response->getBody()->getItems(),
                 'type' => array_search($type, self::TYPE_MAP),
+            ]
+        );
+    }
+
+    public function playlists()
+    {
+        $user = Auth::user();
+
+        return view(
+            'pages.spotify.playlists',
+            [
+                'playlists' => $user->playlists()->orderBy('name')->get(),
             ]
         );
     }

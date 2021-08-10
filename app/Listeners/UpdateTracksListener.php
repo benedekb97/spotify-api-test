@@ -25,6 +25,10 @@ class UpdateTracksListener
 
         /** @var TrackEntity $track */
         foreach ($tracks as $track) {
+            if ($track->getId() === null) {
+                continue;
+            }
+
             $model = $this->getTrack($track->getId());
 
             $model->popularity = $track->getPopularity();
