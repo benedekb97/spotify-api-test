@@ -2,6 +2,22 @@ require('./bootstrap');
 
 import Foundation from 'foundation-sites';
 
+import Echo from 'laravel-echo';
+
+window.Pusher = require('pusher-js');
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: true
+});
+
+window.Echo.private(`user.${userId}.history`)
+    .listen('history_update', (e) => {
+        console.log(e);
+    });
+
 window.playNow = function (url) {
     $.ajax({
         url: url,

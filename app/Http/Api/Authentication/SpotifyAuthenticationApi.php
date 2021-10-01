@@ -110,36 +110,36 @@ class SpotifyAuthenticationApi implements SpotifyAuthenticationApiInterface
     }
 
     private function getRedirectUrl(): string
-{
-    $scope = $this->getScope();
+    {
+        $scope = $this->getScope();
 
-    $baseUrl = trim(self::BASE_URL, '/');
+        $baseUrl = trim(self::BASE_URL, '/');
 
-    $state = Str::random();
+        $state = Str::random();
 
-    Session::put(self::SESSION_STATE_KEY, $state);
+        Session::put(self::SESSION_STATE_KEY, $state);
 
-    $queryString = str_replace(
-        '+',
-        ' ',
-        http_build_query(
-            [
-                'client_id' => config('spotify.client.id'),
-                'response_type' => 'code',
-                'redirect_uri' => config('spotify.redirectUrl'),
-                'scope' => $scope,
-                'state' => $state
-            ]
-        )
-    );
+        $queryString = str_replace(
+            '+',
+            ' ',
+            http_build_query(
+                [
+                    'client_id' => config('spotify.client.id'),
+                    'response_type' => 'code',
+                    'redirect_uri' => config('spotify.redirectUrl'),
+                    'scope' => $scope,
+                    'state' => $state
+                ]
+            )
+        );
 
-    return sprintf(
-        '%s/%s?%s',
-        $baseUrl,
-        self::ENDPOINT_AUTHORIZE,
-        $queryString
-    );
-}
+        return sprintf(
+            '%s/%s?%s',
+            $baseUrl,
+            self::ENDPOINT_AUTHORIZE,
+            $queryString
+        );
+    }
 
     private function getScope(): string
     {

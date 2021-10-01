@@ -4,17 +4,25 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Validators;
 
+use App\Entities\UserInterface;
 use App\Http\Api\Requests\SpotifyRequestInterface;
-use App\Models\Scope;
-use App\Models\User;
+use App\Repositories\ScopeRepositoryInterface;
 use LogicException;
 
 class UserRequestScopeValidator
 {
-    public function validate(User $user, SpotifyRequestInterface $spotifyRequest): bool
+    private ScopeRepositoryInterface $scopeRepository;
+
+    public function __construct(
+        ScopeRepositoryInterface $scopeRepository
+    ) {
+        $this->scopeRepository = $scopeRepository;
+    }
+
+    public function validate(UserInterface $user, SpotifyRequestInterface $spotifyRequest): bool
     {
         foreach ($spotifyRequest->getScopes() as $scopeName) {
-            $scope = Scope::all()->where('name', $scopeName)->first();
+            $scope = $this->scopeRepository->findOneByName($scopeName);
 
             if ($scope === null) {
                 throw new LogicException(
@@ -22,7 +30,7 @@ class UserRequestScopeValidator
                 );
             }
 
-            if (!$user->scopes->contains($scope)) {
+            if (!$user->hasScope($scope)) {
                 return false;
             }
         }

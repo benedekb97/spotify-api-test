@@ -10,6 +10,7 @@ interface SpotifyResponseInterface
 {
     public const STATUS_CODE_OK = 200;
     public const STATUS_CODE_CREATED = 201;
+    public const STATUS_CODE_ACCEPTED = 202;
     public const STATUS_CODE_NO_CONTENT = 204;
     public const STATUS_CODE_UNAUTHENTICATED = 401;
     public const STATUS_CODE_UNAUTHORIZED = 403;

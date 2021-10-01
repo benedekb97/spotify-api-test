@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Http\Api\Events\CreatePlaybackEvent;
+use App\Http\Api\Events\UpdatePlaylistCoverEvent;
 use App\Http\Api\Events\UpdatePlaylistsEvent;
 use App\Http\Api\Events\UpdatePlaylistTracksEvent;
 use App\Http\Api\Events\UpdateTracksEvent;
 use App\Listeners\CreatePlaybackListener;
+use App\Listeners\UpdatePlaylistCoverListener;
 use App\Listeners\UpdatePlaylistsListener;
 use App\Listeners\UpdatePlaylistTracksListener;
 use App\Listeners\UpdateTracksListener;
@@ -32,6 +34,9 @@ class EventServiceProvider extends ServiceProvider
         UpdatePlaylistTracksEvent::class => [
             UpdatePlaylistTracksListener::class,
         ],
+        UpdatePlaylistCoverEvent::class => [
+            UpdatePlaylistCoverListener::class,
+        ]
     ];
 
     public function boot()

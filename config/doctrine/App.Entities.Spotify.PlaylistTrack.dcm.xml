@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="App\Entities\Spotify\PlaylistTrack" table="spotify_playlist_track">
+        <id name="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="playlist" target-entity="Playlist" inversed-by="playlistTracks"/>
+
+        <many-to-one field="track" target-entity="App\Entities\Spotify\Track"/>
+
+        <field name="addedAt" column="added_at" type="datetime"/>
+        <field name="addedByUserId" column="added_by_user_id" nullable="true"/>
+        <field name="local" column="is_local" type="boolean" nullable="true"/>
+    </entity>
+
+</doctrine-mapping>

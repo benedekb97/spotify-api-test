@@ -4,25 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
-use App\Http\Api\Authentication\SpotifyAuthenticationApi;
-use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
-use App\Http\Api\Requests\AbstractSpotifyRequest;
+use App\Entities\UserInterface;
 use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
 use App\Http\Api\Requests\GetRecentlyPlayedTracksRequest;
 use App\Http\Api\Requests\GetRecommendationsRequest;
-use App\Http\Api\Requests\GetUserPlaylistsRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\ResponseBodies\Entity\RecentlyPlayed;
-use App\Http\Api\Responses\ResponseBodies\GetUserPlaylistsResponseBody;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
-use App\Jobs\CreateWeeklyMostPlayedPlaylistJob;
-use App\Models\User;
 use App\Util\CacheTags;
+use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Cache\Repository;
@@ -50,18 +45,17 @@ class UserController extends Controller
 
     private SpotifyApiInterface $spotifyApi;
 
-    private SpotifyAuthenticationApiInterface $spotifyAuthenticationApi;
-
     public function __construct(
         Client $client,
         Repository $cache,
         SpotifyApi $spotifyApi,
-        SpotifyAuthenticationApi $spotifyAuthenticationApi
+        EntityManager $entityManager
     ) {
         $this->client = $client;
         $this->cache = $cache;
         $this->spotifyApi = $spotifyApi;
-        $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
+
+        parent::__construct($entityManager);
     }
 
     public function profile(): Response
@@ -127,12 +121,13 @@ class UserController extends Controller
 
     public function playlists()
     {
+        /** @var UserInterface $user */
         $user = Auth::user();
 
         return view(
             'pages.spotify.playlists',
             [
-                'playlists' => $user->playlists()->orderBy('name')->get(),
+                'playlists' => $user->getPlaylists()->toArray(),
             ]
         );
     }
@@ -184,13 +179,13 @@ class UserController extends Controller
 
     private function getHeaders(): array
     {
-        /** @var User $user */
+        /** @var UserInterface $user */
         $user = Auth::user();
 
         return [
             'Authorization' => sprintf(
                 'Bearer %s',
-                $user->spotify_access_token
+                $user->getSpotifyAccessToken()
             )
         ];
     }

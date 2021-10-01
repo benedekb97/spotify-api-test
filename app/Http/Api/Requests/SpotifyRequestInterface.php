@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Requests;
 
+use App\Entities\UserInterface;
 use App\Http\Api\Factories\ResponseBodies\ResponseBodyFactoryInterface;
 use App\Http\Api\Requests\RequestBodies\RequestBodyInterface;
 use App\Http\Api\Responses\SpotifyResponseInterface;
-use App\Models\User;
 use GuzzleHttp\Client;
 
 interface SpotifyRequestInterface
@@ -36,7 +36,7 @@ interface SpotifyRequestInterface
 
     public function getResponse(): ?SpotifyResponseInterface;
 
-    public function getUser(): ?User;
+    public function getUser(): ?UserInterface;
 
-    public function setUser(?User $user): self;
+    public function setUser(?UserInterface $user): self;
 }

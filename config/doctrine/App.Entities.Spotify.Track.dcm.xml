@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    <entity name="App\Entities\Spotify\Track" table="spotify_tracks">
+        <id name="id" type="string"/>
+
+        <field type="json" name="availableMarkets" column="available_markets" nullable="true"/>
+        <field type="smallint" name="discNumber" column="disc_number" nullable="true"/>
+        <field type="bigint" name="durationMs" column="duration_ms" nullable="true"/>
+        <field type="boolean" name="explicit"/>
+        <field type="json" name="externalIds" column="external_ids" nullable="true"/>
+        <field type="json" name="externalUrls" column="external_urls" nullable="true"/>
+        <field name="href" nullable="true"/>
+        <field name="local" column="is_local" type="boolean" nullable="true"/>
+        <field name="playable" column="is_playable" type="boolean" nullable="true"/>
+        <field name="name"/>
+        <field name="popularity" type="smallint"/>
+        <field name="previewUrl" column="preview_url" nullable="true"/>
+        <field type="integer" name="trackNumber" column="track_number" nullable="true"/>
+        <field name="type" nullable="true"/>
+        <field name="uri" nullable="true"/>
+
+        <field name="createdAt" column="created_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="create"/>
+        </field>
+
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="update"/>
+        </field>
+
+        <many-to-one field="album" target-entity="App\Entities\Spotify\Album" inversed-by="tracks"/>
+
+        <many-to-many field="artists" target-entity="App\Entities\Spotify\Artist">
+            <join-table name="spotify_track_artist">
+                <join-columns>
+                    <join-column name="track_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="artist_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+    </entity>
+</doctrine-mapping>

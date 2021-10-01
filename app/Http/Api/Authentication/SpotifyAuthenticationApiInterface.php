@@ -40,7 +40,7 @@ interface SpotifyAuthenticationApiInterface
     public const SCOPE_USERS_READ_PRIVATE = 'user-read-private';
 
     public const SCOPE_ENABLED_MAP = [
-        self::SCOPE_UGC_IMAGE_UPLOAD => false,
+        self::SCOPE_UGC_IMAGE_UPLOAD => true,
 
         self::SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED => true,
         self::SCOPE_LISTENING_HISTORY_TOP_PLAYED => true,
@@ -50,7 +50,7 @@ interface SpotifyAuthenticationApiInterface
         self::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE => true,
         self::SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING => true,
 
-        self::SCOPE_PLAYBACK_REMOTE_CONTROL => false,
+        self::SCOPE_PLAYBACK_REMOTE_CONTROL => true,
         self::SCOPE_PLAYBACK_STREAMING => false,
 
         self::SCOPE_PLAYLISTS_MODIFY_PUBLIC => true,
@@ -59,7 +59,7 @@ interface SpotifyAuthenticationApiInterface
         self::SCOPE_PLAYLISTS_READ_COLLABORATIVE => true,
 
         self::SCOPE_FOLLOW_MODIFY => false,
-        self::SCOPE_FOLLOW_READ => false,
+        self::SCOPE_FOLLOW_READ => true,
 
         self::SCOPE_LIBRARY_MODIFY => false,
         self::SCOPE_LIBRARY_READ => false,

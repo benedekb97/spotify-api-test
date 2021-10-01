@@ -4,11 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\Spotify\Playback;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\RecommendationsRequest;
+use App\Repositories\PlaybackRepositoryInterface;
+use Doctrine\ORM\EntityManager;
 
 class DashboardController extends Controller
 {
+    private PlaybackRepositoryInterface $playbackRepository;
+
+    public function __construct(
+        EntityManager $entityManager,
+        PlaybackRepositoryInterface $playbackRepository
+    ){
+        parent::__construct($entityManager);
+
+        $this->playbackRepository = $playbackRepository;
+    }
+
     public function index()
     {
         return view('pages.dashboard.index');
@@ -16,9 +28,7 @@ class DashboardController extends Controller
 
     public function history()
     {
-        $playbacks = Playback::where('user_id', Auth::id())
-            ->orderBy('played_at', 'desc')
-            ->paginate(50);
+        $playbacks = $this->playbackRepository->getRecentPlaybacksByUser($this->getUser());
 
         return view(
             'pages.dashboard.history',

@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Entities\Spotify\PlaybackInterface;
+use App\Entities\UserInterface;
+use App\Factories\PlaylistFactoryInterface;
+use App\Factories\TopTracksPlaylistCoverFactory;
 use App\Http\Api\Authentication\SpotifyAuthenticationApi;
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Api\Requests\AddTrackToPlaylistRequest;
 use App\Http\Api\Requests\CreatePlaylistRequest;
+use App\Http\Api\Requests\UploadPlaylistCoverRequest;
 use App\Http\Api\Responses\ResponseBodies\CreatePlaylistResponseBody;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
-use App\Models\Spotify\Playlist;
-use App\Models\User;
+use App\Repositories\PlaybackRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
 use DateInterval;
 use DateTime;
+use DateTimeInterface;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
 
 class CreateWeeklyMostPlayedPlaylistJob
 {
@@ -27,30 +34,43 @@ class CreateWeeklyMostPlayedPlaylistJob
 
     private SpotifyApiInterface $spotifyApi;
 
+    private TopTracksPlaylistCoverFactory $coverFactory;
+
+    private UserRepositoryInterface $userRepository;
+
+    private PlaybackRepositoryInterface $playbackRepository;
+
+    private PlaylistFactoryInterface $playlistFactory;
+
     public function __construct(
         SpotifyAuthenticationApi $spotifyAuthenticationApi,
-        SpotifyApi $spotifyApi
-    )
-    {
+        SpotifyApi $spotifyApi,
+        TopTracksPlaylistCoverFactory $coverFactory,
+        UserRepositoryInterface $userRepository,
+        PlaybackRepositoryInterface $playbackRepository,
+        PlaylistFactoryInterface $playlistFactory
+    ) {
         $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
         $this->spotifyApi = $spotifyApi;
+        $this->coverFactory = $coverFactory;
+        $this->userRepository = $userRepository;
+        $this->playbackRepository = $playbackRepository;
+        $this->playlistFactory = $playlistFactory;
     }
 
     public function __invoke()
     {
-        $users = User::all()->filter(
-            static function (User $user): bool {
-                return $user->isLoggedInWithSpotify() && $user->automatically_create_weekly_playlist;
-            }
-        );
+        $users = $this->userRepository->findAllLoggedInWithSpotify();
 
-        /** @var User $user */
+        /** @var UserInterface $user */
         foreach ($users as $user) {
-            if ($user->needsReauthentication()) {
+            Log::info('[WEEKLY_TOP_TRACKS] Creating weekly top tracks playlist for ' . $user->getName() . ' : ' . $user->getId());
+
+            if (!$user->isLoggedInWithSpotify()) {
                 $this->reauthenticateUser($user);
             }
 
-            $playlistRequest = new CreatePlaylistRequest($user->spotify_id);
+            $playlistRequest = new CreatePlaylistRequest($user->getSpotifyId());
             $playlistRequest->setUser($user);
 
             $playlistResponse = $this->spotifyApi->execute(
@@ -64,23 +84,23 @@ class CreateWeeklyMostPlayedPlaylistJob
             /** @var CreatePlaylistResponseBody $responseBody */
             $responseBody = $playlistResponse->getBody();
 
-            $playlist = Playlist::createFromEntity($responseBody->getPlaylist());
+            $playlist = $this->playlistFactory->createFromSpotifyEntity($responseBody->getPlaylist());
 
             $tracks = [];
 
-            $playbacks = $user->playbacks()
-                ->whereBetween(
-                    'played_at',
-                    [new DateTime('-1 week'), new DateTime()]
-                )
-                ->get();
+            $playbacks = $this->playbackRepository->getPlaybacksForUserBetween(
+                $user,
+                $this->getStartDate(),
+                $this->getEndDate()
+            );
 
+            /** @var PlaybackInterface $playback */
             foreach ($playbacks as $playback) {
-                if (array_key_exists($playback->track->uri, $tracks)) {
-                    $tracks[$playback->track->uri]['count']++;
+                if (array_key_exists($playback->getTrack()->getUri(), $tracks)) {
+                    $tracks[$playback->getTrack()->getUri()]['count']++;
                 } else {
-                    $tracks[$playback->track->uri] = [
-                        'track' => $playback->track,
+                    $tracks[$playback->getTrack()->getUri()] = [
+                        'track' => $playback->getTrack(),
                         'count' => 1,
                     ];
                 }
@@ -99,28 +119,51 @@ class CreateWeeklyMostPlayedPlaylistJob
 
             $trackUris = array_map(
                 static function ($track) {
-                    return $track['track']->uri;
+                    return $track['track']->getUri();
                 },
                 $tracks
             );
 
-            $response = $this->spotifyApi->execute(
-                (new AddTrackToPlaylistRequest($playlist->id))->setUser($user),
+            $this->spotifyApi->execute(
+                (new AddTrackToPlaylistRequest($playlist->getId()))->setUser($user),
                 $trackUris
             );
+
+            // TODO: Test image upload for new albums
+
+            $image = $this->coverFactory->create(
+                $this->getStartDate(),
+                $this->getEndDate()
+            );
+
+            $uploadImageRequest = new UploadPlaylistCoverRequest($playlist->getId());
+
+            $uploadImageRequest->setHeaders(
+                [
+                    'Content-Type' => 'image/jpeg',
+                ]
+            );
+
+            $uploadImageRequest->setUser($user);
+
+            $base64Encoded = base64_encode($image->encode('jpeg')->encoded);
+
+            $uploadImageRequest->setRequestBodyText($base64Encoded);
+
+            $response = $this->spotifyApi->execute($uploadImageRequest);
         }
     }
 
-    private function reauthenticateUser(User $user): void
+    private function reauthenticateUser(UserInterface $user): void
     {
-        $response = $this->spotifyAuthenticationApi->refreshAccessToken($user->spotify_refresh_token);
+        $response = $this->spotifyAuthenticationApi->refreshAccessToken($user->getSpotifyRefreshToken());
 
-        $user->spotify_access_token = $response->getAccessToken();
-        $user->spotify_access_token_expiry = (new DateTime())
-            ->add(new DateInterval(sprintf('PT%sS', $response->getExpiresIn())))
-            ->format('Y-m-d H:i:s');
+        $user->setSpotifyAccessToken($response->getAccessToken());
+        $user->setSpotifyAccessTokenExpiry(
+            (new DateTime())->add(new DateInterval(sprintf('PT%sS', $response->getExpiresIn())))
+        );
 
-        $user->save();
+        $this->userRepository->add($user);
     }
 
     private function getPlaylistName(): string
@@ -128,7 +171,7 @@ class CreateWeeklyMostPlayedPlaylistJob
         return sprintf(
             'Weekly Top %d (%s)',
             self::MAX_SONG_COUNT,
-            (new DateTime())->format('Y-m-d')
+            $this->getEndDate()->format('Y-m-d')
         );
     }
 
@@ -136,9 +179,19 @@ class CreateWeeklyMostPlayedPlaylistJob
     {
         return sprintf(
             'Top played tracks between %s and %s',
-            (new DateTime('-1 week'))->format('Y-m-d'),
-            (new DateTime())->format('Y-m-d')
+            $this->getStartDate()->format('Y-m-d'),
+            $this->getEndDate()->format('Y-m-d')
         );
 
+    }
+
+    private function getStartDate(): DateTimeInterface
+    {
+        return new DateTime('-1 week');
+    }
+
+    private function getEndDate(): DateTimeInterface
+    {
+        return new DateTime();
     }
 }

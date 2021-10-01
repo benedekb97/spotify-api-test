@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Entities\ScopeInterface;
+use App\Entities\UserInterface;
+use App\Factories\UserFactoryInterface;
 use App\Http\Api\Authentication\Factory\Response\AccessCodeResponseFactory;
 use App\Http\Api\Authentication\SpotifyAuthenticationApi;
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
@@ -13,13 +16,13 @@ use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\AccessCodeRequest;
-use App\Models\Scope;
-use App\Models\User;
+use App\Repositories\ScopeRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
 use DateInterval;
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use JsonSchema\Uri\Retrievers\FileGetContents;
 use LogicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,15 +38,30 @@ class AuthenticationController extends Controller
 
     private SpotifyApiInterface $spotifyApi;
 
+    private UserRepositoryInterface $userRepository;
+
+    private UserFactoryInterface $userFactory;
+
+    private ScopeRepositoryInterface $scopeRepository;
+
     public function __construct(
         SpotifyAuthenticationApi $spotifyAuthenticationApi,
         AccessCodeResponseFactory $accessCodeResponseFactory,
-        SpotifyApi $spotifyApi
+        SpotifyApi $spotifyApi,
+        UserRepositoryInterface $userRepository,
+        UserFactoryInterface $userFactory,
+        EntityManager $entityManager,
+        ScopeRepositoryInterface $scopeRepository
     )
     {
         $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
         $this->accessCodeResponseFactory = $accessCodeResponseFactory;
         $this->spotifyApi = $spotifyApi;
+        $this->userRepository = $userRepository;
+        $this->userFactory = $userFactory;
+        $this->scopeRepository = $scopeRepository;
+
+        parent::__construct($entityManager);
     }
 
     public function redirect(): Response
@@ -86,27 +104,25 @@ class AuthenticationController extends Controller
                 );
             }
 
-            /** @var User $user */
-            $user = User::where('email', $userDetails->getUser()->getEmail())->first();
+            /** @var UserInterface $user */
+            $user = $this->userRepository->findOneByEmail($userDetails->getUser()->getEmail());
 
             if ($user === null) {
-                $user = new User();
+                /** @var \App\Entities\User $user */
+                $user = $this->userFactory->createNew();
 
-                $user->email = $userDetails->getUser()->getEmail();
-                $user->name = $userDetails->getUser()->getDisplayName();
+                $user->setEmail($userDetails->getUser()->getEmail());
+                $user->setName($userDetails->getUser()->getDisplayName());
             }
 
-            $user->spotify_access_token = $accessTokenResponse->getAccessToken();
-            $user->spotify_refresh_token = $accessTokenResponse->getRefreshToken();
-            $user->spotify_access_token_expiry = $tokenExpiry;
-            $user->spotify_id = $userDetails->getUser()->getId();
-
-            $user->save();
-
-            Auth::login($user);
+            $user->setSpotifyAccessToken($accessTokenResponse->getAccessToken());
+            $user->setSpotifyRefreshToken($accessTokenResponse->getRefreshToken());
+            $user->setSpotifyAccessTokenExpiry($tokenExpiry);
+            $user->setSpotifyId($userDetails->getUser()->getId());
 
             foreach ($accessTokenResponse->getScope()->getScope() as $scopeName) {
-                $scope = Scope::all()->where('name', $scopeName)->first();
+                /** @var ScopeInterface $scope */
+                $scope = $this->scopeRepository->findOneByName($scopeName);
 
                 if ($scope === null) {
                     throw new LogicException(
@@ -114,8 +130,13 @@ class AuthenticationController extends Controller
                     );
                 }
 
-                $user->scopes()->attach($scope);
+                $user->addScope($scope);
             }
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            Auth::login($user);
 
             return new RedirectResponse(route('dashboard.index'));
         }

@@ -1,11 +1,11 @@
 @extends('layouts.dashboard')
 
-@section('title', $playlist->name)
+@section('title', $playlist->getName())
 
 @section('content')
     <div class="card">
         <div class="card-divider">
-            <h5>{{ $playlist->name }} | <a href="{{ route('spotify.playlists.index') }}">Back</a></h5>
+            <h5>{{ $playlist->getName() }} | <a href="{{ route('spotify.playlists.index') }}">Back</a></h5>
         </div>
         <div class="table-scroll">
             <table>
@@ -17,23 +17,23 @@
                     <th>Duration</th>
                     <th>Operations</th>
                 </tr>
-                @foreach ($playlist->playlistTracks as $playlistTrack)
+                @foreach ($playlist->getPlaylistTracks() as $playlistTrack)
                     <tr>
                         <td>
                             <img
-                                src="{{ $playlistTrack->track->album->images[0]['url'] }}"
+                                src="{{ $playlistTrack->getTrack()->getAlbum()->getImages()[0]['url'] }}"
                                 style="width:50px !important; height:50px !important;"
-                                alt="{{ $playlistTrack->track->album->name }}" />
+                                alt="{{ $playlistTrack->getTrack()->getAlbum()->getName() }}" />
                         </td>
-                        <td>{{ $playlistTrack->track->name }}</td>
-                        <td>{{ isset($playlistTrack->track->trackArtists) ? implode(', ', $playlistTrack->track->trackArtists->map(fn (\App\Models\Spotify\TrackArtist $a) => $a->artist->name)->toArray()) : '...' }}</td>
-                        <td>{{ $playlistTrack->track->album->name }}</td>
-                        <td>{{ date('i:s', $playlistTrack->track->duration_ms / 1000) }}</td>
+                        <td>{{ $playlistTrack->getTrack()->getName() }}</td>
+                        <td>{{ !$playlistTrack->getTrack()->getArtists()->isEmpty() ? implode(', ', $playlistTrack->getTrack()->getArtists()->map(fn (\App\Entities\Spotify\ArtistInterface $a) => $a->getName())->toArray()) : '...' }}</td>
+                        <td>{{ $playlistTrack->getTrack()->getAlbum()->getName() }}</td>
+                        <td>{{ date('i:s', $playlistTrack->getTrack()->getDurationms() / 1000) }}</td>
                         <td>
-                            <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $playlistTrack->track->uri]) }}', '{{ $playlistTrack->track->name }}');">
+                            <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $playlistTrack->getTrack()->getUri()]) }}', '{{ $playlistTrack->getTrack()->getName() }}');">
                                 <i class="fas fa-plus-circle"></i>
                             </a>&nbsp;
-                            <a data-tooltip class="top" title="Play now" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $playlistTrack->track->uri]) }}')">
+                            <a data-tooltip class="top" title="Play now" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $playlistTrack->getTrack()->getUri()]) }}')">
                                 <i class="fas fa-play-circle"></i>
                             </a>
                         </td>

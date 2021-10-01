@@ -10,6 +10,7 @@ use App\Http\Api\Requests\PreviousTrackRequest;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,9 +19,12 @@ class PlayerController extends Controller
     private SpotifyApiInterface $spotifyApi;
 
     public function __construct(
-        SpotifyApi $spotifyApi
+        SpotifyApi $spotifyApi,
+        EntityManager $entityManager
     ) {
         $this->spotifyApi = $spotifyApi;
+
+        parent::__construct($entityManager);
     }
 
     public function next(): Response

@@ -22,23 +22,23 @@
                         <tr>
                             <td style="width:70px !important;">
                                 <img
-                                    src="{{ $playback->track->album->images[0]['url'] }}"
+                                    src="{{ $playback->getTrack()->getAlbum()->getImages()[0]['url'] }}"
                                     style="width:50px; height:50px;"
-                                    alt="{{ $playback->track->album->name }}" />
+                                    alt="{{ $playback->getTrack()->getAlbum()->getName() }}" />
                             </td>
                             <td>
-                                {{ $playback->track->name }}
+                                {{ $playback->getTrack()->getName() }}
                             </td>
                             <td>
-                                {{ implode(', ', $playback->track->trackArtists->map(fn ($a) => $a->artist->name)->toArray()) }}
+                                {{ implode(', ', $playback->getTrack()->getArtists()->map(fn ($a) => $a->getname())->toArray()) }}
                             </td>
-                            <td>{{ $playback->track->album->name }}</td>
-                            <td>{{ (new \Carbon\Carbon($playback->played_at))->diffForHumans() }}</td>
+                            <td>{{ $playback->getTrack()->getAlbum()->getName() }}</td>
+                            <td>{{ (new \Carbon\Carbon($playback->getPlayedAt()))->diffForHumans() }}</td>
                             <td>
-                                <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $playback->track->uri]) }}', '{{ $playback->track->name }}');">
+                                <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $playback->getTrack()->getUri()]) }}', '{{ $playback->getTrack()->getName() }}');">
                                     <i class="fas fa-plus-circle"></i>
                                 </a>&nbsp;
-                                <a data-tooltip class="top" title="Play now" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $playback->track->uri]) }}')">
+                                <a data-tooltip class="top" title="Play now" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $playback->getTrack()->getUri()]) }}')">
                                     <i class="fas fa-play-circle"></i>
                                 </a>
                             </td>

@@ -94,7 +94,14 @@
     window.app = {
         name: '{{ env('APP_URL') }}'
     }
+
+    window.pusher = {
+        id: '{{ env('PUSHER_APP_ID') }}'
+    }
+
+    window.userId = {{ \Illuminate\Support\Facades\Auth::id() }};
 </script>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

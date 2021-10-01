@@ -25,6 +25,8 @@ Route::group(
     }
 );
 
+Route::get('image', [DashboardController::class, 'image'])->name('image');
+
 Route::group(
     [
         'prefix' => 'spotify',

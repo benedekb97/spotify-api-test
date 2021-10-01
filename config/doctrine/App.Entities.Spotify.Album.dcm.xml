@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    <entity name="App\Entities\Spotify\Album" table="spotify_albums"
+            repository-class="App\Repositories\AlbumRepository">
+        <id type="string" name="id" column="id"/>
+
+        <field type="json" name="availableMarkets" column="available_markets" nullable="true"/>
+        <field type="json" name="copyrights" nullable="true"/>
+        <field type="json" name="externalIds" column="external_ids" nullable="true"/>
+        <field type="json" name="externalUrls" column="external_urls" nullable="true"/>
+        <field type="json" name="genres" nullable="true"/>
+        <field name="href" nullable="true"/>
+        <field type="json" name="images" nullable="true"/>
+        <field name="label" nullable="true"/>
+        <field name="name"/>
+        <field name="popularity" type="smallint" nullable="true"/>
+        <field name="releaseDate" column="release_date" nullable="true"/>
+        <field name="releaseDatePrecision" column="release_date_precision" nullable="true"/>
+        <field name="restrictions" type="json" nullable="true"/>
+        <field name="totalTracks" column="total_tracks" type="integer" nullable="true"/>
+        <field name="type" nullable="true"/>
+        <field name="uri" nullable="true"/>
+
+        <field name="createdAt" column="created_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="create"/>
+        </field>
+
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="update"/>
+        </field>
+
+        <many-to-many field="artists" target-entity="App\Entities\Spotify\Artist">
+            <join-table name="spotify_album_artist">
+                <join-columns>
+                    <join-column name="album_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="artist_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
+
+        <one-to-many field="tracks" target-entity="App\Entities\Spotify\Track" mapped-by="album"/>
+    </entity>
+</doctrine-mapping>

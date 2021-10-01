@@ -9,6 +9,7 @@ use App\Http\Api\Requests\TransferPlaybackRequest;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,9 +18,12 @@ class DeviceController extends Controller
     private SpotifyApiInterface $spotifyApi;
 
     public function __construct(
-        SpotifyApi $spotifyApi
+        SpotifyApi $spotifyApi,
+        EntityManager $entityManager
     ) {
         $this->spotifyApi = $spotifyApi;
+
+        parent::__construct($entityManager);
     }
 
     public function listAvailable(): Response

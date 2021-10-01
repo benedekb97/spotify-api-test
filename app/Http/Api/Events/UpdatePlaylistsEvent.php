@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Events;
 
+use App\Entities\UserInterface;
 use App\Http\Api\Responses\ResponseBodies\Entity\Playlist;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Events\Dispatchable;
 use LogicException;
 
 class UpdatePlaylistsEvent
 {
-    private User $user;
+    private UserInterface $user;
 
     private Collection $playlists;
 
     use Dispatchable;
 
-    public function __construct(User $user, $playlists)
+    public function __construct(UserInterface $user, $playlists)
     {
         $this->user = $user;
         $this->playlists = new Collection();
@@ -46,7 +46,7 @@ class UpdatePlaylistsEvent
         }
     }
 
-    public function getUser(): User
+    public function getUser(): UserInterface
     {
         return $this->user;
     }

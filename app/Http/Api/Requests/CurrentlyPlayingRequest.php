@@ -61,7 +61,6 @@ class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyR
     {
         return [
             UpdateTracksEvent::class => $this->getTrack(),
-            CreatePlaybackEvent::class => $this->getTrack(),
         ];
     }
 
