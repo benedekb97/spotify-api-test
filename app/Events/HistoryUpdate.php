@@ -40,6 +40,11 @@ class HistoryUpdate implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
+
+        return [];
+
+        // TODO: Fix initialization problem
+        /*
         return $this->playbacks
             ->map(
                 static function (PlaybackInterface $playback): array
@@ -58,5 +63,6 @@ class HistoryUpdate implements ShouldBroadcast
                 }
             )
             ->toArray();
+        */
     }
 }

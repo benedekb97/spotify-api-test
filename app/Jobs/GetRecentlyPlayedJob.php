@@ -145,7 +145,7 @@ class GetRecentlyPlayedJob
 
             $playbacks = array_slice($this->playbackRepository->getRecentPlaybacksByUser($user), 0, 20);
 
-            event(new HistoryUpdate($user, collect($playbacks)));
+//            event(new HistoryUpdate($user, collect($playbacks)));
         }
     }
 
