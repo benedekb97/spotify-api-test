@@ -30,7 +30,8 @@ class PlaybackRepository extends EntityRepository implements PlaybackRepositoryI
     ): QueryBuilder
     {
         return $this->createQueryBuilder($alias)
-            ->where($alias . '.playedAt BETWEEN :start AND :end')
+            ->where($alias . '.playedAt > :start')
+            ->andWhere($alias . '.playedAt < :end')
             ->setParameter('start', $start)
             ->setParameter('end', $end);
     }
@@ -42,7 +43,7 @@ class PlaybackRepository extends EntityRepository implements PlaybackRepositoryI
     ): array
     {
         return $this->createQueryBuilderBetween($start, $end)
-            ->where('o.user = :user')
+            ->andWhere('o.user = :user')
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();

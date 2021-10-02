@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(GetRecentlyPlayedJob::class)->everyMinute();
+        $schedule->call(GetRecentlyPlayedJob::class)->everyFiveMinutes();
         $schedule->call(CreateWeeklyMostPlayedPlaylistJob::class)->sundays()->at('22:00');
         $schedule->call(SynchronizePlaylistsJob::class)->everyThirtyMinutes();
     }
