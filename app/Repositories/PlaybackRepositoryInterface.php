@@ -8,7 +8,6 @@ use App\Entities\Spotify\PlaybackInterface;
 use App\Entities\Spotify\TrackInterface;
 use App\Entities\UserInterface;
 use DateTimeInterface;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ObjectRepository;
 
 interface PlaybackRepositoryInterface extends ObjectRepository
@@ -20,7 +19,7 @@ interface PlaybackRepositoryInterface extends ObjectRepository
      * @param DateTimeInterface $start
      * @param DateTimeInterface $end
      *
-     * @return Collection<PlaybackInterface>
+     * @return array<PlaybackInterface>
      */
     public function getPlaybacksForUserBetween(
         UserInterface $user,
@@ -28,6 +27,14 @@ interface PlaybackRepositoryInterface extends ObjectRepository
         DateTimeInterface $end
     ): array;
 
+    /**
+     * @param UserInterface     $user
+     * @param TrackInterface    $track
+     * @param DateTimeInterface $start
+     * @param DateTimeInterface $end
+     *
+     * @return array<PlaybackInterface>
+     */
     public function getPlaybacksForUserAndTrackBetween(
         UserInterface $user,
         TrackInterface $track,
