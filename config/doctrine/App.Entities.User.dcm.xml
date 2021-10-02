@@ -2,15 +2,18 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
     <entity name="App\Entities\User" table="users" repository-class="App\Repositories\UserRepository">
-        <id name="id" type="integer" column="id"/>
+        <id name="id" type="integer" column="id">
+            <generator strategy="AUTO"/>
+        </id>
 
         <field name="name"/>
         <field name="email"/>
         <field name="password" nullable="true"/>
-        <field name="spotifyAccessToken" column="spotify_access_token" nullable="true"/>
-        <field name="spotifyRefreshToken" column="spotify_refresh_token" nullable="true"/>
+        <field type="text" name="spotifyAccessToken" column="spotify_access_token" nullable="true"/>
+        <field type="text" name="spotifyRefreshToken" column="spotify_refresh_token" nullable="true"/>
         <field name="spotifyAccessTokenExpiry" column="spotify_access_token_expiry" type="datetime" nullable="true"/>
         <field name="spotifyId" column="spotify_id" nullable="true"/>
+        <field name="automaticallyCreateWeeklyPlaylist" column="automatically_create_weekly_playlist" nullable="true"/>
 
         <many-to-many field="scopes" target-entity="App\Entities\Scope">
             <join-table name="user_scope">

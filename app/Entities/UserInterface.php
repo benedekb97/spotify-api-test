@@ -68,4 +68,8 @@ interface UserInterface extends Authenticatable
     public function addPlaylist(PlaylistInterface $playlist): void;
 
     public function removePlaylist(PlaylistInterface $playlist): void;
+
+    public function automaticallyCreateWeeklyPlaylist(): bool;
+
+    public function setAutomaticallyCreateWeeklyPlaylist(bool $automaticallyCreateWeeklyPlaylist): void;
 }

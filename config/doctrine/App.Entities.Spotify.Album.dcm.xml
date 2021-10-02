@@ -30,7 +30,7 @@
             <gedmo:timestampable on="update"/>
         </field>
 
-        <many-to-many field="artists" target-entity="App\Entities\Spotify\Artist">
+        <many-to-many field="artists" target-entity="App\Entities\Spotify\Artist" mapped-by="albums">
             <join-table name="spotify_album_artist">
                 <join-columns>
                     <join-column name="album_id"/>

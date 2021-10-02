@@ -2,7 +2,9 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
     <entity name="App\Entities\Spotify\Playback" table="spotify_playbacks">
-        <id name="id"/>
+        <id name="id">
+            <generator strategy="AUTO"/>
+        </id>
 
         <many-to-one field="track" target-entity="App\Entities\Spotify\Track"/>
 

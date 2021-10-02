@@ -36,6 +36,8 @@ class User implements UserInterface
 
     private Collection $playlists;
 
+    private bool $automaticallyCreateWeeklyPlaylist = false;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
@@ -233,5 +235,15 @@ class User implements UserInterface
             $this->playlists->removeElement($playlist);
             $playlist->setLocalUser(null);
         }
+    }
+
+    public function automaticallyCreateWeeklyPlaylist(): bool
+    {
+        return $this->automaticallyCreateWeeklyPlaylist;
+    }
+
+    public function setAutomaticallyCreateWeeklyPlaylist(bool $automaticallyCreateWeeklyPlaylist): void
+    {
+        $this->automaticallyCreateWeeklyPlaylist = $automaticallyCreateWeeklyPlaylist;
     }
 }
