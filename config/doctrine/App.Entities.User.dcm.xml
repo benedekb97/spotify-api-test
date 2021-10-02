@@ -16,6 +16,10 @@
         <field name="automaticallyCreateWeeklyPlaylist" column="automatically_create_weekly_playlist" nullable="true"/>
 
         <many-to-many field="scopes" target-entity="App\Entities\Scope">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+
             <join-table name="user_scope">
                 <join-columns>
                     <join-column name="user_id"/>

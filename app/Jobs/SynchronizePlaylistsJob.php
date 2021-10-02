@@ -12,6 +12,8 @@ use App\Http\Api\Responses\ResponseBodies\GetUserPlaylistsResponseBody;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Repositories\UserRepositoryInterface;
+use App\Services\User\SpotifyReauthenticationService;
+use App\Services\User\SpotifyReauthenticationServiceInterface;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -30,16 +32,20 @@ class SynchronizePlaylistsJob
 
     private EntityManager $entityManager;
 
+    private SpotifyReauthenticationServiceInterface $spotifyReauthenticationService;
+
     public function __construct(
         SpotifyAuthenticationApi $spotifyAuthenticationApi,
         SpotifyApi $spotifyApi,
         UserRepositoryInterface $userRepository,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        SpotifyReauthenticationService $spotifyReauthenticationService
     ) {
         $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
         $this->spotifyApi = $spotifyApi;
         $this->userRepository = $userRepository;
         $this->entityManager = $entityManager;
+        $this->spotifyReauthenticationService = $spotifyReauthenticationService;
     }
 
     public function __invoke()
@@ -51,7 +57,7 @@ class SynchronizePlaylistsJob
             Log::info('Synchronizing playlists for user ' . $user->getId());
 
             if ($user->needsReauthentication()) {
-                $this->reauthenticateUser($user);
+                $this->spotifyReauthenticationService->reauthenticate($user);
             }
 
             $offset = 0;
@@ -73,18 +79,5 @@ class SynchronizePlaylistsJob
         $this->entityManager->flush();
 
         Log::info('Finished synchronizing playlists');
-    }
-
-    private function reauthenticateUser(UserInterface $user): void
-    {
-        $response = $this->spotifyAuthenticationApi->refreshAccessToken($user->getSpotifyRefreshToken());
-
-        $user->setSpotifyAccessToken($response->getAccessToken());
-        $user->setSpotifyAccessTokenExpiry(
-            (new DateTime())
-            ->add(new DateInterval(sprintf('PT%sS', $response->getExpiresIn())))
-        );
-
-        $this->entityManager->persist($user);
     }
 }
