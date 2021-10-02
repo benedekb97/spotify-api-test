@@ -15,5 +15,3 @@ yarn-error.log
 /.vscode
 .editorconfig
 .styleci.yml
-_ide_helper.php
-_ide_helper_models.php
