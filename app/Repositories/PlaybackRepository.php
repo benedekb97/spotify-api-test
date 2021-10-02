@@ -23,19 +23,7 @@ class PlaybackRepository extends EntityRepository implements PlaybackRepositoryI
             ->getResult();
     }
 
-    private function createQueryBuilderBetween(
-        DateTimeInterface $start,
-        DateTimeInterface $end,
-        string $alias = 'o'
-    ): QueryBuilder
-    {
-        return $this->createQueryBuilder($alias)
-            ->where($alias . '.playedAt > :start')
-            ->andWhere($alias . '.playedAt < :end')
-            ->setParameter('start', $start)
-            ->setParameter('end', $end);
-    }
-
+    /** @inheritDoc */
     public function getPlaybacksForUserBetween(
         UserInterface $user,
         DateTimeInterface $start,
@@ -49,6 +37,7 @@ class PlaybackRepository extends EntityRepository implements PlaybackRepositoryI
             ->getResult();
     }
 
+    /** @inheritDoc */
     public function getPlaybacksForUserAndTrackBetween(
         UserInterface $user,
         TrackInterface $track,
@@ -63,5 +52,18 @@ class PlaybackRepository extends EntityRepository implements PlaybackRepositoryI
             ->setParameter('track', $track)
             ->getQuery()
             ->getResult();
+    }
+
+    private function createQueryBuilderBetween(
+        DateTimeInterface $start,
+        DateTimeInterface $end,
+        string $alias = 'o'
+    ): QueryBuilder
+    {
+        return $this->createQueryBuilder($alias)
+            ->where($alias . '.playedAt > :start')
+            ->andWhere($alias . '.playedAt < :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
     }
 }
