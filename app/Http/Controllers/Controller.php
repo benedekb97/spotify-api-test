@@ -33,4 +33,19 @@ class Controller extends BaseController
 
         return null;
     }
+
+    protected function findOr404(string $entityName, $identifier): object
+    {
+        $repository = $this->entityManager->getRepository($entityName);
+
+        $resource = $repository->find($identifier);
+
+        if ($resource === null) {
+            abort(404);
+        }
+
+        $this->entityManager->initializeObject($resource);
+
+        return $resource;
+    }
 }

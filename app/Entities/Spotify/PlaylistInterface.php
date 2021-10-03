@@ -83,4 +83,6 @@ interface PlaylistInterface
     public function getLocalUser(): ?UserInterface;
 
     public function hasLocalUser(): bool;
+
+    public function isViewableByUser(?UserInterface $user): bool;
 }

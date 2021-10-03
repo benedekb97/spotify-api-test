@@ -241,4 +241,21 @@ class Playlist implements PlaylistInterface
     {
         return isset($this->localUser);
     }
+
+    public function isViewableByUser(?UserInterface $user): bool
+    {
+        if ($this->isCollaborative()) {
+            return true;
+        }
+
+        if ($user === null) {
+            return false;
+        }
+
+        if ($this->hasLocalUser() && $this->getLocalUser() === $user) {
+            return true;
+        }
+
+        return false;
+    }
 }

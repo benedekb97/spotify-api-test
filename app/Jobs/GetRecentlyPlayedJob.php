@@ -23,11 +23,14 @@ use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 
 class GetRecentlyPlayedJob
 {
-    private const EPSILON = 5 * 60;
+    use Dispatchable;
+
+    private const EPSILON = 3 * 60;
 
     private SpotifyAuthenticationApiInterface $spotifyAuthenticationApi;
 
@@ -151,21 +154,19 @@ class GetRecentlyPlayedJob
 
     private function hasEntry(string $trackId, int $userId, DateTimeInterface $playedAt): bool
     {
-        $start = $playedAt->sub(new DateInterval(sprintf('PT%dS', self::EPSILON)));
-        $end = $playedAt->add(new DateInterval(sprintf('PT%dS', self::EPSILON)));
+        $start = (clone $playedAt)->sub(new DateInterval(sprintf('PT%dS', self::EPSILON)));
+        $end = (clone $playedAt)->add(new DateInterval(sprintf('PT%dS', self::EPSILON)));
 
         $track = $this->trackRepository->find($trackId);
         $user = $this->userRepository->find($userId);
 
-        $playback = Arr::first(
-            $this->playbackRepository->getPlaybacksForUserAndTrackBetween(
-                $user,
-                $track,
-                $start,
-                $end
-            )
+        $playbacks = $this->playbackRepository->getPlaybacksForUserAndTrackBetween(
+            $user,
+            $track,
+            $start,
+            $end
         );
 
-        return $playback !== null;
+        return !empty($playbacks);
     }
 }

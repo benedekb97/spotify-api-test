@@ -20,17 +20,13 @@ class PlaylistController extends Controller
 
     private Repository $cache;
 
-    private PlaylistRepositoryInterface $playlistRepository;
-
     public function __construct(
         SpotifyApi $spotifyApi,
         Repository $cache,
-        EntityManager $entityManager,
-        PlaylistRepositoryInterface $playlistRepository
+        EntityManager $entityManager
     ) {
         $this->spotifyApi = $spotifyApi;
         $this->cache = $cache;
-        $this->playlistRepository = $playlistRepository;
 
         parent::__construct($entityManager);
     }
@@ -38,14 +34,10 @@ class PlaylistController extends Controller
     public function show(string $playlist)
     {
         /** @var PlaylistInterface $playlist */
-        $playlist = $this->playlistRepository->find($playlist);
+        $playlist = $this->findOr404(Playlist::class, $playlist);
 
-        if ($playlist === null) {
-            abort(404);
-        }
-
-        if (!$playlist->isCollaborative() && (!$playlist->hasLocalUser() || $playlist->getLocalUser() !== $this->getUser())) {
-            abort(401);
+        if (!$playlist->isViewableByUser($this->getUser())) {
+            abort(403);
         }
 
         $playlist = $this->cache->remember(
@@ -54,7 +46,7 @@ class PlaylistController extends Controller
             function () use ($playlist) {
                 $this->spotifyApi->execute(new GetPlaylistItemsRequest($playlist->getId()));
 
-                return $this->playlistRepository->find($playlist->getId());
+                return $playlist;
             }
         );
 

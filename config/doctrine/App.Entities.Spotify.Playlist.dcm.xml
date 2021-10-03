@@ -24,7 +24,7 @@
             <gedmo:timestampable on="update"/>
         </field>
 
-        <one-to-many field="playlistTracks" target-entity="App\Entities\Spotify\PlaylistTrack" mapped-by="playlist" fetch="EAGER"/>
+        <one-to-many field="playlistTracks" target-entity="App\Entities\Spotify\PlaylistTrack" mapped-by="playlist"/>
 
         <many-to-one field="localUser" target-entity="App\Entities\User">
             <join-column name="local_user_id"/>

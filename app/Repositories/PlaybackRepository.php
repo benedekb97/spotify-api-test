@@ -7,7 +7,6 @@ namespace App\Repositories;
 use App\Entities\Spotify\TrackInterface;
 use App\Entities\UserInterface;
 use DateTimeInterface;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 
 class PlaybackRepository extends EntityRepository implements PlaybackRepositoryInterface
@@ -61,8 +60,7 @@ class PlaybackRepository extends EntityRepository implements PlaybackRepositoryI
     ): QueryBuilder
     {
         return $this->createQueryBuilder($alias)
-            ->where($alias . '.playedAt > :start')
-            ->andWhere($alias . '.playedAt < :end')
+            ->where($alias . '.playedAt BETWEEN :start AND :end')
             ->setParameter('start', $start)
             ->setParameter('end', $end);
     }
