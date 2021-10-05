@@ -127,7 +127,7 @@ class UserController extends Controller
         return view(
             'pages.spotify.playlists',
             [
-                'playlists' => $user->getPlaylists()->toArray(),
+                'playlists' => $user->getPlaylists(),
             ]
         );
     }

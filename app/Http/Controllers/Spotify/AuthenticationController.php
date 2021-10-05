@@ -108,7 +108,7 @@ class AuthenticationController extends Controller
             $user = $this->userRepository->findOneByEmail($userDetails->getUser()->getEmail());
 
             if ($user === null) {
-                /** @var \App\Entities\User $user */
+                /** @var UserInterface $user */
                 $user = $this->userFactory->createNew();
 
                 $user->setEmail($userDetails->getUser()->getEmail());
