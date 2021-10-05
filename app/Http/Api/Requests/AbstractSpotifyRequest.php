@@ -120,6 +120,11 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
         $this->accessToken = $accessToken;
     }
 
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
+    }
+
     public function setRequestBody(RequestBodyInterface $requestBody): void
     {
         $this->requestBody = $requestBody;
@@ -188,7 +193,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
                 $this->getOptions()
             );
         } catch (GuzzleException $exception) {
-            Log::error(
+            Log::channel('spotifyApi')->error(
                 sprintf(
                     '%s failed with message %s',
                     get_class($this),
@@ -207,7 +212,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
             $this->response->setStatusCode($response->getStatusCode());
             $this->response->setBody((new ErrorResponseBody())->setData($responseContent));
 
-            Log::error(
+            Log::channel('spotifyApi')->error(
                 sprintf(
                     'Could not validate status code for response. Status code: %s Error: %s',
                     $response->getStatusCode(),
@@ -227,7 +232,7 @@ abstract class AbstractSpotifyRequest implements SpotifyRequestInterface
             $this->response->setStatusCode($statusCode);
             $this->response->setBody((new ErrorResponseBody())->setData($response));
 
-            Log::error(
+            Log::channel('spotifyApi')->error(
                 sprintf(
                     'Expecting status code %s, received %s. Error: %s',
                     $this->getExpectedStatusCode(),

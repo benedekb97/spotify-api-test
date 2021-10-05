@@ -10,12 +10,14 @@ use App\Entities\Spotify\Playback;
 use App\Entities\Spotify\Playlist;
 use App\Entities\Spotify\PlaylistTrack;
 use App\Entities\Spotify\Track;
+use App\Entities\Spotify\TrackAssociation;
 use App\Entities\User;
 use App\Factories\AlbumFactory;
 use App\Factories\ArtistFactory;
 use App\Factories\PlaybackFactory;
 use App\Factories\PlaylistFactory;
 use App\Factories\PlaylistTrackFactory;
+use App\Factories\TrackAssociationFactory;
 use App\Factories\TrackFactory;
 use App\Factories\UserFactory;
 use Illuminate\Foundation\Application;
@@ -30,6 +32,7 @@ class FactoryServiceProvider extends ServiceProvider
         Playlist::class => PlaylistFactory::class,
         PlaylistTrack::class => PlaylistTrackFactory::class,
         Track::class => TrackFactory::class,
+        TrackAssociation::class => TrackAssociationFactory::class,
         User::class => UserFactory::class,
     ];
 

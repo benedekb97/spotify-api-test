@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:gedmo="http://gediminasm.org/schemas/orm/doctrine-extensions-mapping">
+    <entity name="App\Entities\Spotify\TrackAssociation" table="spotify_track_associations">
+        <id name="id" column="id">
+            <generator strategy="AUTO"/>
+        </id>
+
+        <many-to-one field="originalTrack" target-entity="App\Entities\Spotify\Track">
+            <join-column name="original_track_id"/>
+        </many-to-one>
+
+        <many-to-one field="recommendedTrack" target-entity="App\Entities\Spotify\Track">
+            <join-column name="recommended_track_id"/>
+        </many-to-one>
+
+        <many-to-one field="user" target-entity="App\Entities\User">
+            <join-column name="user_id"/>
+        </many-to-one>
+
+        <many-to-one field="playlist" target-entity="App\Entities\Spotify\Playlist">
+            <join-column name="playlist_id"/>
+        </many-to-one>
+
+        <field name="createdAt" column="created_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="create"/>
+        </field>
+
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true">
+            <gedmo:timestampable on="update"/>
+        </field>
+    </entity>
+</doctrine-mapping>

@@ -41,6 +41,12 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'spotifyApi' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/spotify_api.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

@@ -85,4 +85,20 @@ interface PlaylistInterface
     public function hasLocalUser(): bool;
 
     public function isViewableByUser(?UserInterface $user): bool;
+
+    public function isTopPlayed(): bool;
+
+    public function setTopPlayed(?bool $topPlayed): void;
+
+    public function getTrackAssociations(): Collection;
+
+    public function hasTrackAssociation(TrackAssociationInterface $trackAssociation): bool;
+
+    public function addTrackAssociation(TrackAssociationInterface $trackAssociation): void;
+
+    public function removeTrackAssociation(TrackAssociationInterface $trackAssociation): void;
+
+    public function getRecommendedTracks(): array;
+
+    public function hasTrack(TrackInterface $track): bool;
 }

@@ -16,6 +16,8 @@
         <field name="uri" nullable="true"/>
         <field name="href" nullable="true"/>
 
+        <field name="topPlayed" column="top_played" type="boolean" nullable="true"/>
+
         <field name="createdAt" column="created_at" type="datetime" nullable="true">
             <gedmo:timestampable on="create"/>
         </field>
@@ -29,6 +31,9 @@
         <many-to-one field="localUser" target-entity="App\Entities\User">
             <join-column name="local_user_id"/>
         </many-to-one>
+
+        <one-to-many field="trackAssociations" target-entity="App\Entities\Spotify\TrackAssociation"
+                     mapped-by="playlist"/>
     </entity>
 
 </doctrine-mapping>

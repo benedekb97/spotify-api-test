@@ -50,9 +50,12 @@ class Track implements TrackInterface
 
     private Collection $artists;
 
+    private Collection $trackAssociations;
+
     public function __construct()
     {
         $this->artists = new ArrayCollection();
+        $this->trackAssociations = new ArrayCollection();
     }
 
     public function setId(string $id): void
@@ -267,5 +270,55 @@ class Track implements TrackInterface
         if ($this->hasArtist($artist)) {
             $this->artists->removeElement($artist);
         }
+    }
+
+    public function getTrackAssociations(): Collection
+    {
+        return $this->trackAssociations;
+    }
+
+    public function hasTrackAssociation(TrackAssociationInterface $trackAssociation): bool
+    {
+        return $this->trackAssociations->contains($trackAssociation);
+    }
+
+    public function addTrackAssociation(TrackAssociationInterface $trackAssociation): void
+    {
+        if (!$this->hasTrackAssociation($trackAssociation)) {
+            $this->trackAssociations->add($trackAssociation);
+        }
+    }
+
+    public function removeTrackAssociation(TrackAssociationInterface $trackAssociation): void
+    {
+        if ($this->hasTrackAssociation($trackAssociation)) {
+            $this->trackAssociations->removeElement($trackAssociation);
+        }
+    }
+
+    public function getRecommendedTracks(): array
+    {
+        $recommendedTracks = [];
+
+        /** @var TrackAssociationInterface $trackAssociation */
+        foreach ($this->getTrackAssociations() as $trackAssociation) {
+            if (!array_key_exists($trackAssociation->getRecommendedTrack()->getId(), $recommendedTracks)) {
+                $recommendedTracks[$trackAssociation->getRecommendedTrack()->getId()] = [
+                    'count' => 1,
+                    'track' => $trackAssociation->getRecommendedTrack(),
+                ];
+            } else {
+                $recommendedTracks[$trackAssociation->getRecommendedTrack()->getId()]['count']++;
+            }
+        }
+
+        uasort(
+            $recommendedTracks,
+            static function ($a, $b) {
+                return $b['count'] <=> $a['count'];
+            }
+        );
+
+        return $recommendedTracks;
     }
 }

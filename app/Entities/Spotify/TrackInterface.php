@@ -94,4 +94,14 @@ interface TrackInterface
     public function addArtist(ArtistInterface $artist): void;
 
     public function removeArtist(ArtistInterface $artist): void;
+
+    public function getTrackAssociations(): Collection;
+
+    public function hasTrackAssociation(TrackAssociationInterface $trackAssociation): bool;
+
+    public function addTrackAssociation(TrackAssociationInterface $trackAssociation): void;
+
+    public function removeTrackAssociation(TrackAssociationInterface $trackAssociation): void;
+
+    public function getRecommendedTracks(): array;
 }

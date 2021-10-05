@@ -40,5 +40,7 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+
+        <one-to-many field="trackAssociations" target-entity="App\Entities\Spotify\TrackAssociation" mapped-by="originalTrack"/>
     </entity>
 </doctrine-mapping>

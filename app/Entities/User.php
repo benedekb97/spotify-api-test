@@ -208,7 +208,7 @@ class User implements UserInterface
 
     public function needsReauthentication(): bool
     {
-        return $this->isLoggedInWithSpotify() && (new DateTime()) > $this->getSpotifyAccessTokenExpiry();
+        return (new DateTime()) > $this->getSpotifyAccessTokenExpiry();
     }
 
     public function getPlaylists(): Collection

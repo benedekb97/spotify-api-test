@@ -8,6 +8,7 @@ use App\Entities\UserInterface;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Illuminate\Support\Arr;
 use function Symfony\Component\String\b;
 
 class Playlist implements PlaylistInterface
@@ -46,9 +47,14 @@ class Playlist implements PlaylistInterface
 
     private ?UserInterface $localUser = null;
 
+    private ?bool $topPlayed = false;
+
+    private Collection $trackAssociations;
+
     public function __construct()
     {
         $this->playlistTracks = new ArrayCollection();
+        $this->trackAssociations = new ArrayCollection();
     }
 
     public function setId(string $id): void
@@ -254,6 +260,80 @@ class Playlist implements PlaylistInterface
 
         if ($this->hasLocalUser() && $this->getLocalUser() === $user) {
             return true;
+        }
+
+        return false;
+    }
+
+    public function isTopPlayed(): bool
+    {
+        return $this->topPlayed ?? false;
+    }
+
+    public function setTopPlayed(?bool $topPlayed): void
+    {
+        $this->topPlayed = $topPlayed ?? false;
+    }
+
+    public function getTrackAssociations(): Collection
+    {
+        return $this->trackAssociations;
+    }
+
+    public function hasTrackAssociation(TrackAssociationInterface $trackAssociation): bool
+    {
+        return $this->trackAssociations->contains($trackAssociation);
+    }
+
+    public function addTrackAssociation(TrackAssociationInterface $trackAssociation): void
+    {
+        if (!$this->hasTrackAssociation($trackAssociation)) {
+            $this->trackAssociations->add($trackAssociation);
+            $trackAssociation->setPlaylist($this);
+        }
+    }
+
+    public function removeTrackAssociation(TrackAssociationInterface $trackAssociation): void
+    {
+        if ($this->hasTrackAssociation($trackAssociation)) {
+            $this->trackAssociations->removeElement($trackAssociation);
+            $trackAssociation->setPlaylist(null);
+        }
+    }
+
+    public function getRecommendedTracks(): array
+    {
+        $tracks = [];
+
+        /** @var TrackAssociationInterface $trackAssociation */
+        foreach ($this->getTrackAssociations() as $trackAssociation) {
+            if (!array_key_exists($trackAssociation->getRecommendedTrack()->getId(), $tracks)) {
+                $tracks[$trackAssociation->getRecommendedTrack()->getId()] = [
+                    'count' => 1,
+                    'track' => $trackAssociation->getRecommendedTrack(),
+                ];
+            } else {
+                $tracks[$trackAssociation->getRecommendedTrack()->getId()]['count']++;
+            }
+        }
+
+        uasort(
+            $tracks,
+            static function ($a, $b) {
+                return $b['count'] <=> $a['count'];
+            }
+        );
+
+        return $tracks;
+    }
+
+    public function hasTrack(TrackInterface $track): bool
+    {
+        /** @var PlaylistTrackInterface $playlistTrack */
+        foreach ($this->getPlaylistTracks() as $playlistTrack) {
+            if ($playlistTrack->getTrack() === $track) {
+                return true;
+            }
         }
 
         return false;
