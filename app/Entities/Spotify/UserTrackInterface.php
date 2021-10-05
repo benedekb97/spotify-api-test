@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Entities\Spotify;
 
 use App\Entities\Traits\ResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 use App\Entities\UserInterface;
 use DateTimeInterface;
 
-interface UserTrackInterface extends ResourceInterface
+interface UserTrackInterface extends ResourceInterface, TimestampableInterface
 {
     public function getUser(): ?UserInterface;
 

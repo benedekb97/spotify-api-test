@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Entities\Spotify;
 
 use App\Entities\Traits\ResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use App\Entities\UserInterface;
 use DateTimeInterface;
 
 class UserTrack implements UserTrackInterface
 {
     use ResourceTrait;
+    use TimestampableTrait;
 
     private ?UserInterface $user = null;
 
