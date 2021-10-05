@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\ResourceInterface;
 use DateTimeInterface;
 
-interface PlaylistTrackInterface
+interface PlaylistTrackInterface extends ResourceInterface
 {
-    public function getId(): ?int;
-
     public function getPlaylist(): ?PlaylistInterface;
 
     public function setPlaylist(?PlaylistInterface $playlist): void;

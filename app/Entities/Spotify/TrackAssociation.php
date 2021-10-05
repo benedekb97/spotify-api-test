@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
-use App\Entities\TimestampableTrait;
+use App\Entities\Traits\ResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use App\Entities\UserInterface;
 
 class TrackAssociation implements TrackAssociationInterface
 {
     use TimestampableTrait;
-
-    private ?int $id = null;
+    use ResourceTrait;
 
     private ?TrackInterface $originalTrack = null;
 
@@ -20,11 +20,6 @@ class TrackAssociation implements TrackAssociationInterface
     private ?UserInterface $user = null;
 
     private ?PlaylistInterface $playlist = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getOriginalTrack(): ?TrackInterface
     {

@@ -10,10 +10,6 @@ use Doctrine\Common\Collections\Collection;
 
 interface PlaylistInterface
 {
-    public function setId(string $id): void;
-
-    public function getId(): ?string;
-
     public function isCollaborative(): ?bool;
 
     public function setCollaborative(?bool $collaborative): void;
@@ -61,14 +57,6 @@ interface PlaylistInterface
     public function getUri(): ?string;
 
     public function setUri(?string $uri): void;
-
-    public function getCreatedAt(): ?DateTimeInterface;
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void;
-
-    public function getUpdatedAt(): ?DateTimeInterface;
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void;
 
     public function getPlaylistTracks(): Collection;
 

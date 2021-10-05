@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
-use DateTimeInterface;
+use App\Entities\Traits\SpotifyResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 use Doctrine\Common\Collections\Collection;
 
-interface ArtistInterface
+interface ArtistInterface extends SpotifyResourceInterface, TimestampableInterface
 {
-    public function setId(string $id): void;
-
-    public function getId(): ?string;
-
     public function getFollowers(): ?array;
 
     public function setFollowers(?array $followers): void;
@@ -44,14 +41,6 @@ interface ArtistInterface
     public function getUri(): ?string;
 
     public function setUri(?string $uri): void;
-
-    public function getCreatedAt(): ?DateTimeInterface;
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void;
-
-    public function getUpdatedAt(): ?DateTimeInterface;
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void;
 
     public function getAlbums(): Collection;
 

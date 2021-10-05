@@ -4,28 +4,22 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\ResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use App\Entities\UserInterface;
 use DateTime;
 use DateTimeInterface;
 
 class Playback implements PlaybackInterface
 {
-    private ?int $id = null;
+    use ResourceTrait;
+    use TimestampableTrait;
 
     private ?TrackInterface $track = null;
 
     private ?UserInterface $user = null;
 
-    private ?DateTimeInterface $createdAt = null;
-
-    private ?DateTimeInterface $updatedAt = null;
-
     private ?DateTimeInterface $playedAt = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getTrack(): ?TrackInterface
     {
@@ -45,26 +39,6 @@ class Playback implements PlaybackInterface
     public function setUser(?UserInterface $user): void
     {
         $this->user = $user;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getPlayedAt(): ?DateTimeInterface

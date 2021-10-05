@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
-use DateTimeInterface;
+use App\Entities\Traits\SpotifyResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class Album implements AlbumInterface
 {
-    private ?string $id = null;
+    use SpotifyResourceTrait;
+    use TimestampableTrait;
 
     private ?array $availableMarkets = null;
 
@@ -44,10 +46,6 @@ class Album implements AlbumInterface
 
     private ?string $uri = null;
 
-    private ?DateTimeInterface $createdAt = null;
-
-    private ?DateTimeInterface $updatedAt = null;
-
     private Collection $artists;
 
     private Collection $tracks;
@@ -56,16 +54,6 @@ class Album implements AlbumInterface
     {
         $this->artists = new ArrayCollection();
         $this->tracks = new ArrayCollection();
-    }
-
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getAvailableMarkets(): ?array
@@ -226,26 +214,6 @@ class Album implements AlbumInterface
     public function setUri(?string $uri): void
     {
         $this->uri = $uri;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getArtists(): Collection

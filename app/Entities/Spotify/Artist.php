@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\SpotifyResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class Artist implements ArtistInterface
 {
-    public const TYPE_ARTIST = 'artist';
+    use SpotifyResourceTrait;
+    use TimestampableTrait;
 
-    private ?string $id = null;
+    public const TYPE_ARTIST = 'artist';
 
     private ?array $followers = null;
 
@@ -39,16 +42,6 @@ class Artist implements ArtistInterface
     public function __construct()
     {
         $this->albums = new ArrayCollection();
-    }
-
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getFollowers(): ?array

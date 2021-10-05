@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Traits\ResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,17 +14,14 @@ use Doctrine\Common\Collections\Collection;
 
 class User implements UserInterface
 {
-    private ?int $id = null;
+    use ResourceTrait;
+    use TimestampableTrait;
 
     private ?string $name = null;
 
     private ?string $email = null;
 
     private ?string $password = null;
-
-    private ?DateTimeInterface $createdAt = null;
-
-    private ?DateTimeInterface $updatedAt = null;
 
     private ?string $spotifyAccessToken = null;
 
@@ -42,16 +41,6 @@ class User implements UserInterface
     {
         $this->playlists = new ArrayCollection();
         $this->scopes = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(?int $id): void
-    {
-        $this->id = $id;
     }
 
     public function getName(): ?string
@@ -82,26 +71,6 @@ class User implements UserInterface
     public function setPassword(?string $password): void
     {
         $this->password = $password;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getSpotifyAccessToken(): ?string

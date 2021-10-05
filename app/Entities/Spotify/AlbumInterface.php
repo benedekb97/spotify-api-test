@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\SpotifyResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 
-interface AlbumInterface
+interface AlbumInterface extends SpotifyResourceInterface, TimestampableInterface
 {
     public const TYPE_ALBUM = 'album';
-
-    public function setId(string $id): void;
-
-    public function getId(): ?string;
 
     public function getAvailableMarkets(): ?array;
 

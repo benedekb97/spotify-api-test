@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
-use DateTimeInterface;
+use App\Entities\Traits\SpotifyResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 class Track implements TrackInterface
 {
-    private ?string $id = null;
+    use SpotifyResourceTrait;
+    use TimestampableTrait;
 
     private ?array $availableMarkets = null;
 
@@ -42,10 +44,6 @@ class Track implements TrackInterface
 
     private ?string $uri = null;
 
-    private ?DateTimeInterface $createdAt = null;
-
-    private ?DateTimeInterface $updatedAt = null;
-
     private ?AlbumInterface $album = null;
 
     private Collection $artists;
@@ -56,16 +54,6 @@ class Track implements TrackInterface
     {
         $this->artists = new ArrayCollection();
         $this->trackAssociations = new ArrayCollection();
-    }
-
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function getAvailableMarkets(): ?array
@@ -216,26 +204,6 @@ class Track implements TrackInterface
     public function setUri(?string $uri): void
     {
         $this->uri = $uri;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getAlbum(): ?AlbumInterface

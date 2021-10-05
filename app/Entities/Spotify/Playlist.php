@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\SpotifyResourceTrait;
+use App\Entities\Traits\TimestampableTrait;
 use App\Entities\UserInterface;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Illuminate\Support\Arr;
-use function Symfony\Component\String\b;
 
 class Playlist implements PlaylistInterface
 {
-    private ?string $id = null;
+    use SpotifyResourceTrait;
+    use TimestampableTrait;
 
     private ?bool $collaborative = null;
 
@@ -39,10 +39,6 @@ class Playlist implements PlaylistInterface
 
     private ?string $uri = null;
 
-    private ?DateTimeInterface $createdAt = null;
-
-    private ?DateTimeInterface $updatedAt = null;
-
     private Collection $playlistTracks;
 
     private ?UserInterface $localUser = null;
@@ -55,16 +51,6 @@ class Playlist implements PlaylistInterface
     {
         $this->playlistTracks = new ArrayCollection();
         $this->trackAssociations = new ArrayCollection();
-    }
-
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getId(): ?string
-    {
-        return $this->id;
     }
 
     public function isCollaborative(): ?bool
@@ -185,26 +171,6 @@ class Playlist implements PlaylistInterface
     public function setUri(?string $uri): void
     {
         $this->uri = $uri;
-    }
-
-    public function getCreatedAt(): ?DateTimeInterface
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    public function getUpdatedAt(): ?DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 
     public function getPlaylistTracks(): Collection

@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
-use DateTimeInterface;
+use App\Entities\Traits\SpotifyResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 use Doctrine\Common\Collections\Collection;
 
-interface TrackInterface
+interface TrackInterface extends SpotifyResourceInterface, TimestampableInterface
 {
     public const TYPE_TRACK = 'track';
-
-    public function setId(string $id): void;
-
-    public function getId(): ?string;
 
     public function getAvailableMarkets(): ?array;
 
@@ -74,14 +71,6 @@ interface TrackInterface
     public function getUri(): ?string;
 
     public function setUri(?string $uri): void;
-
-    public function getCreatedAt(): ?DateTimeInterface;
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void;
-
-    public function getUpdatedAt(): ?DateTimeInterface;
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void;
 
     public function getAlbum(): ?AlbumInterface;
 

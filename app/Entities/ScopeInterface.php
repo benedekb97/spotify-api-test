@@ -4,21 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use DateTimeInterface;
+use App\Entities\Traits\ResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 
-interface ScopeInterface
+interface ScopeInterface extends ResourceInterface, TimestampableInterface
 {
-    public function getId(): ?int;
-
     public function getName(): ?string;
 
     public function setName(?string $name): void;
-
-    public function getCreatedAt(): ?DateTimeInterface;
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void;
-
-    public function getUpdatedAt(): ?DateTimeInterface;
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void;
 }

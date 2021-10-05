@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Traits\ResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 use Illuminate\Contracts\Auth\Authenticatable;
 
-interface UserInterface extends Authenticatable
+interface UserInterface extends Authenticatable, ResourceInterface, TimestampableInterface
 {
-    public function getId(): ?int;
-
     public function getName(): ?string;
 
     public function setName(?string $name): void;
@@ -24,14 +24,6 @@ interface UserInterface extends Authenticatable
     public function getPassword(): ?string;
 
     public function setPassword(?string $password): void;
-
-    public function getCreatedAt(): ?DateTimeInterface;
-
-    public function setCreatedAt(?DateTimeInterface $createdAt): void;
-
-    public function getUpdatedAt(): ?DateTimeInterface;
-
-    public function setUpdatedAt(?DateTimeInterface $updatedAt): void;
 
     public function getSpotifyAccessToken(): ?string;
 

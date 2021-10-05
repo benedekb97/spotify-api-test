@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\ResourceTrait;
 use DateTimeInterface;
 
 class PlaylistTrack implements PlaylistTrackInterface
 {
-    private ?int $id = null;
+    use ResourceTrait;
 
     private ?PlaylistInterface $playlist = null;
 
@@ -19,11 +20,6 @@ class PlaylistTrack implements PlaylistTrackInterface
     private ?string $addedByUserId = null;
 
     private ?bool $local = null;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
 
     public function getPlaylist(): ?PlaylistInterface
     {
