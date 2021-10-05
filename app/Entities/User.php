@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Spotify\TrackInterface;
+use App\Entities\Spotify\UserTrackInterface;
 use App\Entities\Traits\ResourceTrait;
 use App\Entities\Traits\TimestampableTrait;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Cache\Persister\Collection\CachedCollectionPersister;
 
 class User implements UserInterface
 {
@@ -37,10 +40,13 @@ class User implements UserInterface
 
     private bool $automaticallyCreateWeeklyPlaylist = false;
 
+    private Collection $userTracks;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
         $this->scopes = new ArrayCollection();
+        $this->userTracks = new ArrayCollection();
     }
 
     public function getName(): ?string
@@ -214,5 +220,46 @@ class User implements UserInterface
     public function setAutomaticallyCreateWeeklyPlaylist(bool $automaticallyCreateWeeklyPlaylist): void
     {
         $this->automaticallyCreateWeeklyPlaylist = $automaticallyCreateWeeklyPlaylist;
+    }
+
+    public function getUserTracks(): Collection
+    {
+        return $this->userTracks;
+    }
+
+    public function hasUserTrack(UserTrackInterface $userTrack): bool
+    {
+        return $this->userTracks->contains($userTrack);
+    }
+
+    public function addUserTrack(UserTrackInterface $userTrack): void
+    {
+        if (!$this->hasUserTrack($userTrack)) {
+            $this->userTracks->add($userTrack);
+            $userTrack->setUser($this);
+        }
+    }
+
+    public function removeUserTrack(UserTrackInterface $userTrack): void
+    {
+        if ($this->hasUserTrack($userTrack)) {
+            $this->userTracks->removeElement($userTrack);
+            $userTrack->setUser(null);
+        }
+    }
+
+    public function getTracks(): Collection
+    {
+        return $this->userTracks->map(
+            static function (UserTrackInterface $userTrack): ?TrackInterface
+            {
+                return $userTrack->getTrack();
+            }
+        );
+    }
+
+    public function hasTrack(TrackInterface $track): bool
+    {
+        return $this->getTracks()->contains($track);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Spotify\UserTrackInterface;
 use App\Entities\Traits\ResourceInterface;
 use App\Entities\Traits\TimestampableInterface;
 use DateTimeInterface;
@@ -64,4 +65,12 @@ interface UserInterface extends Authenticatable, ResourceInterface, Timestampabl
     public function automaticallyCreateWeeklyPlaylist(): bool;
 
     public function setAutomaticallyCreateWeeklyPlaylist(bool $automaticallyCreateWeeklyPlaylist): void;
+
+    public function getUserTracks(): Collection;
+
+    public function hasUserTrack(UserTrackInterface $userTrack): bool;
+
+    public function addUserTrack(UserTrackInterface $userTrack): void;
+
+    public function removeUserTrack(UserTrackInterface $userTrack): void;
 }
