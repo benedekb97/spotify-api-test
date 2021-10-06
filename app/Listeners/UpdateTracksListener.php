@@ -19,6 +19,10 @@ use App\Http\Api\Responses\ResponseBodies\Entity\Track as TrackEntity;
 use App\Repositories\AlbumRepositoryInterface;
 use App\Repositories\ArtistRepositoryInterface;
 use App\Repositories\TrackRepositoryInterface;
+use App\Services\Providers\Spotify\AlbumProvider;
+use App\Services\Providers\Spotify\AlbumProviderInterface;
+use App\Services\Providers\Spotify\TrackProvider;
+use App\Services\Providers\Spotify\TrackProviderInterface;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -38,6 +42,10 @@ class UpdateTracksListener
 
     private AlbumFactoryInterface $albumFactory;
 
+    private TrackProviderInterface $trackProvider;
+
+    private AlbumProviderInterface $albumProvider;
+
     public function __construct(
         EntityManager $entityManager,
         TrackRepositoryInterface $trackRepository,
@@ -45,7 +53,9 @@ class UpdateTracksListener
         ArtistRepositoryInterface $artistRepository,
         ArtistFactoryInterface $artistFactory,
         AlbumRepositoryInterface $albumRepository,
-        AlbumFactoryInterface $albumFactory
+        AlbumFactoryInterface $albumFactory,
+        TrackProvider $trackProvider,
+        AlbumProvider $albumProvider
     ) {
         $this->entityManager = $entityManager;
         $this->trackRepository = $trackRepository;
@@ -54,6 +64,8 @@ class UpdateTracksListener
         $this->artistFactory = $artistFactory;
         $this->albumRepository = $albumRepository;
         $this->albumFactory = $albumFactory;
+        $this->trackProvider = $trackProvider;
+        $this->albumProvider = $albumProvider;
     }
 
     public function handle(UpdateTracksEvent $event): void
@@ -66,23 +78,7 @@ class UpdateTracksListener
                 continue;
             }
 
-            $model = $this->getTrack($track->getId());
-
-            $model->setPopularity($track->getPopularity());
-            $model->setExplicit($track->getExplicit());
-            $model->setName($track->getName());
-            $model->setType($track->getType());
-            $model->setAvailableMarkets($track->getAvailableMarkets());
-            $model->setDiscNumber($track->getDiscNumber());
-            $model->setDurationms($track->getDurationMs());
-            $model->setExternalids($track->getExternalId() ? $track->getExternalId()->toArray() : []);
-            $model->setExternalUrls($track->getExternalUrl() ? $track->getExternalUrl()->toArray() : []);
-            $model->setHref($track->getHref());
-            $model->setLocal($track->getIsLocal());
-            $model->setPlayable($track->getIsPlayable());
-            $model->setPreviewUrl($track->getPreviewUrl());
-            $model->setTrackNumber($track->getTrackNumber());
-            $model->setUri($track->getUri());
+            $model = $this->trackProvider->provide($track);
 
             $this->setArtists($model, $track->getArtists());
 
@@ -92,20 +88,6 @@ class UpdateTracksListener
         }
 
         $this->entityManager->flush();
-    }
-
-    private function getTrack(string $id): TrackInterface
-    {
-        $track = $this->trackRepository->find($id);
-
-        if ($track === null) {
-            /** @var TrackInterface $track */
-            $track = $this->trackFactory->createNew();
-
-            $track->setId($id);
-        }
-
-        return $track;
     }
 
     private function setArtists(TrackInterface $track, Collection $artists): void
@@ -155,7 +137,7 @@ class UpdateTracksListener
 
     private function setAlbum(TrackInterface $track, AlbumEntity $album): void
     {
-        $model = $this->getAlbum($album);
+        $model = $this->albumProvider->provide($album);
 
         $track->setAlbum($model);
     }

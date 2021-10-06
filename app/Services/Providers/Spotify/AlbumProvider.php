@@ -2,19 +2,43 @@
 
 declare(strict_types=1);
 
-namespace App\Factories;
+namespace App\Services\Providers\Spotify;
 
 use App\Entities\Spotify\AlbumInterface;
-use App\Http\Api\Responses\ResponseBodies\Entity\Album as AlbumEntity;
+use App\Factories\AlbumFactoryInterface;
+use App\Http\Api\Responses\ResponseBodies\Entity\Album;
 use App\Http\Api\Responses\ResponseBodies\Entity\Copyright;
 use App\Http\Api\Responses\ResponseBodies\Entity\Image;
+use App\Repositories\AlbumRepositoryInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
-class AlbumFactory extends EntityFactory implements AlbumFactoryInterface
+class AlbumProvider implements AlbumProviderInterface
 {
-    public function createFromSpotifyEntity(AlbumEntity $entity): AlbumInterface
+    private AlbumRepositoryInterface $albumRepository;
+
+    private AlbumFactoryInterface $albumFactory;
+
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(
+        AlbumRepositoryInterface $albumRepository,
+        AlbumFactoryInterface $albumFactory,
+        EntityManager $entityManager
+    ) {
+        $this->albumRepository = $albumRepository;
+        $this->albumFactory = $albumFactory;
+        $this->entityManager = $entityManager;
+    }
+
+    public function provide(Album $entity): AlbumInterface
     {
-        /** @var AlbumInterface $album */
-        $album = $this->createNew();
+        $album = $this->albumRepository->find($entity->getId());
+
+        if (!$album instanceof AlbumInterface) {
+            /** @var AlbumInterface $album */
+            $album = $this->albumFactory->createNew();
+        }
 
         $album->setAvailableMarkets($entity->getAvailableMarkets());
         $album->setCopyrights($entity->getCopyrights()->map(fn(Copyright $c) => $c->toArray())->toArray());
