@@ -10,6 +10,8 @@ use App\Http\Api\Responses\ResponseBodies\Entity\Album;
 use App\Http\Api\Responses\ResponseBodies\Entity\Copyright;
 use App\Http\Api\Responses\ResponseBodies\Entity\Image;
 use App\Repositories\AlbumRepositoryInterface;
+use App\Services\Assigners\AlbumArtistAssigner;
+use App\Services\Assigners\AlbumArtistAssignerInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -21,14 +23,18 @@ class AlbumProvider implements AlbumProviderInterface
 
     private EntityManagerInterface $entityManager;
 
+    private AlbumArtistAssignerInterface $albumArtistAssigner;
+
     public function __construct(
         AlbumRepositoryInterface $albumRepository,
         AlbumFactoryInterface $albumFactory,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        AlbumArtistAssigner $albumArtistAssigner
     ) {
         $this->albumRepository = $albumRepository;
         $this->albumFactory = $albumFactory;
         $this->entityManager = $entityManager;
+        $this->albumArtistAssigner = $albumArtistAssigner;
     }
 
     public function provide(Album $entity): AlbumInterface
@@ -56,6 +62,8 @@ class AlbumProvider implements AlbumProviderInterface
         $album->setTotalTracks($entity->getTotalTracks());
         $album->setType($entity->getType());
         $album->setUri($entity->getUri());
+
+        $this->albumArtistAssigner->assign($album, $entity->getArtists());
 
         return $album;
     }

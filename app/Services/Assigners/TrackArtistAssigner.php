@@ -10,27 +10,25 @@ use App\Factories\ArtistFactoryInterface;
 use App\Http\Api\Responses\ResponseBodies\Entity\Artist;
 use App\Http\Api\Responses\ResponseBodies\Entity\Artist as ArtistEntity;
 use App\Repositories\ArtistRepositoryInterface;
+use App\Services\Providers\Spotify\ArtistProvider;
+use App\Services\Providers\Spotify\ArtistProviderInterface;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TrackArtistAssigner implements TrackArtistAssignerInterface
 {
-    private ArtistRepositoryInterface $artistRepository;
-
-    private ArtistFactoryInterface $artistFactory;
+    private ArtistProviderInterface $artistProvider;
 
     private EntityManagerInterface $entityManager;
 
     public function __construct(
-        ArtistRepositoryInterface $artistRepository,
-        ArtistFactoryInterface    $artistFactory,
-        EntityManager             $entityManager
+        EntityManager  $entityManager,
+        ArtistProvider $artistProvider
     )
     {
-        $this->artistRepository = $artistRepository;
-        $this->artistFactory = $artistFactory;
         $this->entityManager = $entityManager;
+        $this->artistProvider = $artistProvider;
     }
 
     public function assign(TrackInterface $track, Collection $artists): void
@@ -46,22 +44,11 @@ class TrackArtistAssigner implements TrackArtistAssignerInterface
 
         /** @var Artist $artist */
         foreach ($artists as $artist) {
-            $model = $this->getArtist($artist);
+            $model = $this->artistProvider->provide($artist);
 
             $track->addArtist($model);
         }
 
         $this->entityManager->persist($track);
-    }
-
-    public function getArtist(ArtistEntity $entity): ArtistInterface
-    {
-        $artist = $this->artistRepository->find($entity->getId());
-
-        if (!$artist instanceof ArtistInterface) {
-            $artist = $this->artistFactory->createFromSpotifyEntity($entity);
-        }
-
-        return $artist;
     }
 }
