@@ -10,6 +10,7 @@ use App\Entities\Spotify\Artist;
 use App\Entities\Spotify\Playback;
 use App\Entities\Spotify\Playlist;
 use App\Entities\Spotify\PlaylistTrack;
+use App\Entities\Spotify\Profile;
 use App\Entities\Spotify\Track;
 use App\Entities\Spotify\UserTrack;
 use App\Entities\User;
@@ -18,6 +19,7 @@ use App\Repositories\ArtistRepository;
 use App\Repositories\PlaybackRepository;
 use App\Repositories\PlaylistRepository;
 use App\Repositories\PlaylistTrackRepository;
+use App\Repositories\ProfileRepository;
 use App\Repositories\ScopeRepository;
 use App\Repositories\TrackRepository;
 use App\Repositories\UserRepository;
@@ -33,6 +35,7 @@ class RepositoryServiceProvider extends ServiceProvider
         Playback::class => PlaybackRepository::class,
         Playlist::class => PlaylistRepository::class,
         PlaylistTrack::class => PlaylistTrackRepository::class,
+        Profile::class => ProfileRepository::class,
         Scope::class => ScopeRepository::class,
         Track::class => TrackRepository::class,
         User::class => UserRepository::class,

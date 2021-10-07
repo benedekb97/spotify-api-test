@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping">
+    <entity name="App\Entities\Spotify\Profile" table="spotify_profiles">
+
+        <id name="id" type="string"/>
+
+        <field name="country" nullable="true"/>
+        <field name="displayName" column="display_name" nullable="true"/>
+        <field name="explicitContent" column="explicit_content" type="json" nullable="true"/>
+        <field name="externalUrl" column="external_url" type="json" nullable="true"/>
+        <field name="followers" type="json" nullable="true"/>
+        <field name="href" nullable="true"/>
+        <field name="images" type="json" nullable="true"/>
+        <field name="product" nullable="true"/>
+        <field name="type" nullable="true"/>
+        <field name="uri" nullable="true"/>
+
+        <one-to-one field="user" target-entity="App\Entities\User" inversed-by="profile">
+            <join-column name="user_id"/>
+        </one-to-one>
+
+    </entity>
+</doctrine-mapping>

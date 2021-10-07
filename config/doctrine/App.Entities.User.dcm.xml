@@ -41,6 +41,8 @@
         </field>
 
         <one-to-many field="userTracks" target-entity="App\Entities\Spotify\UserTrack" mapped-by="user"/>
+
+        <one-to-one field="profile" mapped-by="user" target-entity="App\Entities\Spotify\Profile"/>
     </entity>
 
 </doctrine-mapping>

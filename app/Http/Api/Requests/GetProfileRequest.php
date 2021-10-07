@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Api\Requests;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
+use App\Http\Api\Events\UpdateProfileEvent;
 use App\Http\Api\Factories\ResponseBodies\GetProfileResponseBodyFactory;
+use App\Http\Api\Responses\ResponseBodies\GetProfileResponseBody;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use GuzzleHttp\Psr7\Response;
 
@@ -43,7 +45,17 @@ class GetProfileRequest extends AbstractSpotifyRequest implements SpotifyRequest
 
     protected function getEvents(): array
     {
-        return [];
+        return [
+            UpdateProfileEvent::class => $this->getUpdateProfileEventParameters(),
+        ];
+    }
+
+    private function getUpdateProfileEventParameters(): array
+    {
+        /** @var GetProfileResponseBody $responseBody */
+        $responseBody = $this->getResponse()->getBody();
+
+        return [$responseBody->getUser()];
     }
 
     public function getRequestBodyFactoryClass(): ?string

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Spotify\ProfileInterface;
 use App\Entities\Spotify\TrackInterface;
 use App\Entities\Spotify\UserTrackInterface;
 use App\Entities\Traits\ResourceTrait;
@@ -41,6 +42,8 @@ class User implements UserInterface
     private bool $automaticallyCreateWeeklyPlaylist = false;
 
     private Collection $userTracks;
+
+    private ?ProfileInterface $profile = null;
 
     public function __construct()
     {
@@ -261,5 +264,20 @@ class User implements UserInterface
     public function hasTrack(TrackInterface $track): bool
     {
         return $this->getTracks()->contains($track);
+    }
+
+    public function getProfile(): ?ProfileInterface
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?ProfileInterface $profile): void
+    {
+        $this->profile = $profile;
+    }
+
+    public function hasProfile(): bool
+    {
+        return isset($this->profile);
     }
 }

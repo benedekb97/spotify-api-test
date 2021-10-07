@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Spotify\ProfileInterface;
 use App\Entities\Spotify\UserTrackInterface;
 use App\Entities\Traits\ResourceInterface;
 use App\Entities\Traits\TimestampableInterface;
@@ -73,4 +74,10 @@ interface UserInterface extends Authenticatable, ResourceInterface, Timestampabl
     public function addUserTrack(UserTrackInterface $userTrack): void;
 
     public function removeUserTrack(UserTrackInterface $userTrack): void;
+
+    public function getProfile(): ?ProfileInterface;
+
+    public function setProfile(?ProfileInterface $profile): void;
+
+    public function hasProfile(): bool;
 }

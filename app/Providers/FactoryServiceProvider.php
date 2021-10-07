@@ -9,6 +9,7 @@ use App\Entities\Spotify\Artist;
 use App\Entities\Spotify\Playback;
 use App\Entities\Spotify\Playlist;
 use App\Entities\Spotify\PlaylistTrack;
+use App\Entities\Spotify\Profile;
 use App\Entities\Spotify\Track;
 use App\Entities\Spotify\TrackAssociation;
 use App\Entities\User;
@@ -17,6 +18,7 @@ use App\Factories\ArtistFactory;
 use App\Factories\PlaybackFactory;
 use App\Factories\PlaylistFactory;
 use App\Factories\PlaylistTrackFactory;
+use App\Factories\ProfileFactory;
 use App\Factories\TrackAssociationFactory;
 use App\Factories\TrackFactory;
 use App\Factories\UserFactory;
@@ -31,6 +33,7 @@ class FactoryServiceProvider extends ServiceProvider
         Playback::class => PlaybackFactory::class,
         Playlist::class => PlaylistFactory::class,
         PlaylistTrack::class => PlaylistTrackFactory::class,
+        Profile::class => ProfileFactory::class,
         Track::class => TrackFactory::class,
         TrackAssociation::class => TrackAssociationFactory::class,
         User::class => UserFactory::class,
