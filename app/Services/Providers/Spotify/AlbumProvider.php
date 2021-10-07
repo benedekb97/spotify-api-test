@@ -44,6 +44,8 @@ class AlbumProvider implements AlbumProviderInterface
         if (!$album instanceof AlbumInterface) {
             /** @var AlbumInterface $album */
             $album = $this->albumFactory->createNew();
+
+            $album->setId($entity->getId());
         }
 
         $album->setAvailableMarkets($entity->getAvailableMarkets());
@@ -64,6 +66,9 @@ class AlbumProvider implements AlbumProviderInterface
         $album->setUri($entity->getUri());
 
         $this->albumArtistAssigner->assign($album, $entity->getArtists());
+
+        $this->entityManager->persist($album);
+        $this->entityManager->flush();
 
         return $album;
     }

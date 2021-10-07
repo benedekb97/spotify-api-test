@@ -6,8 +6,13 @@ namespace App\Services\Providers\Spotify;
 
 use App\Entities\Spotify\TrackInterface;
 use App\Factories\TrackFactoryInterface;
+use App\Http\Api\Responses\ResponseBodies\Entity\Album;
 use App\Http\Api\Responses\ResponseBodies\Entity\Track;
 use App\Repositories\TrackRepositoryInterface;
+use App\Services\Assigners\TrackArtistAssigner;
+use App\Services\Assigners\TrackArtistAssignerInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TrackProvider implements TrackProviderInterface
 {
@@ -15,12 +20,24 @@ class TrackProvider implements TrackProviderInterface
 
     private TrackFactoryInterface $trackFactory;
 
+    private TrackArtistAssignerInterface $trackArtistAssigner;
+
+    private AlbumProviderInterface $albumProvider;
+
+    private EntityManagerInterface $entityManager;
+
     public function __construct(
         TrackRepositoryInterface $trackRepository,
-        TrackFactoryInterface $trackFactory
+        TrackFactoryInterface $trackFactory,
+        TrackArtistAssigner $trackArtistAssigner,
+        AlbumProvider $albumProvider,
+        EntityManager $entityManager
     ) {
         $this->trackRepository = $trackRepository;
         $this->trackFactory = $trackFactory;
+        $this->trackArtistAssigner = $trackArtistAssigner;
+        $this->albumProvider = $albumProvider;
+        $this->entityManager = $entityManager;
     }
 
     public function provide(Track $entity): TrackInterface
@@ -48,6 +65,17 @@ class TrackProvider implements TrackProviderInterface
         $track->setPreviewUrl($entity->getPreviewUrl());
         $track->setTrackNumber($entity->getTrackNumber());
         $track->setUri($entity->getUri());
+
+        $this->trackArtistAssigner->assign($track, $entity->getArtists());
+
+        if ($entity->getAlbum() instanceof Album) {
+            $track->setAlbum(
+                $this->albumProvider->provide($entity->getAlbum())
+            );
+        }
+
+        $this->entityManager->persist($track);
+        $this->entityManager->flush();
 
         return $track;
     }

@@ -9,5 +9,5 @@ use App\Http\Api\Responses\ResponseBodies\Entity\Artist;
 
 interface ArtistFactoryInterface extends EntityFactoryInterface
 {
-    public function createFromSpotifyEntity(Artist $entity): ArtistInterface;
+
 }

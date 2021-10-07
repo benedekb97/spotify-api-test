@@ -31,6 +31,10 @@
         </field>
 
         <many-to-many field="artists" target-entity="App\Entities\Spotify\Artist" mapped-by="albums">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+
             <join-table name="spotify_album_artist">
                 <join-columns>
                     <join-column name="album_id"/>

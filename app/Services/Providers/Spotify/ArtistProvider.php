@@ -9,6 +9,8 @@ use App\Factories\ArtistFactoryInterface;
 use App\Http\Api\Responses\ResponseBodies\Entity\Artist;
 use App\Http\Api\Responses\ResponseBodies\Entity\Image;
 use App\Repositories\ArtistRepositoryInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ArtistProvider implements ArtistProviderInterface
 {
@@ -16,12 +18,16 @@ class ArtistProvider implements ArtistProviderInterface
 
     private ArtistFactoryInterface $artistFactory;
 
+    private EntityManagerInterface $entityManager;
+
     public function __construct(
         ArtistRepositoryInterface $artistRepository,
-        ArtistFactoryInterface $artistFactory
+        ArtistFactoryInterface $artistFactory,
+        EntityManager $entityManager
     ) {
         $this->artistRepository = $artistRepository;
         $this->artistFactory = $artistFactory;
+        $this->entityManager = $entityManager;
     }
 
     public function provide(Artist $entity): ArtistInterface
@@ -42,6 +48,9 @@ class ArtistProvider implements ArtistProviderInterface
         $artist->setPopularity($entity->getPopularity());
         $artist->setType($entity->getType());
         $artist->setUri($entity->getUri());
+
+        $this->entityManager->persist($artist);
+        $this->entityManager->flush();
 
         return $artist;
     }
