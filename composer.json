@@ -21,7 +21,8 @@
         "laravel-doctrine/orm": "^1.7",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
-        "pusher/pusher-php-server": "^7.0"
+        "pusher/pusher-php-server": "^7.0",
+        "sentry/sentry-laravel": "^2.9"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

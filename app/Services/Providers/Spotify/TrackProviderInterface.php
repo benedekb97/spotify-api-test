@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Factories;
+namespace App\Services\Providers\Spotify;
 
 use App\Entities\Spotify\TrackInterface;
 use App\Http\Api\Responses\ResponseBodies\Entity\Track;
 
-class TrackFactory extends EntityFactory implements TrackFactoryInterface
+interface TrackProviderInterface
 {
-
+    public function provide(Track $entity): TrackInterface;
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
-use Illuminate\Database\Eloquent\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class Track implements EntityInterface
 {
@@ -50,7 +51,7 @@ class Track implements EntityInterface
 
     public function __construct()
     {
-        $this->artists = new Collection();
+        $this->artists = new ArrayCollection();
     }
 
     public function getAlbum(): ?Album

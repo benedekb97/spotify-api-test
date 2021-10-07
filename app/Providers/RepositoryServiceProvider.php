@@ -11,6 +11,7 @@ use App\Entities\Spotify\Playback;
 use App\Entities\Spotify\Playlist;
 use App\Entities\Spotify\PlaylistTrack;
 use App\Entities\Spotify\Track;
+use App\Entities\Spotify\UserTrack;
 use App\Entities\User;
 use App\Repositories\AlbumRepository;
 use App\Repositories\ArtistRepository;
@@ -20,6 +21,7 @@ use App\Repositories\PlaylistTrackRepository;
 use App\Repositories\ScopeRepository;
 use App\Repositories\TrackRepository;
 use App\Repositories\UserRepository;
+use App\Repositories\UserTrackRepository;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,6 +36,7 @@ class RepositoryServiceProvider extends ServiceProvider
         Scope::class => ScopeRepository::class,
         Track::class => TrackRepository::class,
         User::class => UserRepository::class,
+        UserTrack::class => UserTrackRepository::class,
     ];
 
     public function register(): void

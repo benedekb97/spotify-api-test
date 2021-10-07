@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Api\Responses\ResponseBodies\Entity;
 
-use Illuminate\Database\Eloquent\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 class Album implements EntityInterface
 {
@@ -50,10 +51,10 @@ class Album implements EntityInterface
 
     public function __construct()
     {
-        $this->artists = new Collection();
-        $this->copyrights = new Collection();
-        $this->images = new Collection();
-        $this->tracks = new Collection();
+        $this->artists = new ArrayCollection();
+        $this->copyrights = new ArrayCollection();
+        $this->images = new ArrayCollection();
+        $this->tracks = new ArrayCollection();
     }
 
     public function getAlbumType(): ?string

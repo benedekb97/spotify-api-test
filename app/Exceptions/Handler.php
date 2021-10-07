@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use function Sentry\captureException;
 
 class Handler extends ExceptionHandler
 {
@@ -35,7 +36,9 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+            if ($this->shouldntReport($e) && app()->bound('sentry')) {
+                captureException($e);
+            }
         });
     }
 }
