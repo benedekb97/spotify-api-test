@@ -7,11 +7,13 @@ namespace App\Http\Controllers\Spotify;
 use App\Entities\UserInterface;
 use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
+use App\Http\Api\Requests\GetProfileRequest;
 use App\Http\Api\Requests\GetRecentlyPlayedTracksRequest;
 use App\Http\Api\Requests\GetRecommendationsRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\ResponseBodies\Entity\RecentlyPlayed;
+use App\Http\Api\Responses\ResponseBodies\GetProfileResponseBody;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
@@ -29,7 +31,6 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends Controller
 {
     private const ENDPOINT_USER_PROFILE = 'v1/me';
-    private const ENDPOINT_TOP_ARTISTS_AND_TRACKS = 'v1/me/top';
 
     private const TYPE_TRACKS = 'tracks';
     private const TYPE_ARTISTS = 'artists';
@@ -58,26 +59,19 @@ class UserController extends Controller
         parent::__construct($entityManager);
     }
 
-    public function profile(): Response
+    public function profile()
     {
-        try {
-            $response = $this->client->get(
-                $this->getProfileUrl(),
-                [
-                    'headers' => $this->getHeaders(),
-                ]
-            );
-        } catch (GuzzleException $exception) {
-            return new JsonResponse(
-                [
-                    'error' => $exception->getMessage()
-                ]
-            );
-        }
+        /** @var GetProfileResponseBody $responseBody */
+        $responseBody = $this->spotifyApi->execute(
+            (new GetProfileRequest())->setUser($this->getUser())
+        )->getBody();
 
-        $responseContent = json_decode($response->getBody()->getContents(), true);
-
-        return new JsonResponse($responseContent);
+        return view(
+            'pages.dashboard.profile',
+            [
+                'user' => $responseBody->getUser()
+            ]
+        );
     }
 
     public function top(string $type)

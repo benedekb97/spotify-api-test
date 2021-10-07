@@ -34,6 +34,10 @@ class UserFactory
         $user = new User();
 
         $user->setDisplayName($data['display_name']);
+        $user->setCountry($data['country']);
+        $user->setExplicitContent(
+            $this->explicitContentSettingsFactory->create($data['explicit_content'])
+        );
 
         $user->setExternalUrl(
             $this->externalUrlFactory->create($data['external_urls'])
@@ -52,6 +56,7 @@ class UserFactory
             );
         }
 
+        $user->setProduct($data['product']);
         $user->setType($data['type']);
         $user->setUri($data['uri']);
         $user->setEmail($data['email']);
