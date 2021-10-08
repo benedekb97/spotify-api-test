@@ -48,7 +48,7 @@ class SynchronizePlaylistsJob
         $this->spotifyReauthenticationService = $spotifyReauthenticationService;
     }
 
-    public function __invoke()
+    public function __invoke(): void
     {
         $users = $this->userRepository->findAllLoggedInWithSpotify();
 

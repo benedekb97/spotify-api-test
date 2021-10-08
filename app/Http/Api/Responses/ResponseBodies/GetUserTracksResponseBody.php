@@ -12,6 +12,12 @@ class GetUserTracksResponseBody implements ResponseBodyInterface
 {
     private Collection $savedTracks;
 
+    private ?int $limit = null;
+
+    private ?int $offset = null;
+
+    private ?int $total = null;
+
     public function __construct()
     {
         $this->savedTracks = new ArrayCollection();
@@ -32,6 +38,36 @@ class GetUserTracksResponseBody implements ResponseBodyInterface
         if (!$this->hasSavedTrack($savedTrack)) {
             $this->savedTracks->add($savedTrack);
         }
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function setLimit(?int $limit): void
+    {
+        $this->limit = $limit;
+    }
+
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    public function setOffset(?int $offset): void
+    {
+        $this->offset = $offset;
+    }
+
+    public function getTotal(): ?int
+    {
+        return $this->total;
+    }
+
+    public function setTotal(?int $total): void
+    {
+        $this->total = $total;
     }
 
     public function toArray(): array

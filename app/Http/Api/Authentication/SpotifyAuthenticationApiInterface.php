@@ -62,7 +62,7 @@ interface SpotifyAuthenticationApiInterface
         self::SCOPE_FOLLOW_READ => true,
 
         self::SCOPE_LIBRARY_MODIFY => false,
-        self::SCOPE_LIBRARY_READ => false,
+        self::SCOPE_LIBRARY_READ => true,
 
         self::SCOPE_USERS_READ_EMAIL => true,
         self::SCOPE_USERS_READ_PRIVATE => true,

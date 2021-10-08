@@ -31,6 +31,9 @@ class GetUserTracksResponseBodyFactory implements ResponseBodyFactoryInterface
             );
         }
 
+        $responseBody->setLimit($data['limit']);
+        $responseBody->setOffset($data['offset']);
+
         return $responseBody;
     }
 }

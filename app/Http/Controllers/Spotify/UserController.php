@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
+use App\Entities\Spotify\Track;
+use App\Entities\Spotify\UserTrack;
 use App\Entities\UserInterface;
 use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
 use App\Http\Api\Requests\GetProfileRequest;
 use App\Http\Api\Requests\GetRecentlyPlayedTracksRequest;
 use App\Http\Api\Requests\GetRecommendationsRequest;
+use App\Http\Api\Requests\GetUserTracksRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\ResponseBodies\Entity\RecentlyPlayed;
@@ -18,6 +21,12 @@ use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
+use App\Jobs\SynchronizeUserTracksJob;
+use App\Repositories\TrackRepositoryInterface;
+use App\Repositories\UserRepositoryInterface;
+use App\Repositories\UserTrackRepositoryInterface;
+use App\Services\Synchronizers\UserTracksSynchronizer;
+use App\Services\User\SpotifyReauthenticationService;
 use App\Util\CacheTags;
 use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Client;
@@ -57,6 +66,16 @@ class UserController extends Controller
         $this->spotifyApi = $spotifyApi;
 
         parent::__construct($entityManager);
+    }
+
+    public function tracks()
+    {
+        SynchronizeUserTracksJob::dispatch(
+            $this->spotifyApi,
+            $this->entityManager,
+            $this->entityManager->getRepository(UserTrack::class),
+            $this->entityManager->getRepository(Track::class)
+        );
     }
 
     public function profile()
