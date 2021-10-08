@@ -9,5 +9,7 @@ use App\Http\Api\Responses\ResponseBodies\Entity\Track;
 
 interface TrackProviderInterface
 {
+    public function provideForId(string $id): TrackInterface;
+
     public function provide(Track $entity): TrackInterface;
 }

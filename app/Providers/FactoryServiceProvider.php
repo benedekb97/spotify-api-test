@@ -12,6 +12,7 @@ use App\Entities\Spotify\PlaylistTrack;
 use App\Entities\Spotify\Profile;
 use App\Entities\Spotify\Track;
 use App\Entities\Spotify\TrackAssociation;
+use App\Entities\Spotify\UserTrack;
 use App\Entities\User;
 use App\Factories\AlbumFactory;
 use App\Factories\ArtistFactory;
@@ -22,6 +23,7 @@ use App\Factories\ProfileFactory;
 use App\Factories\TrackAssociationFactory;
 use App\Factories\TrackFactory;
 use App\Factories\UserFactory;
+use App\Factories\UserTrackFactory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,6 +39,7 @@ class FactoryServiceProvider extends ServiceProvider
         Track::class => TrackFactory::class,
         TrackAssociation::class => TrackAssociationFactory::class,
         User::class => UserFactory::class,
+        UserTrack::class => UserTrackFactory::class,
     ];
 
     public function register(): void

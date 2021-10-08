@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Jobs\CreateWeeklyMostPlayedPlaylistJob;
 use App\Jobs\GetRecentlyPlayedJob;
 use App\Jobs\SynchronizePlaylistsJob;
+use App\Jobs\SynchronizeUserTracksJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->call(GetRecentlyPlayedJob::class)->everyFiveMinutes();
         $schedule->call(CreateWeeklyMostPlayedPlaylistJob::class)->sundays()->at('22:00');
         $schedule->call(SynchronizePlaylistsJob::class)->everyThirtyMinutes();
+        $schedule->call(SynchronizeUserTracksJob::class)->dailyAt('22:00');
     }
 
     protected function commands()

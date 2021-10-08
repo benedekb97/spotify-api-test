@@ -81,7 +81,7 @@ class UpdateUserTracksListener
         TrackInterface $track,
         DateTimeInterface $addedAt,
         UserInterface $user
-    ): TrackInterface
+    ): UserTrackInterface
     {
         $userTrack = $this->userTrackRepository->findOneByTrackUserAndAddedAt($track, $user, $addedAt);
 

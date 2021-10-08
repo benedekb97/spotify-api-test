@@ -6,6 +6,8 @@ namespace App\Http\Controllers\Spotify;
 
 use App\Entities\Spotify\Track;
 use App\Entities\Spotify\UserTrack;
+use App\Entities\Spotify\UserTrackInterface;
+use App\Entities\User;
 use App\Entities\UserInterface;
 use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
@@ -28,6 +30,7 @@ use App\Repositories\UserTrackRepositoryInterface;
 use App\Services\Synchronizers\UserTracksSynchronizer;
 use App\Services\User\SpotifyReauthenticationService;
 use App\Util\CacheTags;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -49,32 +52,63 @@ class UserController extends Controller
         'Artists' => self::TYPE_ARTISTS,
     ];
 
-    private Client $client;
-
     private Repository $cache;
 
     private SpotifyApiInterface $spotifyApi;
 
+    private UserTrackRepositoryInterface $userTrackRepository;
+
     public function __construct(
-        Client $client,
         Repository $cache,
         SpotifyApi $spotifyApi,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        UserTrackRepositoryInterface $userTrackRepository
     ) {
-        $this->client = $client;
         $this->cache = $cache;
         $this->spotifyApi = $spotifyApi;
+        $this->userTrackRepository = $userTrackRepository;
 
         parent::__construct($entityManager);
     }
 
     public function tracks()
     {
-        SynchronizeUserTracksJob::dispatch(
-            $this->spotifyApi,
-            $this->entityManager,
-            $this->entityManager->getRepository(UserTrack::class),
-            $this->entityManager->getRepository(Track::class)
+        $user = $this->getUser();
+
+        $tracks = $this->userTrackRepository->findAllForUser($user);
+
+        return view(
+            'pages.dashboard.tracks',
+            [
+                'user' => $user,
+                'tracks' => $tracks
+            ]
+        );
+    }
+
+    public function tracksOffset(int $offset): JsonResponse
+    {
+        $tracks = $this->userTrackRepository->findAllForUser($this->getUser(), $offset);
+
+        return new JsonResponse(
+            array_map(
+                static function (UserTrackInterface $track) {
+                    return [
+                        'artists' => implode(
+                            ', ',
+                            $track->getTrack()->getArtists()->map(fn ($a) => $a->getName())->toArray()
+                        ),
+                        'name' => $track->getTrack()->getName(),
+                        'duration' => date('i:s', (int)($track->getTrack()->getDurationMs() / 1000)),
+                        'uri' => $track->getTrack()->getUri(),
+                        'image' => $track->getTrack()->getAlbum()->getImages()[0]['url'],
+                        'addedAt' => (new Carbon($track->getAddedAt()))->diffForHumans(),
+                        'albumName' => $track->getTrack()->getAlbum()->getName(),
+                        'addToQueue' => route('spotify.queue.add', ['uri' => $track->getTrack()->getUri()])
+                    ];
+                },
+                $tracks
+            )
         );
     }
 

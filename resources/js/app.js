@@ -150,9 +150,74 @@ window.updateRecommendations = function () {
     });
 }
 
+let currentOffset = 50;
+
+$(window).scroll(
+    function () {
+        if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+            console.log('Edd ki');
+
+            $('#loading').css('display', 'block');
+
+            updateOnScroll()
+        }
+    }
+)
+
+function updateOnScroll() {
+    $.ajax(
+        {
+            url: window.app.name + '/spotify/tracks/' + currentOffset,
+            success:
+            function (e) {
+                let rows = '';
+
+                e.forEach(
+                    function (element) {
+                        rows += `
+                            <tr>
+                                <td>
+                                    <img
+                                        src="${element.image}"
+                                        style="width:50px; height:50px;"
+                                        alt="${element.albumName}"/>
+                                </td>
+                                <td>
+                                    <b>${element.name}</b> - ${element.artists}
+                                </td>
+                                <td style="text-align:center;">
+                                    ${element.duration}
+                                </td>
+                                <td style="text-align:center;">
+                                    ${element.addedAt}
+                                </td>
+                                <td style="font-size:20pt; text-align:center;">
+                                    <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('${element.addToQueue}', '${element.name}');">
+                                        <i class="fas fa-plus-circle"></i>
+                                    </a>&nbsp;
+                                    <a data-tooltip class="top" title="Play now" onclick="playNow('${element.addToQueue}')">
+                                        <i class="fas fa-play-circle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                );
+
+                let html = $('#tracks').html()
+
+                $('#tracks').html(html + rows);
+
+                $('#loading').css('display', 'none');
+
+                currentOffset += 50;
+            }
+        }
+    )
+}
+
 $(document).ready(
     function() {
-        // TODO: only do this for specific routes kek, now it refreshes every 20 seconds even if you aren't logged in. You get a 401 obv, but still, shite
 
         updateRecommendations();
         updateCurrentlyPlaying();

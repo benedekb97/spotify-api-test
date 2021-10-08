@@ -6,6 +6,7 @@ namespace App\Jobs;
 
 use App\Entities\UserInterface;
 use App\Http\Api\Requests\GetUserTracksRequest;
+use App\Http\Api\Responses\ResponseBodies\Entity\SavedTrack;
 use App\Http\Api\Responses\ResponseBodies\GetUserTracksResponseBody;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
@@ -15,7 +16,7 @@ use App\Services\Synchronizers\UserTracksSynchronizerInterface;
 use App\Services\User\SpotifyReauthenticationService;
 use App\Services\User\SpotifyReauthenticationServiceInterface;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class SynchronizeUserTracksJob
 {
@@ -52,7 +53,7 @@ class SynchronizeUserTracksJob
                 $this->spotifyReauthenticationService->reauthenticate($user);
             }
 
-            $tracks = new Collection();
+            $tracks = [];
 
             $initialRequest = new GetUserTracksRequest();
 
@@ -68,7 +69,10 @@ class SynchronizeUserTracksJob
             /** @var GetUserTracksResponseBody $responseBody */
             $responseBody = $response->getBody();
 
-            $tracks->merge(new Collection($responseBody->getSavedTracks()->toArray()));
+            /** @var SavedTrack $savedTrack */
+            foreach ($responseBody->getSavedTracks() as $savedTrack) {
+                $tracks[$savedTrack->getTrack()->getId()] = $savedTrack->getAddedAt();
+            }
 
             for ($offset = 50; $offset < $responseBody->getTotal(); $offset = $offset + 50) {
                 $request = new GetUserTracksRequest();
@@ -77,7 +81,15 @@ class SynchronizeUserTracksJob
                 $request->setOffset($offset);
                 $request->setLimit(50);
 
-                $this->spotifyApi->execute($request);
+                $response = $this->spotifyApi->execute($request);
+
+                /** @var GetUserTracksResponseBody $responseBody */
+                $responseBody = $response->getBody();
+
+                /** @var SavedTrack $savedTrack */
+                foreach ($responseBody->getSavedTracks() as $savedTrack) {
+                    $tracks[$savedTrack->getTrack()->getId()] = $savedTrack->getAddedAt();
+                }
             }
 
             $this->userTracksSynchronizer->synchronize($user, $tracks);

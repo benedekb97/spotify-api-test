@@ -40,16 +40,24 @@ class TrackProvider implements TrackProviderInterface
         $this->entityManager = $entityManager;
     }
 
-    public function provide(Track $entity): TrackInterface
+    public function provideForId(string $id): TrackInterface
     {
-        $track = $this->trackRepository->find($entity->getId());
+        $track = $this->trackRepository->find($id);
 
         if (!$track instanceof TrackInterface) {
             /** @var TrackInterface $track */
             $track = $this->trackFactory->createNew();
+
+            $track->setId($id);
         }
 
-        $track->setId($entity->getId());
+        return $track;
+    }
+
+    public function provide(Track $entity): TrackInterface
+    {
+        $track = $this->provideForId($entity->getId());
+
         $track->setPopularity($entity->getPopularity());
         $track->setExplicit($entity->getExplicit());
         $track->setName($entity->getName());

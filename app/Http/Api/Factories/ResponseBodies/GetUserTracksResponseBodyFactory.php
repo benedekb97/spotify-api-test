@@ -33,6 +33,7 @@ class GetUserTracksResponseBodyFactory implements ResponseBodyFactoryInterface
 
         $responseBody->setLimit($data['limit']);
         $responseBody->setOffset($data['offset']);
+        $responseBody->setTotal($data['total']);
 
         return $responseBody;
     }

@@ -39,6 +39,7 @@ Route::group(
                 Route::get('profile', [UserController::class, 'profile'])->name('profile');
                 Route::get('top/{type}', [UserController::class, 'top'])->name('top');
                 Route::get('tracks', [UserController::class, 'tracks'])->name('tracks');
+                Route::get('tracks/{offset}', [UserController::class, 'tracksOffset'])->name('tracks.offset');
 
                 Route::get('queue/add/{uri}', [UserController::class, 'addToQueue'])->name('queue.add');
 
