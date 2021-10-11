@@ -22,4 +22,6 @@ interface UserTrackInterface extends ResourceInterface, TimestampableInterface
     public function getAddedAt(): ?DateTimeInterface;
 
     public function setAddedAt(?DateTimeInterface $addedAt): void;
+
+    public function getPlaybackCount(): int;
 }

@@ -189,6 +189,9 @@ function updateOnScroll() {
                                     ${element.duration}
                                 </td>
                                 <td style="text-align:center;">
+                                    ${element.playbackCount}
+                                </td>
+                                <td style="text-align:center;">
                                     ${element.addedAt}
                                 </td>
                                 <td style="font-size:20pt; text-align:center;">

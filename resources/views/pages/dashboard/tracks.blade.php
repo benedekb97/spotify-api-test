@@ -12,6 +12,7 @@
                 <th style="width:70px !important;"></th>
                 <th>Track</th>
                 <th>Duration</th>
+                <th>Playbacks</th>
                 <th>Saved at</th>
                 <th>Operations</th>
             </tr>
@@ -30,6 +31,9 @@
                         </td>
                         <td style="text-align:center;">
                             {{ date('i:s', $track->getTrack()->getDurationMs() / 1000) }}
+                        </td>
+                        <td style="text-align:center;">
+                            {{ $track->getPlaybackCount() }}
                         </td>
                         <td style="text-align:center;">
                             {{ (new Carbon\Carbon($track->getAddedAt()))->diffForHumans() }}

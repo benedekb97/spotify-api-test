@@ -47,6 +47,8 @@ class User implements UserInterface
 
     private ?DateTimeInterface $playbacksUpdatedAt = null;
 
+    private Collection $playbacks;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
@@ -291,5 +293,10 @@ class User implements UserInterface
     public function setPlaybacksUpdatedAtNow(): void
     {
         $this->playbacksUpdatedAt = new DateTime();
+    }
+
+    public function getPlaybacks(): Collection
+    {
+        return $this->playbacks;
     }
 }

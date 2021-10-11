@@ -45,6 +45,8 @@
         <one-to-one field="profile" mapped-by="user" target-entity="App\Entities\Spotify\Profile"/>
 
         <field name="playbacksUpdatedAt" column="playbacks_updated_at" type="datetime" nullable="true"/>
+
+        <one-to-many field="playbacks" target-entity="App\Entities\Spotify\Playback" mapped-by="user"/>
     </entity>
 
 </doctrine-mapping>

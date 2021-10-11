@@ -100,6 +100,7 @@ class UserController extends Controller
                         ),
                         'name' => $track->getTrack()->getName(),
                         'duration' => date('i:s', (int)($track->getTrack()->getDurationMs() / 1000)),
+                        'playbackCount' => $track->getPlaybackCount(),
                         'uri' => $track->getTrack()->getUri(),
                         'image' => $track->getTrack()->getAlbum()->getImages()[0]['url'],
                         'addedAt' => (new Carbon($track->getAddedAt()))->diffForHumans(),
