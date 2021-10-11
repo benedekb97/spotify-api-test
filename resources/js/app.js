@@ -155,8 +155,6 @@ let currentOffset = 50;
 $(window).scroll(
     function () {
         if ($(window).scrollTop() === $(document).height() - $(window).height()) {
-            console.log('Edd ki');
-
             $('#loading').css('display', 'block');
 
             updateOnScroll()
