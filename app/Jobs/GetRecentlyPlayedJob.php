@@ -89,7 +89,7 @@ class GetRecentlyPlayedJob
                 $this->entityManager->persist($user);
             }
 
-            if (count($this->playbackRepository->getRecentPlaybacksByUser($user)) < 50) {
+            if ($user->getPlaybacksUpdatedAt() < new DateTime('-1 hour')) {
                 $limit = 50;
             } else {
                 $limit = 5;
@@ -144,6 +144,9 @@ class GetRecentlyPlayedJob
                 }
             }
 
+            $user->setPlaybacksUpdatedAtNow();
+
+            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             $playbacks = array_slice($this->playbackRepository->getRecentPlaybacksByUser($user), 0, 20);

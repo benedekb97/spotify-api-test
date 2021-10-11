@@ -36,6 +36,9 @@
     <div class="top-bar-right">
         <ul class="menu">
             <li>
+                <a href="{{ route('spotify.tracks') }}">My tracks</a>
+            </li>
+            <li>
                 <a href="{{ route('spotify.profile') }}">My profile</a>
             </li>
         </ul>

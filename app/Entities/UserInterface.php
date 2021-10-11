@@ -80,4 +80,8 @@ interface UserInterface extends Authenticatable, ResourceInterface, Timestampabl
     public function setProfile(?ProfileInterface $profile): void;
 
     public function hasProfile(): bool;
+
+    public function getPlaybacksUpdatedAt(): ?DateTimeInterface;
+
+    public function setPlaybacksUpdatedAtNow(): void;
 }

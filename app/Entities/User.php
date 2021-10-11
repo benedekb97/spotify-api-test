@@ -45,6 +45,8 @@ class User implements UserInterface
 
     private ?ProfileInterface $profile = null;
 
+    private ?DateTimeInterface $playbacksUpdatedAt = null;
+
     public function __construct()
     {
         $this->playlists = new ArrayCollection();
@@ -279,5 +281,15 @@ class User implements UserInterface
     public function hasProfile(): bool
     {
         return isset($this->profile);
+    }
+
+    public function getPlaybacksUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->playbacksUpdatedAt;
+    }
+
+    public function setPlaybacksUpdatedAtNow(): void
+    {
+        $this->playbacksUpdatedAt = new DateTime();
     }
 }
