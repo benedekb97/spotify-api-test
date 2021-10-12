@@ -34,6 +34,8 @@
 
         <one-to-many field="trackAssociations" target-entity="App\Entities\Spotify\TrackAssociation"
                      mapped-by="playlist"/>
+
+        <field name="weeklyPlaylistStartDate" column="weekly_playlist_start_date" type="datetime" nullable="true"/>
     </entity>
 
 </doctrine-mapping>

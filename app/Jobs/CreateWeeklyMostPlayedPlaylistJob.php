@@ -92,6 +92,7 @@ class CreateWeeklyMostPlayedPlaylistJob
             $playlist = $this->playlistFactory->createFromSpotifyEntity($responseBody->getPlaylist());
             $playlist->setTopPlayed(true);
             $playlist->setLocalUser($user);
+            $playlist->setWeeklyPlaylistStartDate($this->getStartDate());
 
             $this->entityManager->persist($playlist);
             $this->entityManager->flush();
