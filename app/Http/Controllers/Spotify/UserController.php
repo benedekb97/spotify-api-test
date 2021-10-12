@@ -4,36 +4,27 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Spotify;
 
-use App\Entities\Spotify\Track;
-use App\Entities\Spotify\UserTrack;
+use App\Entities\Spotify\PlaylistInterface;
 use App\Entities\Spotify\UserTrackInterface;
-use App\Entities\User;
 use App\Entities\UserInterface;
 use App\Http\Api\Requests\AddItemToQueueRequest;
 use App\Http\Api\Requests\CurrentlyPlayingRequest;
 use App\Http\Api\Requests\GetProfileRequest;
 use App\Http\Api\Requests\GetRecentlyPlayedTracksRequest;
 use App\Http\Api\Requests\GetRecommendationsRequest;
-use App\Http\Api\Requests\GetUserTracksRequest;
 use App\Http\Api\Requests\TopArtistsRequest;
 use App\Http\Api\Requests\TopTracksRequest;
 use App\Http\Api\Responses\ResponseBodies\Entity\RecentlyPlayed;
-use App\Http\Api\Responses\ResponseBodies\GetProfileResponseBody;
+use App\Http\Api\Responses\ResponseBodies\Entity\User;
 use App\Http\Api\Responses\SpotifyResponseInterface;
 use App\Http\Api\SpotifyApi;
 use App\Http\Api\SpotifyApiInterface;
 use App\Http\Controllers\Controller;
-use App\Jobs\SynchronizeUserTracksJob;
-use App\Repositories\TrackRepositoryInterface;
 use App\Repositories\UserRepositoryInterface;
 use App\Repositories\UserTrackRepositoryInterface;
-use App\Services\Synchronizers\UserTracksSynchronizer;
-use App\Services\User\SpotifyReauthenticationService;
 use App\Util\CacheTags;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManager;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -58,15 +49,19 @@ class UserController extends Controller
 
     private UserTrackRepositoryInterface $userTrackRepository;
 
+    private UserRepositoryInterface $userRepository;
+
     public function __construct(
         Repository $cache,
         SpotifyApi $spotifyApi,
         EntityManager $entityManager,
-        UserTrackRepositoryInterface $userTrackRepository
+        UserTrackRepositoryInterface $userTrackRepository,
+        UserRepositoryInterface $userRepository
     ) {
         $this->cache = $cache;
         $this->spotifyApi = $spotifyApi;
         $this->userTrackRepository = $userTrackRepository;
+        $this->userRepository = $userRepository;
 
         parent::__construct($entityManager);
     }
@@ -115,15 +110,55 @@ class UserController extends Controller
 
     public function profile()
     {
-        /** @var GetProfileResponseBody $responseBody */
-        $responseBody = $this->spotifyApi->execute(
-            (new GetProfileRequest())->setUser($this->getUser())
-        )->getBody();
+        /** @var User $user */
+        $user = $this->cache->remember(
+            sprintf('user.%s.profile', $this->getUser()->getSpotifyId()),
+            config('cache.ttl'),
+            function () {
+                $response = $this->spotifyApi->execute(
+                    (new GetProfileRequest())->setUser($this->getUser())
+                );
+
+                return $response === null ? null : $response->getBody()->getUser();
+            }
+        );
+
+        $user = $this->userRepository->findOneBySpotifyId($user->getId());
+
+        if ($user !== $this->getUser()) {
+            abort(403);
+        }
 
         return view(
             'pages.dashboard.profile',
             [
-                'user' => $responseBody->getUser()
+                'user' => $user,
+                'profile' => $user->getProfile()
+            ]
+        );
+    }
+
+    public function toggleWeeklyPlaylists(int $userId): JsonResponse
+    {
+        $user = $this->userRepository->find($userId);
+
+        if ($user !== $this->getUser()) {
+            return new JsonResponse(
+                ['success' => false]
+            );
+        }
+
+        $user->setAutomaticallyCreateWeeklyPlaylist(
+            !$user->automaticallyCreateWeeklyPlaylist()
+        );
+
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return new JsonResponse(
+            [
+                'success' => true,
+                'automaticallyCreateWeeklyPlaylist' => $user->automaticallyCreateWeeklyPlaylist(),
             ]
         );
     }

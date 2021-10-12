@@ -152,6 +152,30 @@ window.updateRecommendations = function () {
 
 let currentOffset = 50;
 
+if ($('#toggleWeeklyPlaylists').length) {
+    $('#toggleWeeklyPlaylists').click(
+        function (event) {
+            let userId = $('#toggleWeeklyPlaylists').data('user-id');
+
+            $.ajax(
+                {
+                    url: window.app.name + '/spotify/weekly/' + userId,
+                    success:
+                    function (e) {
+                        if (e.success === true) {
+                            $('#automaticallyCreateWeeklyPlaylist').html(
+                                e.automaticallyCreateWeeklyPlaylist
+                                    ? 'yes'
+                                    : 'no'
+                            );
+                        }
+                    }
+                }
+            )
+        }
+    )
+}
+
 $(window).scroll(
     function () {
         if ($(window).scrollTop() === $(document).height() - $(window).height()) {

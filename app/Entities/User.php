@@ -14,7 +14,6 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Cache\Persister\Collection\CachedCollectionPersister;
 
 class User implements UserInterface
 {
@@ -48,6 +47,8 @@ class User implements UserInterface
     private ?DateTimeInterface $playbacksUpdatedAt = null;
 
     private Collection $playbacks;
+
+    private ?DateTimeInterface $tracksUpdatedAt = null;
 
     public function __construct()
     {
@@ -295,8 +296,35 @@ class User implements UserInterface
         $this->playbacksUpdatedAt = new DateTime();
     }
 
+    public function getTracksUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->tracksUpdatedAt;
+    }
+
+    public function setTracksUpdatedAtNow(): void
+    {
+        $this->tracksUpdatedAt = new DateTime();
+    }
+
     public function getPlaybacks(): Collection
     {
         return $this->playbacks;
+    }
+
+    public function getLastWeeklyPlaylist(): ?PlaylistInterface
+    {
+        $iterator = $this->playlists->getIterator();
+
+        $iterator->uasort(
+            static function (PlaylistInterface $a, PlaylistInterface $b) {
+                return $b->getCreatedAt() <=> $a->getCreatedAt();
+            }
+        );
+
+        $collection = new ArrayCollection(iterator_to_array($iterator));
+
+        return $collection->filter(
+            fn (PlaylistInterface $p) => $p->isTopPlayed()
+        )->first() ?? null;
     }
 }

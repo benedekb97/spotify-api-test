@@ -85,5 +85,11 @@ interface UserInterface extends Authenticatable, ResourceInterface, Timestampabl
 
     public function setPlaybacksUpdatedAtNow(): void;
 
+    public function getTracksUpdatedAt(): ?DateTimeInterface;
+
+    public function setTracksUpdatedAtNow(): void;
+
     public function getPlaybacks(): Collection;
+
+    public function getLastWeeklyPlaylist(): ?PlaylistInterface;
 }

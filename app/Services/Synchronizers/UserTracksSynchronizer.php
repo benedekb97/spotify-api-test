@@ -75,6 +75,9 @@ class UserTracksSynchronizer implements UserTracksSynchronizerInterface
             $this->entityManager->persist($userTrack);
         }
 
+        $user->setTracksUpdatedAtNow();
+
+        $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 }
