@@ -39,12 +39,15 @@
                     </td>
                     <td>{{ $item->getAlbum()->getName() }}</td>
                     <td>{{ date('i:s', $item->getDurationms() / 1000) }}</td>
-                    <td style="font-size:20pt;">
+                    <td style="font-size:12pt;">
                         <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}', '{{ $item->getName() }}');">
                             <i class="fas fa-plus-circle"></i>
                         </a>&nbsp;
                         <a data-tooltip class="top" title="Play now" onclick="playNow('{{ route('spotify.queue.add', ['uri' => $item->getUri()]) }}')">
                             <i class="fas fa-play-circle"></i>
+                        </a>&nbsp;
+                        <a data-tooltip class="top" title="Statistics" href="{{ route('spotify.tracks.show', ['track' => $item->getId()]) }}">
+                            <i class="fas fa-chart-area"></i>
                         </a>
                     </td>
                 </tr>

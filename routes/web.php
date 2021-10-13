@@ -3,6 +3,7 @@
 use App\Http\Controllers\Spotify\DeviceController;
 use App\Http\Controllers\Spotify\PlayerController;
 use App\Http\Controllers\Spotify\PlaylistController;
+use App\Http\Controllers\Spotify\TrackController;
 use App\Http\Controllers\Spotify\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -56,6 +57,16 @@ Route::group(
                     static function () {
                         Route::get('', [UserController::class, 'playlists'])->name('index');
                         Route::get('{playlist}', [PlaylistController::class, 'show'])->name('show');
+                    }
+                );
+
+                Route::group(
+                    [
+                        'prefix' => 'tracks',
+                        'as' => 'tracks.',
+                    ],
+                    static function () {
+                        Route::get('{track}/view', [TrackController::class, 'show'])->name('show');
                     }
                 );
 

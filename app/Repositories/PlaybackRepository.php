@@ -13,6 +13,21 @@ use Doctrine\ORM\QueryBuilder;
 
 class PlaybackRepository extends EntityRepository implements PlaybackRepositoryInterface
 {
+    public function getPlaybacksByTrackGroupedByDate(TrackInterface $track, UserInterface $user): array
+    {
+        return $this->createQueryBuilder('o')
+            ->select('date(o.playedAt) as playedAtDate')
+            ->addSelect('count(o.id) as count')
+            ->where('o.track = :track')
+            ->andWhere('o.user = :user')
+            ->setParameter('user', $user)
+            ->setParameter('track', $track)
+            ->groupBy('playedAtDate')
+            ->orderBy('playedAtDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getRecentPlaybacksByUser(UserInterface $user): array
     {
         return $this->createQueryBuilder('o')

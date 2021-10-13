@@ -176,15 +176,17 @@ if ($('#toggleWeeklyPlaylists').length) {
     )
 }
 
-$(window).scroll(
-    function () {
-        if ($(window).scrollTop() === $(document).height() - $(window).height()) {
-            $('#loading').css('display', 'block');
+if (window.location === window.app.name + '/spotify/tracks/') {
+    $(window).scroll(
+        function () {
+            if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+                $('#loading').css('display', 'block');
 
-            updateOnScroll()
+                updateOnScroll()
+            }
         }
-    }
-)
+    )
+}
 
 function updateOnScroll() {
     $.ajax(

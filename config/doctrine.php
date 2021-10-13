@@ -1,5 +1,7 @@
 <?php
 
+use App\Doctrine\Functions\Date;
+
 return [
 
     /*
@@ -114,7 +116,8 @@ return [
     | DQL custom datetime functions
     |--------------------------------------------------------------------------
     */
-    'custom_datetime_functions'  => [],
+    'custom_datetime_functions'  => [
+    ],
     /*
     |--------------------------------------------------------------------------
     | DQL custom numeric functions
@@ -126,7 +129,9 @@ return [
     | DQL custom string functions
     |--------------------------------------------------------------------------
     */
-    'custom_string_functions'    => [],
+    'custom_string_functions'    => [
+        'date' => Date::class,
+    ],
     /*
     |--------------------------------------------------------------------------
     | Register custom hydrators
