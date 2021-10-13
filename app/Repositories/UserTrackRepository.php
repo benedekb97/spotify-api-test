@@ -27,4 +27,18 @@ class UserTrackRepository extends EntityRepository implements UserTrackRepositor
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllForUser(UserInterface $user, ?int $offset = null): array
+    {
+        $offset = $offset ?? 0;
+
+        return $this->createQueryBuilder('o')
+            ->where('o.user = :user')
+            ->orderBy('o.addedAt', 'DESC')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->setFirstResult($offset)
+            ->setMaxResults(50)
+            ->getResult();
+    }
 }

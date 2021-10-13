@@ -41,9 +41,6 @@ class SpotifyReauthenticationService implements SpotifyReauthenticationServiceIn
         $tokenExpiry = (new DateTime())
             ->add(new DateInterval(sprintf('PT%sS', $refreshedAccessTokenResponse->getExpiresIn())));
 
-        /** @var UserInterface $user */
-        $user = Auth::user();
-
         $user->setSpotifyAccessToken($refreshedAccessTokenResponse->getAccessToken());
         $user->setSpotifyAccessTokenExpiry($tokenExpiry);
 

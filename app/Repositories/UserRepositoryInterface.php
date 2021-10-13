@@ -13,4 +13,6 @@ interface UserRepositoryInterface extends ObjectRepository
     public function findOneByEmail(string $email): ?UserInterface;
 
     public function findAllLoggedInWithSpotify(): array;
+
+    public function findOneBySpotifyId(string $id): ?UserInterface;
 }

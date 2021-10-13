@@ -49,4 +49,14 @@ class UserTrack implements UserTrackInterface
     {
         $this->addedAt = $addedAt;
     }
+
+    public function getPlaybackCount(): int
+    {
+        return $this->user->getPlaybacks()->filter(
+            function (PlaybackInterface $playback): bool
+            {
+                return $playback->getTrack() === $this->track;
+            }
+        )->count();
+    }
 }

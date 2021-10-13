@@ -26,7 +26,7 @@ class CreateWeeklyRecommendedSongsPlaylistJob
         $this->userRepository = $userRepository;
     }
 
-    public function __invoke()
+    public function __invoke(): void
     {
         $users = $this->userRepository->findAllLoggedInWithSpotify();
     }

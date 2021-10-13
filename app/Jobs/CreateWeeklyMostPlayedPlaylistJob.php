@@ -20,6 +20,8 @@ use App\Services\User\SpotifyReauthenticationService;
 use App\Services\User\SpotifyReauthenticationServiceInterface;
 use DateTime;
 use DateTimeInterface;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Log;
 
@@ -41,13 +43,16 @@ class CreateWeeklyMostPlayedPlaylistJob
 
     private SpotifyReauthenticationServiceInterface $spotifyReauthenticationService;
 
+    private EntityManagerInterface $entityManager;
+
     public function __construct(
         SpotifyApi $spotifyApi,
         TopTracksPlaylistCoverFactory $coverFactory,
         UserRepositoryInterface $userRepository,
         PlaybackRepositoryInterface $playbackRepository,
         PlaylistFactoryInterface $playlistFactory,
-        SpotifyReauthenticationService $spotifyReauthenticationService
+        SpotifyReauthenticationService $spotifyReauthenticationService,
+        EntityManager $entityManager
     ) {
         $this->spotifyApi = $spotifyApi;
         $this->coverFactory = $coverFactory;
@@ -55,9 +60,10 @@ class CreateWeeklyMostPlayedPlaylistJob
         $this->playbackRepository = $playbackRepository;
         $this->playlistFactory = $playlistFactory;
         $this->spotifyReauthenticationService = $spotifyReauthenticationService;
+        $this->entityManager = $entityManager;
     }
 
-    public function __invoke()
+    public function __invoke(): void
     {
         $users = $this->userRepository->findAllLoggedInWithSpotify();
 
@@ -84,6 +90,12 @@ class CreateWeeklyMostPlayedPlaylistJob
             $responseBody = $playlistResponse->getBody();
 
             $playlist = $this->playlistFactory->createFromSpotifyEntity($responseBody->getPlaylist());
+            $playlist->setTopPlayed(true);
+            $playlist->setLocalUser($user);
+            $playlist->setWeeklyPlaylistStartDate($this->getStartDate());
+
+            $this->entityManager->persist($playlist);
+            $this->entityManager->flush();
 
             $tracks = [];
 

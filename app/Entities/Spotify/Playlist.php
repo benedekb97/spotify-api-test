@@ -7,6 +7,7 @@ namespace App\Entities\Spotify;
 use App\Entities\Traits\SpotifyResourceTrait;
 use App\Entities\Traits\TimestampableTrait;
 use App\Entities\UserInterface;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -46,6 +47,8 @@ class Playlist implements PlaylistInterface
     private ?bool $topPlayed = false;
 
     private Collection $trackAssociations;
+
+    private ?DateTimeInterface $weeklyPlaylistStartDate = null;
 
     public function __construct()
     {
@@ -303,5 +306,15 @@ class Playlist implements PlaylistInterface
         }
 
         return false;
+    }
+
+    public function getWeeklyPlaylistStartDate(): ?DateTimeInterface
+    {
+        return $this->weeklyPlaylistStartDate;
+    }
+
+    public function setWeeklyPlaylistStartDate(?DateTimeInterface $startDate): void
+    {
+        $this->weeklyPlaylistStartDate = $startDate;
     }
 }

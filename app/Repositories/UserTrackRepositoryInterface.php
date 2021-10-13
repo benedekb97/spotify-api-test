@@ -17,4 +17,6 @@ interface UserTrackRepositoryInterface extends ObjectRepository
         UserInterface $user,
         DateTimeInterface $addedAt
     ): ?UserTrackInterface;
+
+    public function findAllForUser(UserInterface $user, ?int $offset = null): array;
 }

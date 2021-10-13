@@ -13,6 +13,7 @@ use App\Repositories\PlaylistRepositoryInterface;
 use App\Repositories\PlaylistTrackRepositoryInterface;
 use App\Repositories\TrackRepositoryInterface;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Support\Facades\Log;
 
 class UpdatePlaylistTracksListener
 {
@@ -51,6 +52,12 @@ class UpdatePlaylistTracksListener
 
         /** @var PlaylistTrackEntity $playlistTrack */
         foreach ($playlistTracks as $playlistTrack) {
+            if ($playlistTrack->getTrack()->getId() === null) {
+                Log::error('PlaylistTrack has no track ID. skipping');
+
+                continue;
+            }
+
             /** @var TrackInterface $track */
             $track = $this->trackRepository->find($playlistTrack->getTrack()->getId());
 

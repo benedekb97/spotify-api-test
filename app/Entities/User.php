@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use App\Entities\Spotify\PlaylistInterface;
+use App\Entities\Spotify\ProfileInterface;
 use App\Entities\Spotify\TrackInterface;
 use App\Entities\Spotify\UserTrackInterface;
 use App\Entities\Traits\ResourceTrait;
@@ -13,7 +14,6 @@ use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Cache\Persister\Collection\CachedCollectionPersister;
 
 class User implements UserInterface
 {
@@ -41,6 +41,14 @@ class User implements UserInterface
     private bool $automaticallyCreateWeeklyPlaylist = false;
 
     private Collection $userTracks;
+
+    private ?ProfileInterface $profile = null;
+
+    private ?DateTimeInterface $playbacksUpdatedAt = null;
+
+    private Collection $playbacks;
+
+    private ?DateTimeInterface $tracksUpdatedAt = null;
 
     public function __construct()
     {
@@ -261,5 +269,62 @@ class User implements UserInterface
     public function hasTrack(TrackInterface $track): bool
     {
         return $this->getTracks()->contains($track);
+    }
+
+    public function getProfile(): ?ProfileInterface
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?ProfileInterface $profile): void
+    {
+        $this->profile = $profile;
+    }
+
+    public function hasProfile(): bool
+    {
+        return isset($this->profile);
+    }
+
+    public function getPlaybacksUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->playbacksUpdatedAt;
+    }
+
+    public function setPlaybacksUpdatedAtNow(): void
+    {
+        $this->playbacksUpdatedAt = new DateTime();
+    }
+
+    public function getTracksUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->tracksUpdatedAt;
+    }
+
+    public function setTracksUpdatedAtNow(): void
+    {
+        $this->tracksUpdatedAt = new DateTime();
+    }
+
+    public function getPlaybacks(): Collection
+    {
+        return $this->playbacks;
+    }
+
+    public function getLastWeeklyPlaylist(): ?PlaylistInterface
+    {
+        $iterator = $this->playlists->getIterator();
+
+        $iterator->uasort(
+            static function (PlaylistInterface $a, PlaylistInterface $b) {
+                return $b->getCreatedAt() <=> $a->getCreatedAt();
+            }
+        );
+
+        $collection = new ArrayCollection(iterator_to_array($iterator));
+
+        return $collection->filter(
+            fn (PlaylistInterface $p) => $p->isTopPlayed()
+        )->first() ?? null;
     }
 }

@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Traits\SpotifyResourceInterface;
+use App\Entities\Traits\TimestampableInterface;
 use App\Entities\UserInterface;
 use DateTimeInterface;
 use Doctrine\Common\Collections\Collection;
 
-interface PlaylistInterface
+interface PlaylistInterface extends TimestampableInterface, SpotifyResourceInterface
 {
     public function isCollaborative(): ?bool;
 
@@ -89,4 +91,8 @@ interface PlaylistInterface
     public function getRecommendedTracks(): array;
 
     public function hasTrack(TrackInterface $track): bool;
+
+    public function getWeeklyPlaylistStartDate(): ?DateTimeInterface;
+
+    public function setWeeklyPlaylistStartDate(?DateTimeInterface $startDate): void;
 }

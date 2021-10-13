@@ -30,4 +30,13 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->getQuery()
             ->getResult();
     }
+
+    public function findOneBySpotifyId(string $id): ?UserInterface
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.spotifyId = :spotifyId')
+            ->setParameter('spotifyId', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
