@@ -22,7 +22,7 @@
                         <td>{{ $track->getName() }}</td>
                         <td style="text-align:center;">{{ $track->getFormattedDuration() }}</td>
                         <td style="text-align:center;">{{ $statistics->getTrackStatisticsById($track->getId())->getPlaybacks() }}</td>
-                        <td style="font-size:20pt; text-align:center;">
+                        <td style="font-size:12pt; text-align:center;">
                             <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $track->getUri()]) }}', '{{ $track->getName() }}');">
                                 <i class="fas fa-plus-circle"></i>
                             </a>&nbsp;

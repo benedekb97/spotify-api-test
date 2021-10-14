@@ -39,7 +39,7 @@
                         <td style="text-align:center;">
                             {{ (new Carbon\Carbon($track->getAddedAt()))->diffForHumans() }}
                         </td>
-                        <td style="font-size:20pt; text-align:center;">
+                        <td style="font-size:12pt; text-align:center;">
                             <a data-tooltip class="top" title="Add to queue" onclick="addToQueue('{{ route('spotify.queue.add', ['uri' => $track->getTrack()->getUri()]) }}', '{{ $track->getTrack()->getName() }}');">
                                 <i class="fas fa-plus-circle"></i>
                             </a>&nbsp;
