@@ -5,9 +5,17 @@
 @section('content')
     <div class="card">
         <div class="card-divider">
-            <h5>{{ $track->getName() }}</h5>
+            <h5>{{ $track->getName() }} &raquo; <a onclick="history.back();">Back</a></h5>
         </div>
-{{--        <img alt="{{ $track->getName() }}" src="{{ $track->getAlbum()->getImages()[0]['url'] }}" />--}}
+        <div class="card-section">
+            <img alt="{{ $track->getName() }}" src="{{ $track->getAlbum()->getImages()[0]['url'] }}" />
+            <p>Title: <b>{{ $track->getName() }}</b></p>
+            <p>Artists: <b>{{ $track->getFormattedArtistNames() }}</b></p>
+            @if ($track->getAlbum() !== null)
+                <p>Album: <b>{{ $track->getAlbum()->getName() }}</b></p>
+            @endif
+            <p>Total playbacks: <b>{{ $track->getPlaybackCountByUser($user) }}</b></p>
+        </div>
         <div class="card-section">
             <div id="track-statistics" style="width:100%;"></div>
         </div>

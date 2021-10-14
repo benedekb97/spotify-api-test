@@ -224,6 +224,9 @@ function updateOnScroll() {
                                     </a>&nbsp;
                                     <a data-tooltip class="top" title="Play now" onclick="playNow('${element.addToQueue}')">
                                         <i class="fas fa-play-circle"></i>
+                                    </a>&nbsp;
+                                    <a data-tooltip class="top" title="Statistics" href="${element.statistics}">
+                                        <i class="fas fa-chart-area"></i>
                                     </a>
                                 </td>
                             </tr>

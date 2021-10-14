@@ -6,6 +6,7 @@ namespace App\Entities\Spotify;
 
 use App\Entities\Traits\SpotifyResourceTrait;
 use App\Entities\Traits\TimestampableTrait;
+use App\Entities\UserInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -288,5 +289,28 @@ class Track implements TrackInterface
         );
 
         return $recommendedTracks;
+    }
+
+    public function getFormattedArtistNames(): string
+    {
+        return implode(
+            ', ',
+            $this->getArtists()->map(
+                static function (ArtistInterface $artist): string
+                {
+                    return $artist->getName();
+                }
+            )->toArray()
+        );
+    }
+
+    public function getPlaybackCountByUser(UserInterface $user): int
+    {
+        return $user->getPlaybacks()->filter(
+            function (PlaybackInterface $playback): bool
+            {
+                return $playback->getTrack() === $this;
+            }
+        )->count();
     }
 }

@@ -100,7 +100,8 @@ class UserController extends Controller
                         'image' => $track->getTrack()->getAlbum()->getImages()[0]['url'],
                         'addedAt' => (new Carbon($track->getAddedAt()))->diffForHumans(),
                         'albumName' => $track->getTrack()->getAlbum()->getName(),
-                        'addToQueue' => route('spotify.queue.add', ['uri' => $track->getTrack()->getUri()])
+                        'addToQueue' => route('spotify.queue.add', ['uri' => $track->getTrack()->getUri()]),
+                        'statistics' => route('spotify.tracks.show', ['track' => $track->getId()]),
                     ];
                 },
                 $tracks

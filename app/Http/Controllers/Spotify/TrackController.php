@@ -35,7 +35,7 @@ class TrackController extends Controller
 
         $header = [['Date', 'Playbacks']];
 
-        $playbacks = $this->trackStatisticsProvider->provideForUser($track, $this->getUser());
+        $playbacks = $this->trackStatisticsProvider->provideForUser($track, $user = $this->getUser());
 
         $playbacks = array_merge($header, $playbacks);
 
@@ -43,7 +43,8 @@ class TrackController extends Controller
             'pages.spotify.tracks.show',
             [
                 'track' => $track,
-                'playbacks' => $playbacks
+                'playbacks' => $playbacks,
+                'user' => $user
             ]
         );
     }
