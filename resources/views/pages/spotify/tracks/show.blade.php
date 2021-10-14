@@ -12,7 +12,7 @@
             <p>Title: <b>{{ $track->getName() }}</b></p>
             <p>Artists: <b>{{ $track->getFormattedArtistNames() }}</b></p>
             @if ($track->getAlbum() !== null)
-                <p>Album: <b>{{ $track->getAlbum()->getName() }}</b></p>
+                <p>Album: <b><a href="{{ route('spotify.albums.show', ['album' => $track->getAlbum()->getId()]) }}">{{ $track->getAlbum()->getName() }}</a></b></p>
             @endif
             <p>Total playbacks: <b>{{ $track->getPlaybackCountByUser($user) }}</b></p>
         </div>

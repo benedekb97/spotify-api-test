@@ -87,6 +87,11 @@ class Track implements TrackInterface
         $this->durationMs = $durationMs;
     }
 
+    public function getFormattedDuration(): string
+    {
+        return date('i:s', (int) ($this->durationMs / 1000));
+    }
+
     public function isExplicit(): bool
     {
         return $this->explicit;

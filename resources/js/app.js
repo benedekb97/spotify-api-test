@@ -176,13 +176,13 @@ if ($('#toggleWeeklyPlaylists').length) {
     )
 }
 
-if (window.location === window.app.name + '/spotify/tracks/') {
+if (window.location.href.search('spotify/tracks')) {
     $(window).scroll(
         function () {
             if ($(window).scrollTop() === $(document).height() - $(window).height()) {
                 $('#loading').css('display', 'block');
 
-                updateOnScroll()
+                updateOnScroll();
             }
         }
     )

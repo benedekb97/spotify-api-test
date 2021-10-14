@@ -25,6 +25,8 @@ interface TrackInterface extends SpotifyResourceInterface, TimestampableInterfac
 
     public function setDurationMs(?int $durationMs): void;
 
+    public function getFormattedDuration(): string;
+
     public function isExplicit(): bool;
 
     public function setExplicit(bool $explicit): void;
