@@ -7,16 +7,17 @@
         <div class="card-divider">
             <h5>Saved Tracks</h5>
         </div>
-        <table>
-            <tr>
-                <th style="width:70px !important;"></th>
-                <th>Track</th>
-                <th>Duration</th>
-                <th>Playbacks</th>
-                <th>Saved at</th>
-                <th>Operations</th>
-            </tr>
-            <tbody id="tracks">
+        <div class="table-scroll">
+            <table>
+                <tr>
+                    <th style="width:70px !important;"></th>
+                    <th>Track</th>
+                    <th>Duration</th>
+                    <th>Playbacks</th>
+                    <th>Saved at</th>
+                    <th>Operations</th>
+                </tr>
+                <tbody id="tracks">
                 <?php /** @var $track \App\Entities\Spotify\UserTrackInterface */ ?>
                 @foreach($tracks as $track)
                     <tr>
@@ -48,8 +49,9 @@
                         </td>
                     </tr>
                 @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
         <div class="card-divider" id="loading" style="display:none;">
             <p style="text-align:center; width:100%;">Loading...</p>
         </div>
