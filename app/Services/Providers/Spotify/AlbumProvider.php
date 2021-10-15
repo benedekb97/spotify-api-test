@@ -72,4 +72,19 @@ class AlbumProvider implements AlbumProviderInterface
 
         return $album;
     }
+
+    public function provideForId(string $albumId): AlbumInterface
+    {
+        /** @var AlbumInterface|null $album */
+        $album = $this->albumRepository->find($albumId);
+
+        if (!$album instanceof AlbumInterface) {
+            /** @var AlbumInterface $album */
+            $album = $this->albumFactory->createNew();
+
+            $album->setId($albumId);
+        }
+
+
+    }
 }

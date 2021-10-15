@@ -8,16 +8,22 @@
             <h5>{{ $track->getName() }} &raquo; <a onclick="history.back();">Back</a></h5>
         </div>
         <div class="card-section">
-            <img alt="{{ $track->getName() }}" src="{{ $track->getAlbum()->getImages()[0]['url'] }}" />
-            <p>Title: <b>{{ $track->getName() }}</b></p>
-            <p>Artists: <b>{{ $track->getFormattedArtistNames() }}</b></p>
-            @if ($track->getAlbum() !== null)
-                <p>Album: <b><a href="{{ route('spotify.albums.show', ['album' => $track->getAlbum()->getId()]) }}">{{ $track->getAlbum()->getName() }}</a></b></p>
-            @endif
-            <p>Total playbacks: <b>{{ $track->getPlaybackCountByUser($user) }}</b></p>
+            <div id="track-statistics" style="width:100%;"></div>
         </div>
         <div class="card-section">
-            <div id="track-statistics" style="width:100%;"></div>
+            <div class="grid-x">
+                <div class="medium-3">
+                    <img alt="{{ $track->getName() }}" src="{{ $track->getAlbum()->getImages()[0]['url'] }}" />
+                </div>
+                <div class="medium-9" style="padding:10px;">
+                    <p>Title: <b>{{ $track->getName() }}</b></p>
+                    <p>Artists: <b>{{ $track->getFormattedArtistNames() }}</b></p>
+                    @if ($track->getAlbum() !== null)
+                        <p>Album: <b><a href="{{ route('spotify.albums.show', ['album' => $track->getAlbum()->getId()]) }}">{{ $track->getAlbum()->getName() }}</a></b></p>
+                    @endif
+                    <p>Total playbacks: <b>{{ $track->getPlaybackCountByUser($user) }}</b></p>
+                </div>
+            </div>
         </div>
     </div>
 @endsection

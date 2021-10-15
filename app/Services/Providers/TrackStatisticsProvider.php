@@ -27,7 +27,12 @@ class TrackStatisticsProvider implements TrackStatisticsProviderInterface
     {
         $playbacks = $this->playbackRepository->getPlaybacksByTrackGroupedByDate($track, $user);
 
-        $startDate = new DateTime(Arr::first($playbacks)['playedAtDate']);
+        if (empty($playbacks)) {
+            $startDate = new DateTime('-1 day');
+        } else {
+            $startDate = new DateTime(Arr::first($playbacks)['playedAtDate']);
+        }
+
         $endDate = new DateTime();
 
         $playbacks = (new Collection($playbacks))
