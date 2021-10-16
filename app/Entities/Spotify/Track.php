@@ -309,6 +309,23 @@ class Track implements TrackInterface
         );
     }
 
+    public function getFormattedArtistNamesWithLinks(): string
+    {
+        return implode(
+            ', ',
+            $this->getArtists()->map(
+                static function (ArtistInterface $artist): string
+                {
+                    return sprintf(
+                        '<a href="%s">%s</a>',
+                        route('spotify.artists.show', ['artist' => $artist->getId()]),
+                        $artist->getName()
+                    );
+                }
+            )->toArray()
+        );
+    }
+
     public function getPlaybackCountByUser(UserInterface $user): int
     {
         return $user->getPlaybacks()->filter(

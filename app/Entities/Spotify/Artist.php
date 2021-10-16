@@ -39,9 +39,12 @@ class Artist implements ArtistInterface
 
     private Collection $albums;
 
+    private Collection $tracks;
+
     public function __construct()
     {
         $this->albums = new ArrayCollection();
+        $this->tracks = new ArrayCollection();
     }
 
     public function getFollowers(): ?array
@@ -167,6 +170,32 @@ class Artist implements ArtistInterface
         if ($this->hasAlbum($album)) {
             $this->albums->removeElement($album);
             $album->removeArtist($this);
+        }
+    }
+
+    public function getTracks(): Collection
+    {
+        return $this->tracks;
+    }
+
+    public function hasTrack(TrackInterface $track): bool
+    {
+        return $this->tracks->contains($track);
+    }
+
+    public function addTrack(TrackInterface $track): void
+    {
+        if (!$this->hasTrack($track)) {
+            $this->tracks->add($track);
+            $track->addArtist($this);
+        }
+    }
+
+    public function removeTrack(TrackInterface $track): void
+    {
+        if ($this->hasTrack($track)) {
+            $this->tracks->removeElement($track);
+            $track->removeArtist($this);
         }
     }
 }

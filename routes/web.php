@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Spotify\AlbumController;
+use App\Http\Controllers\Spotify\ArtistController;
 use App\Http\Controllers\Spotify\DeviceController;
 use App\Http\Controllers\Spotify\PlayerController;
 use App\Http\Controllers\Spotify\PlaylistController;
@@ -78,6 +79,16 @@ Route::group(
                     ],
                     static function () {
                         Route::get('{album}', [AlbumController::class, 'show'])->name('show');
+                    }
+                );
+
+                Route::group(
+                    [
+                        'prefix' => 'artists',
+                        'as' => 'artists.',
+                    ],
+                    static function () {
+                        Route::get('{artist}', [ArtistController::class, 'show'])->name('show');
                     }
                 );
 

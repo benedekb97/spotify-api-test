@@ -17,7 +17,7 @@
                 </div>
                 <div class="medium-9" style="padding:10px;">
                     <p>Title: <b>{{ $track->getName() }}</b></p>
-                    <p>Artists: <b>{{ $track->getFormattedArtistNames() }}</b></p>
+                    <p>Artists: <b>{!! $track->getFormattedArtistNamesWithLinks() !!}</b></p>
                     @if ($track->getAlbum() !== null)
                         <p>Album: <b><a href="{{ route('spotify.albums.show', ['album' => $track->getAlbum()->getId()]) }}">{{ $track->getAlbum()->getName() }}</a></b></p>
                     @endif

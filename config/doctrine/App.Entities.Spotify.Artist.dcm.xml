@@ -35,5 +35,20 @@
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
+
+        <many-to-many field="tracks" target-entity="App\Entities\Spotify\Track" inversed-by="artists">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+
+            <join-table name="spotify_track_artist">
+                <join-columns>
+                    <join-column name="artist_id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="track_id"/>
+                </inverse-join-columns>
+            </join-table>
+        </many-to-many>
     </entity>
 </doctrine-mapping>

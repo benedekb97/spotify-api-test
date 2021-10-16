@@ -49,4 +49,12 @@ interface ArtistInterface extends SpotifyResourceInterface, TimestampableInterfa
     public function addAlbum(AlbumInterface $album): void;
 
     public function removeAlbum(AlbumInterface $album): void;
+
+    public function getTracks(): Collection;
+
+    public function hasTrack(TrackInterface $track): bool;
+
+    public function addTrack(TrackInterface $track): void;
+
+    public function removeTrack(TrackInterface $track): void;
 }

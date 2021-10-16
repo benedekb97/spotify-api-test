@@ -99,5 +99,7 @@ interface TrackInterface extends SpotifyResourceInterface, TimestampableInterfac
 
     public function getFormattedArtistNames(): string;
 
+    public function getFormattedArtistNamesWithLinks(): string;
+
     public function getPlaybackCountByUser(UserInterface $user): int;
 }
