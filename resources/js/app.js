@@ -176,15 +176,17 @@ if ($('#toggleWeeklyPlaylists').length) {
     )
 }
 
-$(window).scroll(
-    function () {
-        if ($(window).scrollTop() === $(document).height() - $(window).height()) {
-            $('#loading').css('display', 'block');
+if (window.location.href.search('spotify/tracks')) {
+    $(window).scroll(
+        function () {
+            if ($(window).scrollTop() === $(document).height() - $(window).height()) {
+                $('#loading').css('display', 'block');
 
-            updateOnScroll()
+                updateOnScroll();
+            }
         }
-    }
-)
+    )
+}
 
 function updateOnScroll() {
     $.ajax(
@@ -222,6 +224,9 @@ function updateOnScroll() {
                                     </a>&nbsp;
                                     <a data-tooltip class="top" title="Play now" onclick="playNow('${element.addToQueue}')">
                                         <i class="fas fa-play-circle"></i>
+                                    </a>&nbsp;
+                                    <a data-tooltip class="top" title="Statistics" href="${element.statistics}">
+                                        <i class="fas fa-chart-area"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -243,9 +248,7 @@ function updateOnScroll() {
 
 $(document).ready(
     function() {
-
         updateRecommendations();
-        updateCurrentlyPlaying();
 
         setInterval(updateCurrentlyPlaying, 20 * 1000);
     }

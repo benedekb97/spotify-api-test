@@ -35,12 +35,13 @@ class SynchronizePlaylistsJob
     private SpotifyReauthenticationServiceInterface $spotifyReauthenticationService;
 
     public function __construct(
-        SpotifyAuthenticationApi $spotifyAuthenticationApi,
-        SpotifyApi $spotifyApi,
-        UserRepositoryInterface $userRepository,
-        EntityManager $entityManager,
+        SpotifyAuthenticationApi       $spotifyAuthenticationApi,
+        SpotifyApi                     $spotifyApi,
+        UserRepositoryInterface        $userRepository,
+        EntityManager                  $entityManager,
         SpotifyReauthenticationService $spotifyReauthenticationService
-    ) {
+    )
+    {
         $this->spotifyAuthenticationApi = $spotifyAuthenticationApi;
         $this->spotifyApi = $spotifyApi;
         $this->userRepository = $userRepository;
@@ -73,7 +74,7 @@ class SynchronizePlaylistsJob
 
                 /** @var GetUserPlaylistsResponseBody $responseBody */
                 $responseBody = $response->getBody();
-            } while ($responseBody->getLimit() + $offset < $responseBody->getTotal());
+            } while ($offset < $responseBody->getTotal());
         }
 
         $this->entityManager->flush();

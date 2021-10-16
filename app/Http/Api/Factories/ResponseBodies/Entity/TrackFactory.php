@@ -32,9 +32,11 @@ class TrackFactory
     {
         $track = new Track();
 
-        $track->setAlbum(
-            $this->albumFactory->create($data['album'])
-        );
+        if (array_key_exists('album', $data)) {
+            $track->setAlbum(
+                $this->albumFactory->create($data['album'])
+            );
+        }
 
         foreach ($data['artists'] as $artist) {
             $track->addArtist(
@@ -47,9 +49,11 @@ class TrackFactory
         $track->setDurationMs($data['duration_ms']);
         $track->setExplicit($data['explicit']);
 
-        $track->setExternalId(
-            $this->externalIdFactory->create($data['external_ids'])
-        );
+        if (array_key_exists('external_ids', $data)) {
+            $track->setExternalId(
+                $this->externalIdFactory->create($data['external_ids'])
+            );
+        }
 
         $track->setExternalUrl(
             $this->externalUrlFactory->create($data['external_urls'])
@@ -59,7 +63,11 @@ class TrackFactory
         $track->setId($data['id']);
         $track->setIsLocal($data['is_local']);
         $track->setName($data['name']);
-        $track->setPopularity($data['popularity']);
+
+        if (array_key_exists('popularity', $data)) {
+            $track->setPopularity($data['popularity']);
+        }
+
         $track->setPreviewUrl($data['preview_url']);
         $track->setTrackNumber($data['track_number']);
         $track->setType($data['type']);

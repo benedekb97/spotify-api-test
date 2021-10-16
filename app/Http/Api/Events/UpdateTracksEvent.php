@@ -40,8 +40,9 @@ class UpdateTracksEvent
         } else {
             throw new LogicException(
                 sprintf(
-                'Unexpected type for \'tracks\' in %s',
-                    get_class($this)
+                'Unexpected type for \'tracks\' in %s: %s',
+                    get_class($this),
+                    get_class($tracks)
                 )
             );
         }

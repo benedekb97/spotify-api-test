@@ -50,6 +50,8 @@ class PlaylistController extends Controller
             }
         );
 
+        $this->entityManager->merge($playlist);
+
         return view(
             'pages.spotify.playlists.show',
             [

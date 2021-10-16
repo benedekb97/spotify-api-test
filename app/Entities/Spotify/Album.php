@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entities\Spotify;
 
+use App\Entities\Statistics\TrackStatistics;
 use App\Entities\Traits\SpotifyResourceTrait;
 use App\Entities\Traits\TimestampableTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -245,6 +246,20 @@ class Album implements AlbumInterface
     public function getTracks(): Collection
     {
         return $this->tracks;
+    }
+
+    public function getSortedTracks(): Collection
+    {
+        $tracksIterator = $this->tracks->getIterator();
+
+        $tracksIterator->uasort(
+            static function (TrackInterface $a, TrackInterface $b): int
+            {
+                return $a->getTrackNumber() <=> $b->getTrackNumber();
+            }
+        );
+
+        return new ArrayCollection(iterator_to_array($tracksIterator));
     }
 
     public function hasTrack(TrackInterface $track): bool

@@ -14,7 +14,7 @@
         <field name="local" column="is_local" type="boolean" nullable="true"/>
         <field name="playable" column="is_playable" type="boolean" nullable="true"/>
         <field name="name"/>
-        <field name="popularity" type="smallint"/>
+        <field name="popularity" type="smallint" nullable="true"/>
         <field name="previewUrl" column="preview_url" nullable="true"/>
         <field type="integer" name="trackNumber" column="track_number" nullable="true"/>
         <field name="type" nullable="true"/>

@@ -95,6 +95,8 @@ interface AlbumInterface extends SpotifyResourceInterface, TimestampableInterfac
 
     public function getTracks(): Collection;
 
+    public function getSortedTracks(): Collection;
+
     public function hasTrack(TrackInterface $track): bool;
 
     public function addTrack(TrackInterface $track): void;

@@ -21,9 +21,9 @@ class Track implements EntityInterface
 
     private ?bool $explicit = null;
 
-    private ?ExternalId $externalId;
+    private ?ExternalId $externalId = null;
 
-    private ?ExternalUrl $externalUrl;
+    private ?ExternalUrl $externalUrl = null;
 
     private ?string $href = null;
 

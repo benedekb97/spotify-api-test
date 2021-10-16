@@ -6,6 +6,7 @@ namespace App\Entities\Spotify;
 
 use App\Entities\Traits\SpotifyResourceInterface;
 use App\Entities\Traits\TimestampableInterface;
+use App\Entities\UserInterface;
 use Doctrine\Common\Collections\Collection;
 
 interface TrackInterface extends SpotifyResourceInterface, TimestampableInterface
@@ -23,6 +24,8 @@ interface TrackInterface extends SpotifyResourceInterface, TimestampableInterfac
     public function getDurationMs(): ?int;
 
     public function setDurationMs(?int $durationMs): void;
+
+    public function getFormattedDuration(): string;
 
     public function isExplicit(): bool;
 
@@ -93,4 +96,8 @@ interface TrackInterface extends SpotifyResourceInterface, TimestampableInterfac
     public function removeTrackAssociation(TrackAssociationInterface $trackAssociation): void;
 
     public function getRecommendedTracks(): array;
+
+    public function getFormattedArtistNames(): string;
+
+    public function getPlaybackCountByUser(UserInterface $user): int;
 }

@@ -12,6 +12,8 @@ use Doctrine\Persistence\ObjectRepository;
 
 interface PlaybackRepositoryInterface extends ObjectRepository
 {
+    public function getPlaybacksByTrackGroupedByDate(TrackInterface $track, UserInterface $user): array;
+
     public function getRecentPlaybacksByUser(UserInterface $user): array;
 
     /**

@@ -10,4 +10,6 @@ use App\Http\Api\Responses\ResponseBodies\Entity\Album;
 interface AlbumProviderInterface
 {
     public function provide(Album $entity): AlbumInterface;
+
+    public function provideForId(string $albumId): AlbumInterface;
 }

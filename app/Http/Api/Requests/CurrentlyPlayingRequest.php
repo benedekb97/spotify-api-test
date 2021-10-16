@@ -6,6 +6,7 @@ namespace App\Http\Api\Requests;
 
 use App\Http\Api\Authentication\SpotifyAuthenticationApiInterface;
 use App\Http\Api\Events\CreatePlaybackEvent;
+use App\Http\Api\Events\UpdateCurrentlyPlayingEvent;
 use App\Http\Api\Events\UpdateTracksEvent;
 use App\Http\Api\Factories\ResponseBodies\CurrentlyPlayingResponseBodyFactory;
 use App\Http\Api\Responses\ResponseBodies\CurrentlyPlayingResponseBody;
@@ -61,7 +62,24 @@ class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyR
     {
         return [
             UpdateTracksEvent::class => $this->getTrack(),
+            UpdateCurrentlyPlayingEvent::class => $this->getUpdateCurrentlyPlayingEventParameters(),
         ];
+    }
+
+    private function getUpdateCurrentlyPlayingEventParameters(): array
+    {
+        /** @var CurrentlyPlayingResponseBody|null $responseBody */
+        $responseBody = $this->getResponse()->getBody();
+
+        if ($responseBody === null) {
+            return [$this->getUser(), null];
+        }
+
+        if ($responseBody->getIsPlaying()) {
+            return [$this->getUser(), $responseBody->getItem()];
+        }
+
+        return [$this->getUser(), null];
     }
 
     private function getTrack(): array
