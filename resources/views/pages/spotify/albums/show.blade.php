@@ -17,7 +17,7 @@
                     <th>Operations</th>
                 </tr>
                 @foreach ($album->getSortedTracks() as $track)
-                    <tr style="background-color:rgba(0, 255, 0, {{ $statistics->getTrackStatisticsById($track->getId())->getAlpha() }});">
+                    <tr style="background-color:rgba(0, 0, 255, {{ $statistics->getTrackStatisticsById($track->getId())->getAlpha() }});">
                         <td style="text-align:center;">{{ $track->getTrackNumber() }}</td>
                         <td>{{ $track->getName() }}</td>
                         <td style="text-align:center;">{{ $track->getFormattedDuration() }}</td>

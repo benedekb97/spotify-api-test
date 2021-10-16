@@ -248,9 +248,7 @@ function updateOnScroll() {
 
 $(document).ready(
     function() {
-
         updateRecommendations();
-        updateCurrentlyPlaying();
 
         setInterval(updateCurrentlyPlaying, 20 * 1000);
     }

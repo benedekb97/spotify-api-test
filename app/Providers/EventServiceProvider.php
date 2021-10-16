@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Api\Events\CreatePlaybackEvent;
+use App\Http\Api\Events\UpdateCurrentlyPlayingEvent;
 use App\Http\Api\Events\UpdatePlaylistCoverEvent;
 use App\Http\Api\Events\UpdatePlaylistsEvent;
 use App\Http\Api\Events\UpdatePlaylistTracksEvent;
@@ -10,6 +11,7 @@ use App\Http\Api\Events\UpdateProfileEvent;
 use App\Http\Api\Events\UpdateTracksEvent;
 use App\Http\Api\Events\UpdateUserTracksEvent;
 use App\Listeners\CreatePlaybackListener;
+use App\Listeners\UpdateCurrentlyPlayingListener;
 use App\Listeners\UpdatePlaylistCoverListener;
 use App\Listeners\UpdatePlaylistsListener;
 use App\Listeners\UpdatePlaylistTracksListener;
@@ -46,7 +48,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         UpdateUserTracksEvent::class => [
             UpdateUserTracksListener::class,
-        ]
+        ],
+        UpdateCurrentlyPlayingEvent::class => [
+            UpdateCurrentlyPlayingListener::class,
+        ],
     ];
 
     public function boot()

@@ -60,8 +60,12 @@
                     <div class="card-divider">
                         <h5>Currently playing</h5>
                     </div>
-                        <img src=""
-                             alt=""
+                        <img src="
+                            @isset($currentlyPlaying)
+                                {{ $currentlyPlaying->getAlbum()->getImages()[0]['url'] }}
+                            @endisset
+                                "
+                             alt="@isset($currentlyPlaying){{ $currentlyPlaying->getAlbum()->getName() }}@endisset"
                              id="currentlyPlayingImg"
                         />
                         <div class="card-section">
@@ -72,7 +76,7 @@
                                     </a>
                                 </div>
                                 <div class="cell small-8 align-center-middle" style="text-align:center;">
-                                    <span id="currentlyPlayingText" class="align-center-middle"></span>
+                                    <span id="currentlyPlayingText" class="align-center-middle">@isset($currentlyPlaying)<b>{{ $currentlyPlaying->getFormattedArtistNames() }}</b> - {{ $currentlyPlaying->getName() }}@endisset</span>
                                 </div>
                                 <div class="cell small-2" style="text-align:right; font-size:20pt;">
                                     <a href="#" onclick="moveTrack('{{ route('spotify.next') }}')">
