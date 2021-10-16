@@ -12,7 +12,7 @@ class GetGenresRequest extends AbstractSpotifyRequest implements SpotifyRequestI
 {
     private const ENDPOINT = 'v1/recommendations/available-genre-seeds';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [];
     }

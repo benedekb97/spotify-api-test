@@ -25,7 +25,7 @@ class AddTrackToPlaylistRequest extends AbstractSpotifyRequest implements Spotif
         $this->playlistId = $playlistId;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_PLAYLISTS_MODIFY_PUBLIC,

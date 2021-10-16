@@ -25,7 +25,7 @@ class GetAlbumTracksRequest extends AbstractSpotifyRequest implements SpotifyReq
         $this->albumId = $albumId;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [];
     }

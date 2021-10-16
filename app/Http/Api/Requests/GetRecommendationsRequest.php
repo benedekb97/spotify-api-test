@@ -32,7 +32,7 @@ class GetRecommendationsRequest extends AbstractSpotifyRequest implements Spotif
         $this->seedTracks = $tracks;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [];
     }

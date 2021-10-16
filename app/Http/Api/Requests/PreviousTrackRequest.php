@@ -12,7 +12,7 @@ class PreviousTrackRequest extends AbstractSpotifyRequest implements SpotifyRequ
 {
     private const ENDPOINT = 'v1/me/player/previous';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE,

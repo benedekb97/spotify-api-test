@@ -34,7 +34,7 @@ class GetRecentlyPlayedTracksRequest extends AbstractSpotifyRequest implements S
         $this->limit = $limit;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_LISTENING_HISTORY_RECENTLY_PLAYED

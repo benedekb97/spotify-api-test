@@ -24,7 +24,7 @@ class CreatePlaylistRequest extends AbstractSpotifyRequest implements SpotifyReq
         $this->userId = $userId;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_PLAYLISTS_MODIFY_PRIVATE,

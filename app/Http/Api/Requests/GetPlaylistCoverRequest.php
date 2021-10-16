@@ -24,7 +24,7 @@ class GetPlaylistCoverRequest extends AbstractSpotifyRequest implements SpotifyR
         $this->playlistId = $playlistId;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [];
     }

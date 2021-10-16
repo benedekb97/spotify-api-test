@@ -13,7 +13,7 @@ class TransferPlaybackRequest extends AbstractSpotifyRequest implements SpotifyR
 {
     private const ENDPOINT = 'v1/me/player';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE

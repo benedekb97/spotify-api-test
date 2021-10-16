@@ -22,7 +22,7 @@ class AddItemToQueueRequest extends AbstractSpotifyRequest implements SpotifyReq
         $this->uri = $uri;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_SPOTIFY_CONNECT_MODIFY_PLAYBACK_STATE,

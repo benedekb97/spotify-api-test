@@ -31,7 +31,7 @@ class GetUserTracksRequest extends AbstractSpotifyRequest implements SpotifyRequ
         $this->offset = max($offset, 0);
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [SpotifyAuthenticationApiInterface::SCOPE_LIBRARY_READ];
     }

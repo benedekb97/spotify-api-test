@@ -15,7 +15,7 @@ class GetProfileRequest extends AbstractSpotifyRequest implements SpotifyRequest
 {
     private const ENDPOINT = 'v1/me';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_USERS_READ_EMAIL,

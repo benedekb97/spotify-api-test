@@ -39,6 +39,7 @@ interface SpotifyAuthenticationApiInterface
     public const SCOPE_USERS_READ_EMAIL = 'user-read-email';
     public const SCOPE_USERS_READ_PRIVATE = 'user-read-private';
 
+    /** @deprecated Use RequiredScopesProvider to determine enabled scopes */
     public const SCOPE_ENABLED_MAP = [
         self::SCOPE_UGC_IMAGE_UPLOAD => true,
 
