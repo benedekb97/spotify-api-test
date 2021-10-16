@@ -37,7 +37,7 @@ class GetPlaylistItemsRequest extends AbstractSpotifyRequest implements SpotifyR
         $this->limit = $limit;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [];
     }

@@ -13,7 +13,7 @@ class GetAvailableDevicesRequest extends AbstractSpotifyRequest implements Spoti
 {
     private const ENDPOINT = 'v1/me/player/devices';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_SPOTIFY_CONNECT_PLAYBACK_STATE

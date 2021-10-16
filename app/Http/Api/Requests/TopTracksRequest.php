@@ -15,7 +15,7 @@ class TopTracksRequest extends AbstractSpotifyRequest implements SpotifyRequestI
 {
     private const ENDPOINT = 'v1/me/top/tracks?limit=50';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_LISTENING_HISTORY_TOP_PLAYED

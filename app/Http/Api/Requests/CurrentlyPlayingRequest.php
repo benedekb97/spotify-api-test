@@ -17,7 +17,7 @@ class CurrentlyPlayingRequest extends AbstractSpotifyRequest implements SpotifyR
 {
     private const ENDPOINT = 'v1/me/player/currently-playing';
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [SpotifyAuthenticationApiInterface::SCOPE_SPOTIFY_CONNECT_CURRENTLY_PLAYING];
     }

@@ -21,7 +21,7 @@ class UserRequestScopeValidator
 
     public function validate(UserInterface $user, SpotifyRequestInterface $spotifyRequest): bool
     {
-        foreach ($spotifyRequest->getScopes() as $scopeName) {
+        foreach ($spotifyRequest::getScopes() as $scopeName) {
             $scope = $this->scopeRepository->findOneByName($scopeName);
 
             if ($scope === null) {

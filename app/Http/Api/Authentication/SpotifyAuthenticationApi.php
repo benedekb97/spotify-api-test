@@ -8,6 +8,8 @@ use App\Http\Api\Authentication\Factory\Response\AccessTokenResponseFactory;
 use App\Http\Api\Authentication\Factory\Response\RefreshedAccessTokenResponseFactory;
 use App\Http\Api\Authentication\Responses\AccessTokenResponse;
 use App\Http\Api\Authentication\Responses\RefreshedAccessTokenResponse;
+use App\Http\Api\Providers\RequiredScopesProvider;
+use App\Http\Api\Providers\RequiredScopesProviderInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Log\Logger;
@@ -27,16 +29,20 @@ class SpotifyAuthenticationApi implements SpotifyAuthenticationApiInterface
 
     private Logger $logger;
 
+    private RequiredScopesProviderInterface $requiredScopesProvider;
+
     public function __construct(
         AccessTokenResponseFactory $accessTokenResponseFactory,
         RefreshedAccessTokenResponseFactory $refreshedAccessTokenResponseFactory,
         Client $client,
-        Logger $logger
+        Logger $logger,
+        RequiredScopesProvider $requiredScopesProvider
     ) {
         $this->accessTokenResponseFactory = $accessTokenResponseFactory;
         $this->refreshedAccessTokenResponseFactory = $refreshedAccessTokenResponseFactory;
         $this->client = $client;
         $this->logger = $logger;
+        $this->requiredScopesProvider = $requiredScopesProvider;
     }
 
     public function redirect(): Response
@@ -145,10 +151,8 @@ class SpotifyAuthenticationApi implements SpotifyAuthenticationApiInterface
     {
         $scopes = [];
 
-        foreach (self::SCOPE_ENABLED_MAP as $scope => $enabled) {
-            if ($enabled) {
-                $scopes[] = $scope;
-            }
+        foreach ($this->requiredScopesProvider->provide() as $scopeName) {
+            $scopes[] = $scopeName;
         }
 
         return implode(' ', $scopes);

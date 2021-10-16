@@ -23,7 +23,7 @@ class UploadPlaylistCoverRequest extends AbstractSpotifyRequest implements Spoti
         $this->playlistId = $playlistId;
     }
 
-    public function getScopes(): array
+    public static function getScopes(): array
     {
         return [
             SpotifyAuthenticationApiInterface::SCOPE_UGC_IMAGE_UPLOAD,
