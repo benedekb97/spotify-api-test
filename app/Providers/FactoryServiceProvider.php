@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Entities\Scope;
 use App\Entities\Spotify\Album;
 use App\Entities\Spotify\Artist;
 use App\Entities\Spotify\Playback;
@@ -20,6 +21,7 @@ use App\Factories\PlaybackFactory;
 use App\Factories\PlaylistFactory;
 use App\Factories\PlaylistTrackFactory;
 use App\Factories\ProfileFactory;
+use App\Factories\ScopeFactory;
 use App\Factories\TrackAssociationFactory;
 use App\Factories\TrackFactory;
 use App\Factories\UserFactory;
@@ -40,6 +42,7 @@ class FactoryServiceProvider extends ServiceProvider
         TrackAssociation::class => TrackAssociationFactory::class,
         User::class => UserFactory::class,
         UserTrack::class => UserTrackFactory::class,
+        Scope::class => ScopeFactory::class,
     ];
 
     public function register(): void
