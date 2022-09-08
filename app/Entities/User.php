@@ -325,6 +325,6 @@ class User implements UserInterface
 
         return $collection->filter(
             fn (PlaylistInterface $p) => $p->isTopPlayed()
-        )->first() ?? null;
+        )->first() ?: null;
     }
 }
