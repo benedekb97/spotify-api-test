@@ -22,7 +22,4 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 RUN mv composer.phar /usr/local/bin/composer
 
-RUN chmod -R 0777 /app/storage/logs
-RUN chmod -R 0777 /app/storage/framework
-
 RUN cron

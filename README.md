@@ -14,3 +14,4 @@ Random amalgamation of code to play with Spotify's REST API
 - Migrate database `php artisan do:mi:mi`
 - Seed database `php artisan db:seed`
 - Fill `SPOTIFY_API_CLIENT_ID` and `SPOTIFY_API_CLIENT_SECRET` values in .env file
+- Update storage permissions `chmod -R 777 /app/storage/logs && chmod -R 777 /appstorage/framework`
