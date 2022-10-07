@@ -6,14 +6,23 @@ RUN pecl install -o -f redis \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis
 
-RUN apt-get update && apt-get -y install cron
+RUN apt-get update && apt-get -y install cron zlib1g-dev libpng-dev git wget nano
+
+RUN docker-php-ext-install gd
 
 COPY .cron /etc/cron.d/.cron
 
 RUN chmod 0644 /etc/cron.d/.cron
 
 RUN crontab /etc/cron.d/.cron
-#
-#RUN touch /var/log/cron.log
-#
-#CMD cron && tail -f /var/log/cron.log
+
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php composer-setup.php \
+    && php -r "unlink('composer-setup.php');"
+
+RUN mv composer.phar /usr/local/bin/composer
+
+RUN chmod -R 0777 /app/storage/logs
+RUN chmod -R 0777 /app/storage/framework
+
+RUN cron
