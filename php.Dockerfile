@@ -8,9 +8,6 @@ RUN pecl install -o -f redis \
 
 RUN apt-get update && apt-get -y install cron zlib1g-dev libpng-dev git wget nano
 
-RUN curl -O https://phar.phpunit.de/phpunit-9.5.26.phar
-RUN chmod +x phpunit-9.5.26.phar && mv phpunit-9.5.26.phar /usr/local/bin/phpunit
-
 RUN docker-php-ext-install gd
 
 COPY .cron /etc/cron.d/.cron
