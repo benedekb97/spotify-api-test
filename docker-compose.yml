@@ -7,6 +7,9 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
       - ./:/app
+    networks:
+      - app-network
+
   mysql:
     image: mariadb:latest
     environment:
@@ -14,20 +17,31 @@ services:
       MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'root'
       MYSQL_DATABASE: 'spotify'
-    volumes:
-      - mysqldata:/var/lib/mysql
     ports:
-      - 3306:3306
+      - "3306:3306"
+    networks:
+      - app-network
+
   php:
     build:
       context: .
       dockerfile: php.Dockerfile
-    image: php:7.4-fpm
     volumes:
       - ./:/app
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+      - web
+      - redis
+
   redis:
     image: redis/redis-stack-server
     ports:
-      - 6379:6379
-volumes:
-  mysqldata: {}
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
